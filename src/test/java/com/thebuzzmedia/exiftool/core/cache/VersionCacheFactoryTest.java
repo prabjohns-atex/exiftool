@@ -17,14 +17,14 @@
 
 package com.thebuzzmedia.exiftool.core.cache;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.thebuzzmedia.exiftool.VersionCache;
 import com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils;
 import com.thebuzzmedia.exiftool.tests.ReflectionUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class VersionCacheFactoryTest {
 
@@ -44,8 +44,8 @@ public class VersionCacheFactoryTest {
 
 		VersionCache cache = VersionCacheFactory.newCache();
 		assertThat(cache)
-			.isNotNull()
-			.isExactlyInstanceOf(GuavaVersionCache.class);
+				.isNotNull()
+				.isExactlyInstanceOf(GuavaVersionCache.class);
 	}
 
 	@Test
@@ -54,8 +54,8 @@ public class VersionCacheFactoryTest {
 
 		VersionCache cache = VersionCacheFactory.newCache();
 		assertThat(cache)
-			.isNotNull()
-			.isExactlyInstanceOf(DefaultVersionCache.class);
+				.isNotNull()
+				.isExactlyInstanceOf(DefaultVersionCache.class);
 	}
 
 	private static void updateGuavaFlag(boolean value) throws Exception {

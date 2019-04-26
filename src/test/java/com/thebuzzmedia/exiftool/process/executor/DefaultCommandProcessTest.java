@@ -17,6 +17,21 @@
 
 package com.thebuzzmedia.exiftool.process.executor;
 
+import com.thebuzzmedia.exiftool.process.OutputHandler;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import static com.thebuzzmedia.exiftool.tests.TestConstants.BR;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -31,21 +46,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-
-import com.thebuzzmedia.exiftool.process.OutputHandler;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 @SuppressWarnings("resource")
 public class DefaultCommandProcessTest {
@@ -227,9 +227,9 @@ public class DefaultCommandProcessTest {
 		String out = process.read();
 
 		assertThat(out)
-			.isNotNull()
-			.isNotEmpty()
-			.isEqualTo(output);
+				.isNotNull()
+				.isNotEmpty()
+				.isEqualTo(output);
 	}
 
 	@Test
@@ -262,9 +262,9 @@ public class DefaultCommandProcessTest {
 		String out = process.read(handler);
 
 		assertThat(out)
-			.isNotNull()
-			.isNotEmpty()
-			.isEqualTo(firstLine + BR + secondLine);
+				.isNotNull()
+				.isNotEmpty()
+				.isEqualTo(firstLine + BR + secondLine);
 
 		verify(handler, times(2)).readLine(anyString());
 		verify(handler).readLine(firstLine);
@@ -281,9 +281,9 @@ public class DefaultCommandProcessTest {
 		process.write(message);
 
 		assertThat(os.toString())
-			.isNotNull()
-			.isNotEmpty()
-			.isEqualTo(message);
+				.isNotNull()
+				.isNotEmpty()
+				.isEqualTo(message);
 	}
 
 	@Test
@@ -343,8 +343,8 @@ public class DefaultCommandProcessTest {
 		process.write(asList(msg1, msg2));
 
 		assertThat(os.toString())
-			.isNotNull()
-			.isNotEmpty()
-			.isEqualTo(msg1 + msg2);
+				.isNotNull()
+				.isNotEmpty()
+				.isEqualTo(msg1 + msg2);
 	}
 }

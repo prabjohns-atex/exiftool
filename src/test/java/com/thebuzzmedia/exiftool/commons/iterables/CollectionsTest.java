@@ -17,8 +17,6 @@
 
 package com.thebuzzmedia.exiftool.commons.iterables;
 
-import com.thebuzzmedia.exiftool.commons.iterables.Collections;
-import com.thebuzzmedia.exiftool.commons.iterables.Mapper;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -80,12 +78,12 @@ public class CollectionsTest {
 		verify(mapper).map(input2);
 
 		assertThat(outputs)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSameSizeAs(inputs)
-			.containsExactly(
-				input1 + "from_mapper",
-				input2 + "from_mapper"
-			);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSameSizeAs(inputs)
+				.containsExactly(
+						input1 + "from_mapper",
+						input2 + "from_mapper"
+				);
 	}
 }

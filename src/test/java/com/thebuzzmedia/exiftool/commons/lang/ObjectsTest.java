@@ -17,7 +17,6 @@
 
 package com.thebuzzmedia.exiftool.commons.lang;
 
-import com.thebuzzmedia.exiftool.commons.lang.Objects;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,8 +31,8 @@ public class ObjectsTest {
 		String foo = Objects.firstNonNull(v1, v2);
 
 		assertThat(foo)
-			.isNotNull()
-			.isEqualTo(v1);
+				.isNotNull()
+				.isEqualTo(v1);
 	}
 
 	@Test
@@ -44,8 +43,8 @@ public class ObjectsTest {
 		String foo = Objects.firstNonNull(v1, v2);
 
 		assertThat(foo)
-			.isNotNull()
-			.isEqualTo(v2);
+				.isNotNull()
+				.isEqualTo(v2);
 	}
 
 	@Test
@@ -59,8 +58,8 @@ public class ObjectsTest {
 		String foo = Objects.firstNonNull(v1, v2, o1, o2, o3);
 
 		assertThat(foo)
-			.isNotNull()
-			.isEqualTo(o2);
+				.isNotNull()
+				.isEqualTo(o2);
 	}
 
 	@Test

@@ -48,8 +48,8 @@ public class CommandBuilderTest {
 	@Test
 	public void it_should_build_command_with_arguments() {
 		Command cmd = CommandBuilder.builder("exiftool")
-			.addArgument("-ver")
-			.build();
+				.addArgument("-ver")
+				.build();
 
 		assertThat(cmd.toString()).isEqualTo("exiftool -ver");
 	}
@@ -57,8 +57,8 @@ public class CommandBuilderTest {
 	@Test
 	public void it_should_build_command_with_several_arguments() {
 		Command cmd = CommandBuilder.builder("exiftool")
-			.addArgument("-ver", "-stay_open")
-			.build();
+				.addArgument("-ver", "-stay_open")
+				.build();
 
 		assertThat(cmd.toString()).isEqualTo("exiftool -ver -stay_open");
 	}
@@ -109,7 +109,7 @@ public class CommandBuilderTest {
 	public void it_should_not_build_command_if_one_of_argument_is_null() {
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("Command line argument should be defined if set");
-		CommandBuilder.builder("exiftool").addArgument("-ver", new String[] { null });
+		CommandBuilder.builder("exiftool").addArgument("-ver", new String[]{null});
 	}
 
 	@Test

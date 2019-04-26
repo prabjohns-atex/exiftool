@@ -59,13 +59,13 @@ public interface Tag {
 	 * @return Name of the tag.
 	 */
 	String getName();
-	
+
 	/**
 	 * Used to get the display name of the tag, which is the actual name printed
 	 * by the tool on stout. 
-	 * 
+	 *
 	 * For simple tags this is equivalent to value returned by <code>getName</code>.
-	 * 
+	 *
 	 * @since 2.4.0
 	 * @return Display name of the tag.
 	 */

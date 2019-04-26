@@ -17,9 +17,9 @@
 
 package com.thebuzzmedia.exiftool.tests;
 
-import java.io.File;
-
 import com.thebuzzmedia.exiftool.it.img.AbstractExifToolImgIT;
+
+import java.io.File;
 
 public final class TestConstants {
 

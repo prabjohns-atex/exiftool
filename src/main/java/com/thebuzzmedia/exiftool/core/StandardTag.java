@@ -148,10 +148,10 @@ public enum StandardTag implements Tag {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String getDisplayName() {
-	    return name;
+		return name;
 	}
 
 	@Override
@@ -192,7 +192,8 @@ public enum StandardTag implements Tag {
 		ARRAY {
 			@Override
 			public <T> T parse(String value) {
-				return (T) value.split(Pattern.quote(Constants.SEPARATOR)); }
+				return (T) value.split(Pattern.quote(Constants.SEPARATOR));
+			}
 		};
 
 		public abstract <T> T parse(String value);

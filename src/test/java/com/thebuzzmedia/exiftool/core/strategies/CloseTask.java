@@ -58,7 +58,8 @@ class CloseTask implements Runnable {
 		try {
 			log.debug("Closing pool from task #{}", id);
 			pool.close();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			log.debug("Close operation from task #{} throw exception", id);
 			thrown = ex;
 		}

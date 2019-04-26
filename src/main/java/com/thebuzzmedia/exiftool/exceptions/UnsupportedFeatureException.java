@@ -69,9 +69,9 @@ public class UnsupportedFeatureException extends AbstractExifException {
 
 	private static String message(String path, Version version) {
 		String msg = "" +
-			"Use of feature requires version %s or higher of the native ExifTool program. " +
-			"The version of ExifTool referenced by the path '%s' is not high enough. " +
-			"You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception.";
+				"Use of feature requires version %s or higher of the native ExifTool program. " +
+				"The version of ExifTool referenced by the path '%s' is not high enough. " +
+				"You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception.";
 
 		return format(msg, version, path);
 	}

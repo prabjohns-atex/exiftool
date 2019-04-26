@@ -17,13 +17,13 @@
 
 package com.thebuzzmedia.exiftool.logs;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.writeStaticPrivateField;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.writeStaticPrivateField;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoggerFactoryTest {
 
@@ -52,8 +52,8 @@ public class LoggerFactoryTest {
 		Logger logger = LoggerFactory.getLogger(LoggerFactoryTest.class);
 
 		assertThat(logger)
-			.isNotNull()
-			.isExactlyInstanceOf(LoggerSlf4j.class);
+				.isNotNull()
+				.isExactlyInstanceOf(LoggerSlf4j.class);
 	}
 
 	@Test
@@ -64,8 +64,8 @@ public class LoggerFactoryTest {
 		Logger logger = LoggerFactory.getLogger(LoggerFactoryTest.class);
 
 		assertThat(logger)
-			.isNotNull()
-			.isExactlyInstanceOf(LoggerLog4j.class);
+				.isNotNull()
+				.isExactlyInstanceOf(LoggerLog4j.class);
 	}
 
 	@Test
@@ -77,8 +77,8 @@ public class LoggerFactoryTest {
 		Logger logger = LoggerFactory.getLogger(LoggerFactoryTest.class);
 
 		assertThat(logger)
-			.isNotNull()
-			.isExactlyInstanceOf(DefaultLogger.class);
+				.isNotNull()
+				.isExactlyInstanceOf(DefaultLogger.class);
 
 		assertThat(logger.isDebugEnabled()).isFalse();
 	}
@@ -92,8 +92,8 @@ public class LoggerFactoryTest {
 		Logger logger = LoggerFactory.getLogger(LoggerFactoryTest.class);
 
 		assertThat(logger)
-			.isNotNull()
-			.isExactlyInstanceOf(DefaultLogger.class);
+				.isNotNull()
+				.isExactlyInstanceOf(DefaultLogger.class);
 
 		assertThat(logger.isDebugEnabled()).isTrue();
 	}
@@ -101,7 +101,8 @@ public class LoggerFactoryTest {
 	private static void updateExifToolDebugProperty(String debug) {
 		if (debug != null) {
 			System.setProperty("exiftool.debug", debug);
-		} else {
+		}
+		else {
 			System.clearProperty("exiftool.debug");
 		}
 	}

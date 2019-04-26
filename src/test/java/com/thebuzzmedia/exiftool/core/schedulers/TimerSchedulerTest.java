@@ -31,7 +31,10 @@ import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.writePrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 public class TimerSchedulerTest {
 
@@ -94,8 +97,8 @@ public class TimerSchedulerTest {
 
 		TimerTask actualScheduler = readPrivateField(scheduler, "pendingTask");
 		assertThat(actualScheduler)
-			.isNotNull()
-			.isSameAs(task);
+				.isNotNull()
+				.isSameAs(task);
 
 		task.run();
 		verify(runnable).run();

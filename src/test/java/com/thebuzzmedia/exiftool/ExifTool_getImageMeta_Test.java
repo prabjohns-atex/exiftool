@@ -17,25 +17,6 @@
 
 package com.thebuzzmedia.exiftool;
 
-import static com.thebuzzmedia.exiftool.tests.MockitoUtils.anyListOf;
-import static com.thebuzzmedia.exiftool.tests.TagUtils.parseTags;
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
@@ -57,6 +38,25 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.thebuzzmedia.exiftool.tests.MockitoUtils.anyListOf;
+import static com.thebuzzmedia.exiftool.tests.TagUtils.parseTags;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.rules.ExpectedException.none;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ExifTool_getImageMeta_Test {
@@ -82,8 +82,8 @@ public class ExifTool_getImageMeta_Test {
 		path = "exiftool";
 
 		CommandResult cmd = new CommandResultBuilder()
-			.output("9.36")
-			.build();
+				.output("9.36")
+				.build();
 
 		when(executor.execute(any(Command.class))).thenReturn(cmd);
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
@@ -127,8 +127,8 @@ public class ExifTool_getImageMeta_Test {
 		thrown.expectMessage("Unable to read the given image [/tmp/foo.png], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.");
 
 		File image = new FileBuilder("foo.png")
-			.exists(false)
-			.build();
+				.exists(false)
+				.build();
 
 		exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
 	}
@@ -139,8 +139,8 @@ public class ExifTool_getImageMeta_Test {
 		thrown.expectMessage("Unable to read the given image [/tmp/foo.png], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.");
 
 		File image = new FileBuilder("foo.png")
-			.canRead(false)
-			.build();
+				.canRead(false)
+				.build();
 
 		exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
 	}
@@ -155,7 +155,7 @@ public class ExifTool_getImageMeta_Test {
 		tags.put(StandardTag.COMMENT, "foo");
 
 		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-			.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image, format, tags.keySet());
@@ -164,10 +164,10 @@ public class ExifTool_getImageMeta_Test {
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(tags.size())
-			.isEqualTo(tags);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(tags.size())
+				.isEqualTo(tags);
 	}
 
 	@Test
@@ -180,7 +180,7 @@ public class ExifTool_getImageMeta_Test {
 		tags.put(StandardTag.COMMENT, "bar");
 
 		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-			.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image, format, tags.keySet());
@@ -189,10 +189,10 @@ public class ExifTool_getImageMeta_Test {
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(tags.size())
-			.isEqualTo(tags);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(tags.size())
+				.isEqualTo(tags);
 	}
 
 	@Test
@@ -204,7 +204,7 @@ public class ExifTool_getImageMeta_Test {
 		tags.put(StandardTag.COMMENT, "bar");
 
 		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-			.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image, tags.keySet());
@@ -213,10 +213,10 @@ public class ExifTool_getImageMeta_Test {
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(tags.size())
-			.isEqualTo(tags);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(tags.size())
+				.isEqualTo(tags);
 	}
 
 	@Test

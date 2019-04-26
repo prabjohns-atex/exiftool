@@ -60,11 +60,14 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 		int nbParams = params.length;
 		if (nbParams == 0) {
 			verify(slf4j).info(message);
-		} else if (nbParams == 1) {
+		}
+		else if (nbParams == 1) {
 			verify(slf4j).info(message, params[0]);
-		} else if (nbParams == 2) {
+		}
+		else if (nbParams == 2) {
 			verify(slf4j).info(message, params[0], params[1]);
-		} else {
+		}
+		else {
 			throw new AssertionError("Invalid number of parameters");
 		}
 	}
@@ -76,11 +79,14 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 		int nbParams = params.length;
 		if (nbParams == 0) {
 			verify(slf4j).warn(message);
-		} else if (nbParams == 1) {
+		}
+		else if (nbParams == 1) {
 			verify(slf4j).warn(message, params[0]);
-		} else if (nbParams == 2) {
+		}
+		else if (nbParams == 2) {
 			verify(slf4j).warn(message, params[0], params[1]);
-		} else {
+		}
+		else {
 			throw new AssertionError("Invalid number of parameters");
 		}
 	}
@@ -92,11 +98,14 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 		int nbParams = params.length;
 		if (nbParams == 0) {
 			verify(slf4j).error(message);
-		} else if (nbParams == 1) {
+		}
+		else if (nbParams == 1) {
 			verify(slf4j).error(message, params[0]);
-		} else if (nbParams == 2) {
+		}
+		else if (nbParams == 2) {
 			verify(slf4j).error(message, params[0], params[1]);
-		} else {
+		}
+		else {
 			throw new AssertionError("Invalid number of parameters");
 		}
 	}
@@ -120,11 +129,14 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 		int nbParams = params.length;
 		if (nbParams == 0) {
 			verify(slf4j).debug(message);
-		} else if (nbParams == 1) {
+		}
+		else if (nbParams == 1) {
 			verify(slf4j).debug(message, params[0]);
-		} else if (nbParams == 2) {
+		}
+		else if (nbParams == 2) {
 			verify(slf4j).debug(message, params[0], params[1]);
-		} else {
+		}
+		else {
 			throw new AssertionError("Invalid number of parameters");
 		}
 	}
@@ -142,11 +154,14 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 		int nbParams = params.length;
 		if (nbParams == 0) {
 			verify(slf4j).trace(message);
-		} else if (nbParams == 1) {
+		}
+		else if (nbParams == 1) {
 			verify(slf4j).trace(message, params[0]);
-		} else if (nbParams == 2) {
+		}
+		else if (nbParams == 2) {
 			verify(slf4j).trace(message, params[0], params[1]);
-		} else {
+		}
+		else {
 			throw new AssertionError("Invalid number of parameters");
 		}
 	}

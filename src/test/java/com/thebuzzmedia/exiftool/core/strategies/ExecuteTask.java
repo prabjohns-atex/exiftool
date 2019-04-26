@@ -74,10 +74,12 @@ class ExecuteTask implements Runnable {
 			lock.await();
 			log.debug("Execute task #{} is executing task from pool", id);
 			pool.execute(executor, exifTool, arguments, handler);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			log.debug("Execute task #{} throw exception", id);
 			this.thrown = ex;
-		} catch (InterruptedException ex) {
+		}
+		catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 		}
 	}

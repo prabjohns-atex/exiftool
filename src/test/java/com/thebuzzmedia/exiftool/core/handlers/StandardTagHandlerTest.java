@@ -34,8 +34,8 @@ public class StandardTagHandlerTest {
 	@Before
 	public void setUp() {
 		inputs = asList(
-			StandardTag.APERTURE,
-			StandardTag.ARTIST
+				StandardTag.APERTURE,
+				StandardTag.ARTIST
 		);
 	}
 
@@ -45,8 +45,8 @@ public class StandardTagHandlerTest {
 		boolean hasNext = handler.readLine(null);
 		assertThat(hasNext).isFalse();
 		assertThat(handler.getTags())
-			.isNotNull()
-			.isEmpty();
+				.isNotNull()
+				.isEmpty();
 	}
 
 	@Test
@@ -55,8 +55,8 @@ public class StandardTagHandlerTest {
 		boolean hasNext = handler.readLine("{ready}");
 		assertThat(hasNext).isFalse();
 		assertThat(handler.getTags())
-			.isNotNull()
-			.isEmpty();
+				.isNotNull()
+				.isEmpty();
 	}
 
 	@Test
@@ -69,10 +69,10 @@ public class StandardTagHandlerTest {
 
 		assertThat(hasNext).isTrue();
 		assertThat(handler.getTags())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsEntry(tag, value);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(1)
+				.containsEntry(tag, value);
 	}
 
 	@Test
@@ -84,9 +84,9 @@ public class StandardTagHandlerTest {
 		handler.readLine(tag.getName() + ": " + value);
 
 		assertThat(handler.getTags())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsEntry(tag, value);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(1)
+				.containsEntry(tag, value);
 	}
 }

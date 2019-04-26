@@ -22,7 +22,6 @@ import com.thebuzzmedia.exiftool.Version;
 import com.thebuzzmedia.exiftool.exceptions.PoolIOException;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +38,14 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class PoolStrategyTest {
 
@@ -129,13 +135,13 @@ public class PoolStrategyTest {
 
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(1, executionLock))
-			.when(s1)
-			.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
+				.when(s1)
+				.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(1, executionLock))
-			.when(s2)
-			.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
+				.when(s2)
+				.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
 		pool = new PoolStrategy(asList(s1, s2));
 
@@ -173,13 +179,13 @@ public class PoolStrategyTest {
 
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(1, execLock1))
-			.when(s1)
-			.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
+				.when(s1)
+				.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(2, execLock2))
-			.when(s2)
-			.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
+				.when(s2)
+				.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
 		pool = new PoolStrategy(asList(s1, s2));
 
@@ -234,13 +240,13 @@ public class PoolStrategyTest {
 
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(1, execLock1))
-			.when(s1)
-			.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
+				.when(s1)
+				.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(2, execLock2))
-			.when(s2)
-			.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
+				.when(s2)
+				.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
 		pool = new PoolStrategy(asList(s1, s2));
 
@@ -335,8 +341,8 @@ public class PoolStrategyTest {
 		CountDownLatch execLock = new CountDownLatch(1);
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(1, execLock))
-			.when(s1)
-			.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
+				.when(s1)
+				.execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 
@@ -383,10 +389,10 @@ public class PoolStrategyTest {
 
 		Collection<Exception> exceptions = ((PoolIOException) task.getThrown()).getThrownExceptions();
 		assertThat(exceptions)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.contains(ex1, ex2);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(2)
+				.contains(ex1, ex2);
 	}
 
 	private PoolStrategy runPool(ExecutionStrategy s1, ExecutionStrategy s2, TaskFactory taskFactory) throws Exception {

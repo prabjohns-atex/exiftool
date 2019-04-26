@@ -17,9 +17,9 @@
 
 package com.thebuzzmedia.exiftool.core.cache;
 
-import static com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils.isGuavaAvailable;
-
 import com.thebuzzmedia.exiftool.VersionCache;
+
+import static com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils.isGuavaAvailable;
 
 /**
  * {@link VersionCache} factory.

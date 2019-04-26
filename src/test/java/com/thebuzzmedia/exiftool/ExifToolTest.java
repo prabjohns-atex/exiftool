@@ -37,7 +37,10 @@ import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readStaticPrivateF
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("resource")
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -67,8 +70,8 @@ public class ExifToolTest {
 		path = "exiftool";
 
 		v9_36 = new CommandResultBuilder()
-			.output("9.36")
-			.build();
+				.output("9.36")
+				.build();
 
 		when(executor.execute(any(Command.class))).thenReturn(v9_36);
 
@@ -183,17 +186,17 @@ public class ExifToolTest {
 		ExecutionStrategy strategy = readPrivateField(exifTool, "strategy");
 
 		assertThat(path)
-			.isNotNull()
-			.isNotEmpty()
-			.isEqualTo(this.path);
+				.isNotNull()
+				.isNotEmpty()
+				.isEqualTo(this.path);
 
 		assertThat(executor)
-			.isNotNull()
-			.isEqualTo(this.executor);
+				.isNotNull()
+				.isEqualTo(this.executor);
 
 		assertThat(strategy)
-			.isNotNull()
-			.isEqualTo(this.strategy);
+				.isNotNull()
+				.isEqualTo(this.strategy);
 
 		verify(this.strategy).isSupported(versionCaptor.capture());
 
@@ -206,10 +209,10 @@ public class ExifToolTest {
 		verify(this.executor).execute(cmdCaptor.capture());
 		assertThat(cmdCaptor.getValue()).isNotNull();
 		assertThat(cmdCaptor.getValue().getArguments())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsExactly(this.path, "-ver");
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(2)
+				.containsExactly(this.path, "-ver");
 	}
 
 	@Test
@@ -218,9 +221,9 @@ public class ExifToolTest {
 
 		thrown.expect(UnsupportedFeatureException.class);
 		thrown.expectMessage(
-			"Use of feature requires version 9.36.0 or higher of the native ExifTool program. " +
-				"The version of ExifTool referenced by the path '" + path + "' is not high enough. " +
-				"You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception."
+				"Use of feature requires version 9.36.0 or higher of the native ExifTool program. " +
+						"The version of ExifTool referenced by the path '" + path + "' is not high enough. " +
+						"You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception."
 		);
 
 		new ExifTool(path, executor, strategy);

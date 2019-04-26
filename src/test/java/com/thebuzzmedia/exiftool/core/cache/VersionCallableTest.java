@@ -17,16 +17,6 @@
 
 package com.thebuzzmedia.exiftool.core.cache;
 
-import static com.thebuzzmedia.exiftool.tests.TestConstants.EXIF_TOOL;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-
 import com.thebuzzmedia.exiftool.Version;
 import com.thebuzzmedia.exiftool.exceptions.ExifToolNotFoundException;
 import com.thebuzzmedia.exiftool.process.Command;
@@ -41,6 +31,16 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.io.IOException;
+
+import static com.thebuzzmedia.exiftool.tests.TestConstants.EXIF_TOOL;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class VersionCallableTest {
@@ -62,8 +62,8 @@ public class VersionCallableTest {
 	public void it_should_parse_version() throws Exception {
 		CommandExecutor executor = mock(CommandExecutor.class);
 		CommandResult result = new CommandResultBuilder()
-			.output("9.36")
-			.build();
+				.output("9.36")
+				.build();
 
 		when(executor.execute(any(Command.class))).thenReturn(result);
 
@@ -75,22 +75,22 @@ public class VersionCallableTest {
 		Command cmd = cmdCaptor.getValue();
 		assertThat(cmd).isNotNull();
 		assertThat(cmd.getArguments())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsExactly(exifTool, "-ver");
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(2)
+				.containsExactly(exifTool, "-ver");
 
 		assertThat(version)
-			.isNotNull()
-			.isEqualTo(new Version("9.36.0"));
+				.isNotNull()
+				.isEqualTo(new Version("9.36.0"));
 	}
 
 	@Test
 	public void it_should_parse_version_and_throw_exception_with_failure() throws Exception {
 		CommandExecutor executor = mock(CommandExecutor.class);
 		CommandResult result = new CommandResultBuilder()
-			.success(false)
-			.build();
+				.success(false)
+				.build();
 
 		when(executor.execute(any(Command.class))).thenReturn(result);
 
@@ -120,8 +120,8 @@ public class VersionCallableTest {
 	public void it_should_parse_version_and_handle_null_reference() throws Exception {
 		String path = EXIF_TOOL.getAbsolutePath();
 		CommandResult result = new CommandResultBuilder()
-			.output("9.36")
-			.build();
+				.output("9.36")
+				.build();
 
 		CommandExecutor executor = mock(CommandExecutor.class);
 		when(executor.execute(any(Command.class))).thenReturn(result);

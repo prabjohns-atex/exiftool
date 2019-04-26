@@ -56,10 +56,10 @@ public class DefaultStrategyTest {
 
 		Command cmd = cmdCaptor.getValue();
 		assertThat(cmd.getArguments())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSameSizeAs(expectedArguments)
-			.isEqualTo(expectedArguments);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSameSizeAs(expectedArguments)
+				.isEqualTo(expectedArguments);
 	}
 
 	@Test

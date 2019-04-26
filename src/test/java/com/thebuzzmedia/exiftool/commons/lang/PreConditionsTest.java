@@ -53,8 +53,8 @@ public class PreConditionsTest {
 		String val = "foo";
 		String foo = PreConditions.notNull(val, "should not be null");
 		assertThat(foo)
-			.isNotNull()
-			.isEqualTo(val);
+				.isNotNull()
+				.isEqualTo(val);
 	}
 
 	@Test
@@ -92,9 +92,9 @@ public class PreConditionsTest {
 		String result = PreConditions.notBlank(val, message);
 
 		assertThat(result)
-			.isNotNull()
-			.isNotEmpty()
-			.isEqualTo(val);
+				.isNotNull()
+				.isNotEmpty()
+				.isEqualTo(val);
 	}
 
 	@Test
@@ -123,9 +123,9 @@ public class PreConditionsTest {
 		String[] results = PreConditions.notEmpty(val, message);
 
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.isSameAs(val);
+				.isNotNull()
+				.isNotEmpty()
+				.isSameAs(val);
 	}
 
 	@Test
@@ -155,9 +155,9 @@ public class PreConditionsTest {
 		Map<String, String> results = PreConditions.notEmpty(val, message);
 
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.isSameAs(val);
+				.isNotNull()
+				.isNotEmpty()
+				.isSameAs(val);
 	}
 
 	@Test
@@ -186,9 +186,9 @@ public class PreConditionsTest {
 		Iterable<String> results = PreConditions.notEmpty(val, message);
 
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.isSameAs(val);
+				.isNotNull()
+				.isNotEmpty()
+				.isSameAs(val);
 	}
 
 	@Test
@@ -243,8 +243,8 @@ public class PreConditionsTest {
 		thrown.expectMessage(message);
 
 		File file = new FileBuilder("foo.png")
-			.exists(false)
-			.build();
+				.exists(false)
+				.build();
 
 		PreConditions.isReadable(file, message);
 	}
@@ -256,8 +256,8 @@ public class PreConditionsTest {
 		thrown.expectMessage(message);
 
 		File file = new FileBuilder("foo.png")
-			.canRead(false)
-			.build();
+				.canRead(false)
+				.build();
 
 		PreConditions.isReadable(file, message);
 	}
@@ -270,8 +270,8 @@ public class PreConditionsTest {
 		File result = PreConditions.isReadable(file, message);
 
 		assertThat(result)
-			.isNotNull()
-			.isSameAs(file);
+				.isNotNull()
+				.isSameAs(file);
 	}
 
 	@Test
@@ -290,8 +290,8 @@ public class PreConditionsTest {
 		thrown.expectMessage(message);
 
 		File file = new FileBuilder("foo.png")
-			.exists(false)
-			.build();
+				.exists(false)
+				.build();
 
 		PreConditions.isWritable(file, message);
 	}
@@ -303,8 +303,8 @@ public class PreConditionsTest {
 		thrown.expectMessage(message);
 
 		File file = new FileBuilder("foo.png")
-			.canWrite(false)
-			.build();
+				.canWrite(false)
+				.build();
 
 		PreConditions.isWritable(file, message);
 	}
@@ -317,7 +317,7 @@ public class PreConditionsTest {
 		File result = PreConditions.isWritable(file, message);
 
 		assertThat(result)
-			.isNotNull()
-			.isSameAs(file);
+				.isNotNull()
+				.isSameAs(file);
 	}
 }

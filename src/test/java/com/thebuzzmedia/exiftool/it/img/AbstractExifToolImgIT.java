@@ -57,18 +57,18 @@ public abstract class AbstractExifToolImgIT {
 	@Before
 	public void setUp() {
 		exifTool = new ExifToolBuilder()
-			.withPath(PATH)
-			.build();
+				.withPath(PATH)
+				.build();
 
 		exifToolStayOpen = new ExifToolBuilder()
-			.withPath(PATH)
-			.enableStayOpen()
-			.build();
+				.withPath(PATH)
+				.enableStayOpen()
+				.build();
 
 		exifToolPool = new ExifToolBuilder()
-			.withPath(PATH)
-			.withPoolSize(2)
-			.build();
+				.withPath(PATH)
+				.withPoolSize(2)
+				.build();
 	}
 
 	@After
@@ -150,21 +150,21 @@ public abstract class AbstractExifToolImgIT {
 	private void checkMeta(ExifTool exifTool, File image, Tag[] tags, Map<Tag, String> expectations) throws Exception {
 		Map<Tag, String> results = exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList(tags));
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(expectations.size());
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(expectations.size());
 
 		for (Map.Entry<Tag, String> entry : results.entrySet()) {
 			Tag tag = entry.getKey();
 			assertThat(expectations)
-				.overridingErrorMessage(String.format("Result should contain tag %s", tag))
-				.containsKey(tag);
+					.overridingErrorMessage(String.format("Result should contain tag %s", tag))
+					.containsKey(tag);
 
 			String result = entry.getValue();
 			String expectation = expectations.get(tag);
 			assertThat(result)
-				.overridingErrorMessage(String.format("Result should contain tag %s with value %s", tag, expectation))
-				.isEqualToIgnoringCase(expectation);
+					.overridingErrorMessage(String.format("Result should contain tag %s with value %s", tag, expectation))
+					.isEqualToIgnoringCase(expectation);
 		}
 	}
 
@@ -185,7 +185,7 @@ public abstract class AbstractExifToolImgIT {
 					.containsKey(tag.getDisplayName());
 
 			Object result = parsedResults.get(tag.getName());
-			assertThat(((String[])result)[0])
+			assertThat(((String[]) result)[0])
 					.overridingErrorMessage(String.format("Result should contain tag %s with value %s", tag, entry.getValue()))
 					.isEqualToIgnoringCase(entry.getValue());
 		}

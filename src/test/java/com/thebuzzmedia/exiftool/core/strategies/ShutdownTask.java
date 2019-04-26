@@ -58,7 +58,8 @@ class ShutdownTask implements Runnable {
 		try {
 			log.debug("Shutdown pool from task #{}", id);
 			pool.shutdown();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			log.debug("Shutdown operation from task #{} throw exception", id);
 			thrown = ex;
 		}

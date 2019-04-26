@@ -17,19 +17,18 @@
 
 package com.thebuzzmedia.exiftool.it.builder;
 
-import static com.thebuzzmedia.exiftool.tests.TestConstants.EXIF_TOOL;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.UUID;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.Version;
 import com.thebuzzmedia.exiftool.exceptions.ExifToolNotFoundException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.UUID;
+
+import static com.thebuzzmedia.exiftool.tests.TestConstants.EXIF_TOOL;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractExifToolIT {
 

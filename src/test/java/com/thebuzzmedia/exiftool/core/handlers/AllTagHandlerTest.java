@@ -34,8 +34,8 @@ public class AllTagHandlerTest {
 		boolean hasNext = handler.readLine(null);
 		assertThat(hasNext).isFalse();
 		assertThat(handler.getTags())
-			.isNotNull()
-			.isEmpty();
+				.isNotNull()
+				.isEmpty();
 	}
 
 	@Test
@@ -44,8 +44,8 @@ public class AllTagHandlerTest {
 		boolean hasNext = handler.readLine("{ready}");
 		assertThat(hasNext).isFalse();
 		assertThat(handler.getTags())
-			.isNotNull()
-			.isEmpty();
+				.isNotNull()
+				.isEmpty();
 	}
 
 	@Test
@@ -59,9 +59,9 @@ public class AllTagHandlerTest {
 		Map<Tag, String> results = handler.getTags();
 		assertThat(hasNext).isTrue();
 		assertThat(results)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(1);
 
 		assertThat(results)
 				.containsKey(tag);

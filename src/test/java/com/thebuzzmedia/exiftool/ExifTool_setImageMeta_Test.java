@@ -17,23 +17,6 @@
 
 package com.thebuzzmedia.exiftool;
 
-import static com.thebuzzmedia.exiftool.tests.MockitoUtils.anyListOf;
-import static com.thebuzzmedia.exiftool.tests.MapUtils.newMap;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.exceptions.UnwritableFileException;
@@ -54,6 +37,23 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static com.thebuzzmedia.exiftool.tests.MapUtils.newMap;
+import static com.thebuzzmedia.exiftool.tests.MockitoUtils.anyListOf;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.rules.ExpectedException.none;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ExifTool_setImageMeta_Test {
@@ -80,13 +80,13 @@ public class ExifTool_setImageMeta_Test {
 	public void setUp() throws Exception {
 		path = "exiftool";
 		tags = newMap(
-			StandardTag.APERTURE, "foo",
-			StandardTag.ARTIST, "bar"
+				StandardTag.APERTURE, "foo",
+				StandardTag.ARTIST, "bar"
 		);
 
 		CommandResult result = new CommandResultBuilder()
-			.output("9.36")
-			.build();
+				.output("9.36")
+				.build();
 
 		when(executor.execute(any(Command.class))).thenReturn(result);
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
@@ -130,8 +130,8 @@ public class ExifTool_setImageMeta_Test {
 		thrown.expectMessage("Unable to read the given image [/tmp/foo.png], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.");
 
 		File image = new FileBuilder("foo.png")
-			.exists(false)
-			.build();
+				.exists(false)
+				.build();
 
 		exifTool.setImageMeta(image, StandardFormat.HUMAN_READABLE, tags);
 	}
@@ -142,8 +142,8 @@ public class ExifTool_setImageMeta_Test {
 		thrown.expectMessage("Unable to read the given image [/tmp/foo.png], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.");
 
 		File image = new FileBuilder("foo.png")
-			.canWrite(false)
-			.build();
+				.canWrite(false)
+				.build();
 
 		exifTool.setImageMeta(image, StandardFormat.HUMAN_READABLE, tags);
 	}
@@ -154,7 +154,7 @@ public class ExifTool_setImageMeta_Test {
 		final Format format = StandardFormat.HUMAN_READABLE;
 
 		doAnswer(new WriteTagsAnswer())
-			.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
 
 		exifTool.setImageMeta(image, format, tags);
 
@@ -162,16 +162,16 @@ public class ExifTool_setImageMeta_Test {
 
 		List<String> args = argsCaptor.getValue();
 		assertThat(args)
-			.isNotEmpty()
-			.isNotNull()
-			.hasSize(5)
-			.containsExactly(
-				"-S",
-				"-ApertureValue=foo",
-				"-Artist=bar",
-				"/tmp/foo.png",
-				"-execute"
-			);
+				.isNotEmpty()
+				.isNotNull()
+				.hasSize(5)
+				.containsExactly(
+						"-S",
+						"-ApertureValue=foo",
+						"-Artist=bar",
+						"/tmp/foo.png",
+						"-execute"
+				);
 	}
 
 	@Test
@@ -180,7 +180,7 @@ public class ExifTool_setImageMeta_Test {
 		final Format format = StandardFormat.NUMERIC;
 
 		doAnswer(new WriteTagsAnswer())
-			.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
 
 		exifTool.setImageMeta(image, format, tags);
 
@@ -188,17 +188,17 @@ public class ExifTool_setImageMeta_Test {
 
 		List<String> args = argsCaptor.getValue();
 		assertThat(args)
-			.isNotEmpty()
-			.isNotNull()
-			.hasSize(6)
-			.containsExactly(
-				"-n",
-				"-S",
-				"-ApertureValue=foo",
-				"-Artist=bar",
-				"/tmp/foo.png",
-				"-execute"
-			);
+				.isNotEmpty()
+				.isNotNull()
+				.hasSize(6)
+				.containsExactly(
+						"-n",
+						"-S",
+						"-ApertureValue=foo",
+						"-Artist=bar",
+						"/tmp/foo.png",
+						"-execute"
+				);
 	}
 
 	@Test
@@ -206,7 +206,7 @@ public class ExifTool_setImageMeta_Test {
 		final File image = new FileBuilder("foo.png").build();
 
 		doAnswer(new WriteTagsAnswer())
-			.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
 
 		exifTool.setImageMeta(image, tags);
 
@@ -214,17 +214,17 @@ public class ExifTool_setImageMeta_Test {
 
 		List<String> args = argsCaptor.getValue();
 		assertThat(args)
-			.isNotEmpty()
-			.isNotNull()
-			.hasSize(6)
-			.containsExactly(
-				"-n",
-				"-S",
-				"-ApertureValue=foo",
-				"-Artist=bar",
-				"/tmp/foo.png",
-				"-execute"
-			);
+				.isNotEmpty()
+				.isNotNull()
+				.hasSize(6)
+				.containsExactly(
+						"-n",
+						"-S",
+						"-ApertureValue=foo",
+						"-Artist=bar",
+						"/tmp/foo.png",
+						"-execute"
+				);
 	}
 
 	private static class WriteTagsAnswer implements Answer<String> {

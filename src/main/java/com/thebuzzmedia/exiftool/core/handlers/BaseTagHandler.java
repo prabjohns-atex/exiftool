@@ -76,10 +76,12 @@ public abstract class BaseTagHandler implements TagHandler {
 			if (tag != null) {
 				tags.put(tag, value);
 				log.debug("Read Tag [name={}, value={}]", tag, value);
-			} else {
+			}
+			else {
 				log.debug("Unable to read Tag: {}", line);
 			}
-		} else {
+		}
+		else {
 			log.warn("Skipped line: {}", line);
 		}
 

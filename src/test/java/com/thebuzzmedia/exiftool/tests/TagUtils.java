@@ -37,7 +37,7 @@ public final class TagUtils {
 	 */
 	public static Map<String, Object> parseTags(Map<Tag, String> tags) {
 		final Map<String, Object> map = new HashMap<>(tags.size());
-		for(Map.Entry<Tag, String> entry : tags.entrySet()) {
+		for (Map.Entry<Tag, String> entry : tags.entrySet()) {
 			String displayName = entry.getKey().getDisplayName();
 			Object value = entry.getKey().parse(entry.getValue());
 			map.put(displayName, value);

@@ -93,9 +93,9 @@ public class DefaultLoggerTest extends AbstractLoggerTest {
 		String msg = String.format(template, params);
 		String expectedMessage = String.format("[%s] [exiftool] %s" + BR, level, msg);
 		assertThat(systemOutRule.getPendingOut())
-			.isNotNull()
-			.isNotEmpty()
-			.isEqualTo(expectedMessage);
+				.isNotNull()
+				.isNotEmpty()
+				.isEqualTo(expectedMessage);
 	}
 
 	private String toStringFormatMessage(String message) {

@@ -28,8 +28,8 @@ public class Example {
 	public static void main(String[] args) throws Exception {
 
 		ExifTool tool = new ExifToolBuilder()
-			.enableStayOpen()
-			.build();
+				.enableStayOpen()
+				.build();
 
 		File directory = new File("src/test/resources/images");
 		File[] files = directory.listFiles();

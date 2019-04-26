@@ -360,7 +360,8 @@ public class ExifToolBuilder {
 		if (poolSize > 0) {
 			this.poolSize = poolSize;
 			this.cleanupDelay = cleanupDelay;
-		} else {
+		}
+		else {
 			log.warn("Pool size has been enabled with a value less or equal than zero, ignore it.");
 		}
 
@@ -384,7 +385,8 @@ public class ExifToolBuilder {
 		if (poolSize > 0) {
 			this.poolSize = poolSize;
 			this.cleanupDelay = 0L;
-		} else {
+		}
+		else {
 			log.warn("Pool size has been enabled with a value less or equal than zero, ignore it.");
 		}
 

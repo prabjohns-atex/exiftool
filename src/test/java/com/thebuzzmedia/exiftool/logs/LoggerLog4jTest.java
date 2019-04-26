@@ -20,7 +20,10 @@ package com.thebuzzmedia.exiftool.logs;
 import org.apache.log4j.Level;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class LoggerLog4jTest extends AbstractLoggerTest {
 

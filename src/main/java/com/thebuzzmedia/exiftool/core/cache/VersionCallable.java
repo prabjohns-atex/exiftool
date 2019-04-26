@@ -90,7 +90,8 @@ class VersionCallable implements Callable<Version> {
 			}
 
 			return new Version(result.getOutput());
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new ExifToolNotFoundException(ex, exifTool, failure(ex));
 		}

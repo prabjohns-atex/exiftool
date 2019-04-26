@@ -46,7 +46,7 @@ class GuavaVersionCache implements VersionCache {
 	 */
 	GuavaVersionCache() {
 		this.cache = CacheBuilder.newBuilder()
-			.build();
+				.build();
 	}
 
 	@Override

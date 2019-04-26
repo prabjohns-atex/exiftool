@@ -107,8 +107,8 @@ public class Version implements Comparable<Version> {
 		if (o instanceof Version) {
 			Version v = (Version) o;
 			return v.major == major
-				&& v.minor == minor
-				&& v.patch == patch;
+					&& v.minor == minor
+					&& v.patch == patch;
 		}
 
 		return false;

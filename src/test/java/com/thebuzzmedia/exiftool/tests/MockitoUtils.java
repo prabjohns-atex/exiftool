@@ -1,8 +1,8 @@
 package com.thebuzzmedia.exiftool.tests;
 
-import java.util.List;
-
 import org.mockito.ArgumentMatchers;
+
+import java.util.List;
 
 /**
  * Static Mockito Utilities.

@@ -34,7 +34,7 @@ final class LogUtils {
 	 *
 	 * @param message Input message.
 	 * @return Output message.
-	*/
+	 */
 	static String fromSlf4jStyle(String message) {
 		return message.replace("{}", "%s");
 	}

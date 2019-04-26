@@ -56,5 +56,5 @@ public interface CommandExecutor {
 	 * @return Process.
 	 * @throws java.io.IOException If an error occurred during operation.
 	 */
-	CommandProcess start(Command command) throws IOException ;
+	CommandProcess start(Command command) throws IOException;
 }

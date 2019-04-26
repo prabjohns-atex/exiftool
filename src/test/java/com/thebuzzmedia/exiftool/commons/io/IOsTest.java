@@ -17,7 +17,6 @@
 
 package com.thebuzzmedia.exiftool.commons.io;
 
-import com.thebuzzmedia.exiftool.commons.io.IOs;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
 import org.junit.After;
 import org.junit.Before;

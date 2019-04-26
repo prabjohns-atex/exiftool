@@ -135,7 +135,8 @@ public class PoolStrategy implements ExecutionStrategy {
 					strategies.add(strategy);
 					added++;
 				}
-			} catch (InterruptedException ex) {
+			}
+			catch (InterruptedException ex) {
 				log.warn(ex.getMessage());
 				Thread.currentThread().interrupt();
 			}
@@ -146,7 +147,8 @@ public class PoolStrategy implements ExecutionStrategy {
 		for (ExecutionStrategy strategy : strategies) {
 			try {
 				function.apply(strategy, i);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				log.error("Failed to process strategy #{}", i);
 				thrownEx.add(ex);
 			}

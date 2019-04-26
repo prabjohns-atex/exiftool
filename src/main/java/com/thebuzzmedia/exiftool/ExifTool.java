@@ -17,8 +17,8 @@
 
 package com.thebuzzmedia.exiftool;
 
-import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
 import com.thebuzzmedia.exiftool.core.StandardFormat;
+import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
 import com.thebuzzmedia.exiftool.core.cache.VersionCacheFactory;
 import com.thebuzzmedia.exiftool.core.handlers.AllTagHandler;
 import com.thebuzzmedia.exiftool.core.handlers.StandardTagHandler;
@@ -30,7 +30,11 @@ import com.thebuzzmedia.exiftool.process.CommandExecutor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isReadable;

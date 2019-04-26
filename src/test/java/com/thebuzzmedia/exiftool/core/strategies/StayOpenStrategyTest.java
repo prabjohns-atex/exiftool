@@ -42,7 +42,11 @@ import static com.thebuzzmedia.exiftool.tests.TestConstants.BR;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StayOpenStrategyTest {
@@ -113,8 +117,8 @@ public class StayOpenStrategyTest {
 		inOrder.verify(process).read(any(OutputHandler.class));
 
 		assertThat(readPrivateField(strategy, "process"))
-			.isNotNull()
-			.isSameAs(process);
+				.isNotNull()
+				.isSameAs(process);
 
 		verifyStartProcess();
 		verifyExecutionArguments();
@@ -231,26 +235,26 @@ public class StayOpenStrategyTest {
 	private void verifyStartProcess() {
 		Command startCmd = cmdCaptor.getValue();
 		assertThat(startCmd.getArguments())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(7)
-			.containsExactly(
-				exifTool, "-stay_open", "True", "-sep", "|>☃", "-@", "-"
-			);
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(7)
+				.containsExactly(
+						exifTool, "-stay_open", "True", "-sep", "|>☃", "-@", "-"
+				);
 	}
 
 	private void verifyExecutionArguments() {
 		List<String> processArgs = argsCaptor.getValue();
 		assertThat(processArgs)
-			.isNotNull()
-			.isNotEmpty()
-			.are(new Condition<String>() {
-				@Override
-				public boolean matches(String value) {
-					return value.endsWith(BR);
-				}
-			})
-			.isEqualTo(appendBr(args));
+				.isNotNull()
+				.isNotEmpty()
+				.are(new Condition<String>() {
+					@Override
+					public boolean matches(String value) {
+						return value.endsWith(BR);
+					}
+				})
+				.isEqualTo(appendBr(args));
 	}
 
 	private List<String> appendBr(List<String> list) {

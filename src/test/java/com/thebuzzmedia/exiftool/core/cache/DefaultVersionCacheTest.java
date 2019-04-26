@@ -17,11 +17,11 @@
 
 package com.thebuzzmedia.exiftool.core.cache;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
+import com.thebuzzmedia.exiftool.VersionCache;
 
 import java.util.concurrent.ConcurrentMap;
 
-import com.thebuzzmedia.exiftool.VersionCache;
+import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
 
 public class DefaultVersionCacheTest extends AbstractVersionCacheTest<DefaultVersionCache> {
 

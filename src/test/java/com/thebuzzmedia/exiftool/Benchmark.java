@@ -42,11 +42,11 @@ public class Benchmark {
 				+ " total operations.\n");
 
 		ExifTool tool = new ExifToolBuilder()
-			.build();
+				.build();
 
 		ExifTool toolSO = new ExifToolBuilder()
-			.enableStayOpen()
-			.build();
+				.enableStayOpen()
+				.build();
 
 		/*
 		 * -stay_open False

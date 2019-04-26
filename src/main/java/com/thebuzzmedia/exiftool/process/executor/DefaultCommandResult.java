@@ -93,7 +93,7 @@ public class DefaultCommandResult implements CommandResult {
 		if (o instanceof DefaultCommandResult) {
 			DefaultCommandResult r = (DefaultCommandResult) o;
 			return Objects.equals(exitStatus, r.exitStatus)
-				&& Objects.equals(output, r.output);
+					&& Objects.equals(output, r.output);
 		}
 
 		return false;

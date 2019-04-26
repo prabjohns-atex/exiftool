@@ -31,14 +31,14 @@ public class ResultHandlerTest {
 
 		handler.readLine("foo");
 		assertThat(handler.getOutput())
-			.isNotEmpty()
-			.isEqualTo("foo");
+				.isNotEmpty()
+				.isEqualTo("foo");
 
 		handler.readLine("bar");
 		assertThat(handler.getOutput())
-			.isNotEmpty()
-			.isEqualTo(
-				"foo" + TestConstants.BR + "bar"
-			);
+				.isNotEmpty()
+				.isEqualTo(
+						"foo" + TestConstants.BR + "bar"
+				);
 	}
 }

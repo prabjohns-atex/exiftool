@@ -71,7 +71,8 @@ public class SystemPropertyRule extends ExternalResource {
 			String value = entry.getValue();
 			if (value == null) {
 				System.clearProperty(prop);
-			} else {
+			}
+			else {
 				System.setProperty(prop, value);
 			}
 		}
