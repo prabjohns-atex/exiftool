@@ -18,7 +18,6 @@
 package com.thebuzzmedia.exiftool.tests;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 /**
  * Reflection Utilities used in unit tests.
@@ -68,20 +67,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Write value on static private field of a given class.
-	 *
-	 * @param name Name of the field to write.
-	 * @param value The value.
-	 * @param <T> Type of class.
-	 * @throws NoSuchFieldException   If the field does not exist.
-	 * @throws IllegalAccessException If the field is not accessible.
-	 */
-	public static <T, V> void writeStaticPrivateField(Class<T> klass, String name, V value) throws NoSuchFieldException, IllegalAccessException {
-		doWrite(klass, null, name, value);
-	}
-
-	/**
-	 * Write value on static private field of a given class.
+	 * Write value on a private field of a given class.
 	 *
 	 * @param name Name of the field to write.
 	 * @param value The value.
@@ -92,14 +78,6 @@ public final class ReflectionUtils {
 	private static <T, V> void doWrite(Class<T> klass, Object instance, String name, V value) throws NoSuchFieldException, IllegalAccessException {
 		Field field = klass.getDeclaredField(name);
 		field.setAccessible(true);
-
-		// Remove final modifier
-		int modifiers = field.getModifiers();
-		Field modifierField = field.getClass().getDeclaredField("modifiers");
-		modifiers = modifiers & ~Modifier.FINAL;
-		modifierField.setAccessible(true);
-		modifierField.setInt(field, modifiers);
-
 		field.set(instance, value);
 	}
 }

@@ -18,8 +18,6 @@
 package com.thebuzzmedia.exiftool.commons.io;
 
 import com.thebuzzmedia.exiftool.process.OutputHandler;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -28,7 +26,6 @@ import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 
 import static com.thebuzzmedia.exiftool.tests.TestConstants.BR;
@@ -45,19 +42,6 @@ public class IOsTest {
 
 	private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-	private String charset;
-
-	@Before
-	public void setUp() {
-		charset = System.getProperty("file.encoding");
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		System.setProperty("file.encoding", charset);
-		resetDefaultCharset();
-	}
-
 	@Test
 	public void it_should_read_input_stream() throws Exception {
 		String firstLine = "first-line";
@@ -68,7 +52,7 @@ public class IOsTest {
 		OutputHandler handler = mock(OutputHandler.class);
 		when(handler.readLine(anyString())).thenAnswer(new Answer<Boolean>() {
 			@Override
-			public Boolean answer(InvocationOnMock invocation) throws Throwable {
+			public Boolean answer(InvocationOnMock invocation) {
 				String str = (String) invocation.getArguments()[0];
 				return str != null;
 			}
@@ -91,7 +75,7 @@ public class IOsTest {
 		OutputHandler handler = mock(OutputHandler.class);
 		when(handler.readLine(anyString())).thenAnswer(new Answer<Boolean>() {
 			@Override
-			public Boolean answer(InvocationOnMock invocation) throws Throwable {
+			public Boolean answer(InvocationOnMock invocation) {
 				return false;
 			}
 		});
@@ -129,17 +113,8 @@ public class IOsTest {
 		OutputHandler handler = mock(OutputHandler.class);
 		when(handler.readLine(anyString())).thenReturn(false);
 
-		System.setProperty("file.encoding", "CP1252");
-		resetDefaultCharset();
-
 		IOs.readInputStream(is, handler);
 
 		verify(handler).readLine("line-with-accent: àéê");
-	}
-
-	private void resetDefaultCharset() throws Exception {
-		Field charset = Charset.class.getDeclaredField("defaultCharset");
-		charset.setAccessible(true);
-		charset.set(null, null);
 	}
 }

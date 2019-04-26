@@ -149,10 +149,7 @@ public abstract class AbstractExifToolImgIT {
 
 	private void checkMeta(ExifTool exifTool, File image, Tag[] tags, Map<Tag, String> expectations) throws Exception {
 		Map<Tag, String> results = exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList(tags));
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(expectations.size());
+		assertThat(results).hasSize(expectations.size());
 
 		for (Map.Entry<Tag, String> entry : results.entrySet()) {
 			Tag tag = entry.getKey();
@@ -170,12 +167,8 @@ public abstract class AbstractExifToolImgIT {
 
 	private void checkAllMetaContains(ExifTool exifTool, File image, Map<Tag, String> expectations) throws Exception {
 		Map<Tag, String> results = exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE);
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty();
-
-		assertThat(results.size())
-				.isGreaterThanOrEqualTo(expectations.size());
+		assertThat(results).isNotEmpty();
+		assertThat(results.size()).isGreaterThanOrEqualTo(expectations.size());
 
 		Map<String, Object> parsedResults = parseTags(results);
 		for (Map.Entry<Tag, String> entry : expectations.entrySet()) {

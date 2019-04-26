@@ -17,12 +17,8 @@
 
 package com.thebuzzmedia.exiftool.core.cache;
 
-import com.thebuzzmedia.exiftool.VersionCache;
 import com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils;
-import com.thebuzzmedia.exiftool.tests.ReflectionUtils;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,34 +27,5 @@ public class VersionCacheFactoryTest {
 	@Before
 	public void setUp() {
 		assertThat(DependencyUtils.isGuavaAvailable()).isTrue();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		updateGuavaFlag(true);
-	}
-
-	@Test
-	public void it_should_load_guava_cache_by_default() throws Exception {
-		updateGuavaFlag(true);
-
-		VersionCache cache = VersionCacheFactory.newCache();
-		assertThat(cache)
-				.isNotNull()
-				.isExactlyInstanceOf(GuavaVersionCache.class);
-	}
-
-	@Test
-	public void it_should_load_default_cache_as_fallback() throws Exception {
-		updateGuavaFlag(false);
-
-		VersionCache cache = VersionCacheFactory.newCache();
-		assertThat(cache)
-				.isNotNull()
-				.isExactlyInstanceOf(DefaultVersionCache.class);
-	}
-
-	private static void updateGuavaFlag(boolean value) throws Exception {
-		ReflectionUtils.writeStaticPrivateField(DependencyUtils.class, "GUAVA_AVAILABLE", value);
 	}
 }
