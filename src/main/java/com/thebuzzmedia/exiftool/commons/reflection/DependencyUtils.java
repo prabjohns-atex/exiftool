@@ -35,10 +35,13 @@ public final class DependencyUtils {
 	private static final String LOG4J_FQN = "org.apache.log4j.Logger";
 	private static final boolean LOG4J_AVAILABLE = ClassUtils.isPresent(LOG4J_FQN);
 
+	private static final String LOG4J2_FQN = "org.apache.logging.log4j.Logger";
+	private static final boolean LOG4J2_AVAILABLE = ClassUtils.isPresent(LOG4J2_FQN);
+
 	/**
 	 * Check if Guava is available on the classpath.
 	 *
-	 * @return True if guava is available, false otherwise.
+	 * @return {@code true} if guava is available, {@code false} otherwise.
 	 */
 	public static boolean isGuavaAvailable() {
 		return GUAVA_AVAILABLE;
@@ -47,7 +50,7 @@ public final class DependencyUtils {
 	/**
 	 * Check if slf4j is available on the classpath.
 	 *
-	 * @return True if slf4j is available, false otherwise.
+	 * @return {@code true} if slf4j is available, {@code false} otherwise.
 	 */
 	public static boolean isSlf4jAvailable() {
 		return SLF4J_AVAILABLE;
@@ -56,9 +59,18 @@ public final class DependencyUtils {
 	/**
 	 * Check if log4j is available on the classpath.
 	 *
-	 * @return True if log4j is available, false otherwise.
+	 * @return {@code true} if log4j is available, {@code false} otherwise.
 	 */
 	public static boolean isLog4jAvailable() {
 		return LOG4J_AVAILABLE;
+	}
+
+	/**
+	 * Check if log4j2 is available on the classpath.
+	 *
+	 * @return {@code true} if log4j2 is available, {@code false} otherwise.
+	 */
+	public static boolean isLog4j2Available() {
+		return LOG4J2_AVAILABLE;
 	}
 }

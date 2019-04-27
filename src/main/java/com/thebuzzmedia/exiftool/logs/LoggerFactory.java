@@ -17,6 +17,7 @@
 
 package com.thebuzzmedia.exiftool.logs;
 
+import static com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils.isLog4j2Available;
 import static com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils.isLog4jAvailable;
 import static com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils.isSlf4jAvailable;
 
@@ -49,6 +50,11 @@ public final class LoggerFactory {
 		// First try slf4j
 		if (isSlf4jAvailable()) {
 			return new LoggerSlf4j(klass);
+		}
+
+		// Then, try log4j2
+		if (isLog4j2Available()) {
+			return new LoggerLog4j2(klass);
 		}
 
 		// Then, try log4j
