@@ -21,12 +21,18 @@ import org.junit.rules.ExternalResource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
  * Catch System.out logging and store in a buffer.
  */
 public class SystemOutRule extends ExternalResource {
+
+	/**
+	 * A flag to enable/disable log to console.
+	 */
+	private final boolean writeToConsole;
 
 	/**
 	 * Original out stream.
@@ -40,19 +46,35 @@ public class SystemOutRule extends ExternalResource {
 	 * Will be initialized before each tests.
 	 * Will be flushed after each tests.
 	 */
-	private ByteArrayOutputStream out;
+	private CompositeOutputStream compositeOut;
+
+	public SystemOutRule(boolean writeToConsole) {
+		this.writeToConsole = writeToConsole;
+	}
 
 	@Override
 	public void before() {
 		originalOut = System.out;
-		out = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(out));
+		compositeOut = new CompositeOutputStream(
+				writeToConsole ? originalOut : new ByteArrayOutputStream()
+		);
+
+		System.setOut(new PrintStream(
+				compositeOut
+		));
 	}
 
 	@Override
 	public void after() {
 		try {
-			out.flush();
+			compositeOut.flush();
+		}
+		catch (IOException ex) {
+			// No worries
+		}
+
+		try {
+			compositeOut.close();
 		}
 		catch (IOException ex) {
 			// No worries
@@ -60,15 +82,45 @@ public class SystemOutRule extends ExternalResource {
 
 		// Restore original out stream
 		System.setOut(originalOut);
+
+		// Remove this one.
+		compositeOut = null;
 	}
 
 	public String getPendingOut() {
-		if (out == null) {
+		if (compositeOut == null) {
 			return null;
 		}
 
-		String pending = out.toString();
-		out.reset();
-		return pending;
+		return compositeOut.sb.toString();
+	}
+
+	private static class CompositeOutputStream extends OutputStream {
+		private final OutputStream o1;
+		private final StringBuilder sb;
+
+		private CompositeOutputStream(OutputStream o1) {
+			this.o1 = o1;
+			this.sb = new StringBuilder();
+		}
+
+		@Override
+		public void write(int b) throws IOException {
+			o1.write(b);
+			sb.append((char) b);
+		}
+
+		@Override
+		public void flush() throws IOException {
+			super.flush();
+			o1.flush();
+		}
+
+		@Override
+		public void close() throws IOException {
+			super.close();
+			o1.close();
+			sb.delete(0, sb.length());
+		}
 	}
 }

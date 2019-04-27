@@ -32,10 +32,10 @@ class LoggerSlf4j implements Logger {
 	 * Create logger.
 	 * This constructor should be called by {@link com.thebuzzmedia.exiftool.logs.LoggerFactory} only.
 	 *
-	 * @param log Internal Logger.
+	 * @param name Logger name.
 	 */
-	LoggerSlf4j(org.slf4j.Logger log) {
-		this.log = log;
+	LoggerSlf4j(Class<?> name) {
+		this.log = org.slf4j.LoggerFactory.getLogger(name);
 	}
 
 	@Override

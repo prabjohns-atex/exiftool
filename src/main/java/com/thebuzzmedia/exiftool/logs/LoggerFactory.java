@@ -48,14 +48,12 @@ public final class LoggerFactory {
 	public static Logger getLogger(Class<?> klass) {
 		// First try slf4j
 		if (isSlf4jAvailable()) {
-			org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(klass);
-			return new LoggerSlf4j(log);
+			return new LoggerSlf4j(klass);
 		}
 
 		// Then, try log4j
 		if (isLog4jAvailable()) {
-			org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(klass);
-			return new LoggerLog4j(log);
+			return new LoggerLog4j(klass);
 		}
 
 		// Return default logger...

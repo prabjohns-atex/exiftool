@@ -17,156 +17,29 @@
 
 package com.thebuzzmedia.exiftool.logs;
 
+import ch.qos.logback.classic.Level;
+
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class LoggerSlf4jTest extends AbstractLoggerTest {
 
 	@Override
 	Logger getLogger() {
-		org.slf4j.Logger slf4j = mock(org.slf4j.Logger.class);
-
-		when(slf4j.isTraceEnabled()).thenReturn(true);
-		when(slf4j.isDebugEnabled()).thenReturn(true);
-		when(slf4j.isInfoEnabled()).thenReturn(true);
-		when(slf4j.isWarnEnabled()).thenReturn(true);
-		when(slf4j.isErrorEnabled()).thenReturn(true);
-
-		return new LoggerSlf4j(slf4j);
+		return createLogger(Level.TRACE);
 	}
 
 	@Override
 	Logger getLoggerWithoutDebug() {
-		org.slf4j.Logger slf4j = mock(org.slf4j.Logger.class);
-
-		when(slf4j.isTraceEnabled()).thenReturn(false);
-		when(slf4j.isDebugEnabled()).thenReturn(false);
-		when(slf4j.isInfoEnabled()).thenReturn(true);
-		when(slf4j.isWarnEnabled()).thenReturn(true);
-		when(slf4j.isErrorEnabled()).thenReturn(true);
-
-		return new LoggerSlf4j(slf4j);
+		return createLogger(Level.INFO);
 	}
 
-	@Override
-	void verifyInfo(Logger logger, String message, Object... params) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
+	private Logger createLogger(Level level) {
+		LoggerSlf4j logger = new LoggerSlf4j(getClass());
 
-		int nbParams = params.length;
-		if (nbParams == 0) {
-			verify(slf4j).info(message);
-		}
-		else if (nbParams == 1) {
-			verify(slf4j).info(message, params[0]);
-		}
-		else if (nbParams == 2) {
-			verify(slf4j).info(message, params[0], params[1]);
-		}
-		else {
-			throw new AssertionError("Invalid number of parameters");
-		}
-	}
+		ch.qos.logback.classic.Logger logback = readPrivateField(logger, "log");
+		logback.setLevel(level);
+		logback.setAdditive(true);
 
-	@Override
-	void verifyWarn(Logger logger, String message, Object... params) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
-
-		int nbParams = params.length;
-		if (nbParams == 0) {
-			verify(slf4j).warn(message);
-		}
-		else if (nbParams == 1) {
-			verify(slf4j).warn(message, params[0]);
-		}
-		else if (nbParams == 2) {
-			verify(slf4j).warn(message, params[0], params[1]);
-		}
-		else {
-			throw new AssertionError("Invalid number of parameters");
-		}
-	}
-
-	@Override
-	void verifyError(Logger logger, String message, Object... params) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
-
-		int nbParams = params.length;
-		if (nbParams == 0) {
-			verify(slf4j).error(message);
-		}
-		else if (nbParams == 1) {
-			verify(slf4j).error(message, params[0]);
-		}
-		else if (nbParams == 2) {
-			verify(slf4j).error(message, params[0], params[1]);
-		}
-		else {
-			throw new AssertionError("Invalid number of parameters");
-		}
-	}
-
-	@Override
-	void verifyErrorException(Logger logger, String message, Exception ex) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
-		verify(slf4j).error(message, ex);
-	}
-
-	@Override
-	void verifyWarnException(Logger logger, String message, Exception ex) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
-		verify(slf4j).warn(message, ex);
-	}
-
-	@Override
-	void verifyDebug(Logger logger, String message, Object... params) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
-
-		int nbParams = params.length;
-		if (nbParams == 0) {
-			verify(slf4j).debug(message);
-		}
-		else if (nbParams == 1) {
-			verify(slf4j).debug(message, params[0]);
-		}
-		else if (nbParams == 2) {
-			verify(slf4j).debug(message, params[0], params[1]);
-		}
-		else {
-			throw new AssertionError("Invalid number of parameters");
-		}
-	}
-
-	@Override
-	void verifyWithoutDebug(Logger logger, String message, Object... params) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
-		verify(slf4j, never()).debug(anyString(), any(Object[].class));
-	}
-
-	@Override
-	void verifyTrace(Logger logger, String message, Object... params) {
-		org.slf4j.Logger slf4j = getSlf4j(logger);
-
-		int nbParams = params.length;
-		if (nbParams == 0) {
-			verify(slf4j).trace(message);
-		}
-		else if (nbParams == 1) {
-			verify(slf4j).trace(message, params[0]);
-		}
-		else if (nbParams == 2) {
-			verify(slf4j).trace(message, params[0], params[1]);
-		}
-		else {
-			throw new AssertionError("Invalid number of parameters");
-		}
-	}
-
-	private static org.slf4j.Logger getSlf4j(Logger logger) {
-		return readPrivateField(logger, "log");
+		return logger;
 	}
 }
