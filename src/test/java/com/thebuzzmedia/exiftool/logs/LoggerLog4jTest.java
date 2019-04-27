@@ -19,7 +19,7 @@ package com.thebuzzmedia.exiftool.logs;
 
 import org.apache.log4j.Level;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class LoggerLog4jTest extends AbstractLoggerTest {
 
 	@Override
-	protected Logger getLogger() {
+	Logger getLogger() {
 		org.apache.log4j.Logger log4j = mock(org.apache.log4j.Logger.class);
 		when(log4j.isDebugEnabled()).thenReturn(true);
 		when(log4j.isInfoEnabled()).thenReturn(true);
@@ -43,7 +43,7 @@ public class LoggerLog4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected Logger getLoggerWithoutDebug() {
+	Logger getLoggerWithoutDebug() {
 		org.apache.log4j.Logger log4j = mock(org.apache.log4j.Logger.class);
 		when(log4j.isDebugEnabled()).thenReturn(false);
 		when(log4j.isInfoEnabled()).thenReturn(true);
@@ -58,52 +58,52 @@ public class LoggerLog4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected void verifyInfo(Logger logger, String message, Object... params) throws Exception {
+	void verifyInfo(Logger logger, String message, Object... params) {
 		verifyCall(logger, Level.INFO, message, params);
 	}
 
 	@Override
-	protected void verifyWarn(Logger logger, String message, Object... params) throws Exception {
+	void verifyWarn(Logger logger, String message, Object... params) {
 		verifyCall(logger, Level.WARN, message, params);
 	}
 
 	@Override
-	protected void verifyError(Logger logger, String message, Object... params) throws Exception {
+	void verifyError(Logger logger, String message, Object... params) {
 		verifyCall(logger, Level.ERROR, message, params);
 	}
 
 	@Override
-	protected void verifyErrorException(Logger logger, String message, Exception ex) throws Exception {
+	void verifyErrorException(Logger logger, String message, Exception ex) {
 		verifyException(logger, Level.ERROR, message, ex);
 	}
 
 	@Override
-	protected void verifyWarnException(Logger logger, String message, Exception ex) throws Exception {
+	void verifyWarnException(Logger logger, String message, Exception ex) {
 		verifyException(logger, Level.WARN, message, ex);
 	}
 
 	@Override
-	protected void verifyDebug(Logger logger, String message, Object... params) throws Exception {
+	void verifyDebug(Logger logger, String message, Object... params) {
 		verifyCall(logger, Level.DEBUG, message, params);
 	}
 
 	@Override
-	protected void verifyWithoutDebug(Logger logger, String message, Object... params) throws Exception {
+	void verifyWithoutDebug(Logger logger, String message, Object... params) {
 		verify(getLog4j(logger), never()).debug(message);
 	}
 
 	@Override
-	protected void verifyTrace(Logger logger, String message, Object... params) throws Exception {
+	void verifyTrace(Logger logger, String message, Object... params) {
 		verifyCall(logger, Level.TRACE, message, params);
 	}
 
-	private void verifyException(Logger logger, Level level, String message, Exception ex) throws Exception {
+	private void verifyException(Logger logger, Level level, String message, Exception ex) {
 		org.apache.log4j.Logger log4j = getLog4j(logger);
 		verify(log4j).isEnabledFor(level);
 		verify(log4j).log(level, message, ex);
 	}
 
-	private static void verifyCall(Logger logger, Level level, String message, Object... params) throws Exception {
+	private static void verifyCall(Logger logger, Level level, String message, Object... params) {
 		String template = toStringFormatMessage(message);
 		String msg = String.format(template, params);
 
@@ -112,7 +112,7 @@ public class LoggerLog4jTest extends AbstractLoggerTest {
 		verify(log4j).log(level, msg);
 	}
 
-	private static org.apache.log4j.Logger getLog4j(Logger logger) throws Exception {
+	private static org.apache.log4j.Logger getLog4j(Logger logger) {
 		return readPrivateField(logger, "log");
 	}
 

@@ -31,7 +31,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import static com.thebuzzmedia.exiftool.tests.MockitoUtils.anyListOf;
+import static com.thebuzzmedia.exiftool.tests.MockitoTestUtils.anyListOf;
 import static java.lang.Thread.sleep;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;

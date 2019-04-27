@@ -20,7 +20,7 @@ package com.thebuzzmedia.exiftool.core.cache;
 import com.google.common.cache.Cache;
 import com.thebuzzmedia.exiftool.VersionCache;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 
 public class GuavaVersionCacheTest extends AbstractVersionCacheTest<GuavaVersionCache> {
 
@@ -30,7 +30,7 @@ public class GuavaVersionCacheTest extends AbstractVersionCacheTest<GuavaVersion
 	}
 
 	@Override
-	protected long size(VersionCache cache) throws Exception {
+	protected long size(VersionCache cache) {
 		return ((Cache<?, ?>) readPrivateField(cache, "cache")).size();
 	}
 }

@@ -17,34 +17,31 @@
 
 package com.thebuzzmedia.exiftool.tests;
 
-import java.util.LinkedHashMap;
+import com.thebuzzmedia.exiftool.Tag;
+
+import java.util.HashMap;
 import java.util.Map;
 
-import static java.util.Collections.unmodifiableMap;
-
 /**
- * Static Utilities for map.
+ * Static utilities for tags.
  */
-public final class MapUtils {
+public final class TagTestUtils {
 
-	private MapUtils() {
+	private TagTestUtils() {
 	}
 
 	/**
-	 * Create map with two entries.
-	 *
-	 * @param k1 First key.
-	 * @param v1 First value.
-	 * @param k2 Second key.
-	 * @param v2 Second value.
-	 * @param <T> Type of keys.
-	 * @param <U> Type of values.
-	 * @return New created map.
+	 * Parse tag results into a map of tag names to parsed values
+	 * @param tags map of tags to values
+	 * @return map of tag names to parsed values
 	 */
-	public static <T, U> Map<T, U> newMap(T k1, U v1, T k2, U v2) {
-		Map<T, U> map = new LinkedHashMap<>();
-		map.put(k1, v1);
-		map.put(k2, v2);
-		return unmodifiableMap(map);
+	public static Map<String, Object> parseTags(Map<Tag, String> tags) {
+		final Map<String, Object> map = new HashMap<>(tags.size());
+		for (Map.Entry<Tag, String> entry : tags.entrySet()) {
+			String displayName = entry.getKey().getDisplayName();
+			Object value = entry.getKey().parse(entry.getValue());
+			map.put(displayName, value);
+		}
+		return map;
 	}
 }

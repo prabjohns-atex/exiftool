@@ -8,10 +8,10 @@ import java.util.List;
  * Static Mockito Utilities.
  * Used in test only.
  */
-public final class MockitoUtils {
+public final class MockitoTestUtils {
 
 	// Ensure non instantiation.
-	private MockitoUtils() {
+	private MockitoTestUtils() {
 	}
 
 	/**

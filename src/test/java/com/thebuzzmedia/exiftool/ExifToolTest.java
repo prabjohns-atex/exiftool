@@ -32,8 +32,8 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readStaticPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readStaticPrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.ArgumentMatchers.any;
@@ -83,42 +83,42 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_path_is_null() throws Exception {
+	public void it_should_not_create_exiftool_if_path_is_null() {
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("ExifTool path should not be null");
 		new ExifTool(null, executor, strategy);
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_path_is_empty() throws Exception {
+	public void it_should_not_create_exiftool_if_path_is_empty() {
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("ExifTool path should not be null");
 		new ExifTool("", executor, strategy);
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_path_is_blank() throws Exception {
+	public void it_should_not_create_exiftool_if_path_is_blank() {
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage("ExifTool path should not be null");
 		new ExifTool("  ", executor, strategy);
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_executor_is_null() throws Exception {
+	public void it_should_not_create_exiftool_if_executor_is_null() {
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("Executor should not be null");
 		new ExifTool(path, null, strategy);
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_strategy_is_null() throws Exception {
+	public void it_should_not_create_exiftool_if_strategy_is_null() {
 		thrown.expect(NullPointerException.class);
 		thrown.expectMessage("Execution strategy should not be null");
 		new ExifTool(path, executor, null);
 	}
 
 	@Test
-	public void it_should_get_version_from_cache() throws Exception {
+	public void it_should_get_version_from_cache() {
 		VersionCache cache = readStaticPrivateField(ExifTool.class, "cache");
 
 		cache.clear();
@@ -136,7 +136,7 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_check_if_exiftool_is_running() throws Exception {
+	public void it_should_check_if_exiftool_is_running() {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 
@@ -169,7 +169,7 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_get_exiftool_version() throws Exception {
+	public void it_should_get_exiftool_version() {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 		Version version = exifTool.getVersion();
@@ -185,18 +185,9 @@ public class ExifToolTest {
 		CommandExecutor executor = readPrivateField(exifTool, "executor");
 		ExecutionStrategy strategy = readPrivateField(exifTool, "strategy");
 
-		assertThat(path)
-				.isNotNull()
-				.isNotEmpty()
-				.isEqualTo(this.path);
-
-		assertThat(executor)
-				.isNotNull()
-				.isEqualTo(this.executor);
-
-		assertThat(strategy)
-				.isNotNull()
-				.isEqualTo(this.strategy);
+		assertThat(path).isEqualTo(this.path);
+		assertThat(executor).isEqualTo(this.executor);
+		assertThat(strategy).isEqualTo(this.strategy);
 
 		verify(this.strategy).isSupported(versionCaptor.capture());
 
@@ -208,15 +199,11 @@ public class ExifToolTest {
 
 		verify(this.executor).execute(cmdCaptor.capture());
 		assertThat(cmdCaptor.getValue()).isNotNull();
-		assertThat(cmdCaptor.getValue().getArguments())
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.containsExactly(this.path, "-ver");
+		assertThat(cmdCaptor.getValue().getArguments()).hasSize(2).containsExactly(this.path, "-ver");
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_instance_if_strategy_is_not_supported() throws Exception {
+	public void it_should_not_create_exiftool_instance_if_strategy_is_not_supported() {
 		when(strategy.isSupported(any(Version.class))).thenReturn(false);
 
 		thrown.expect(UnsupportedFeatureException.class);

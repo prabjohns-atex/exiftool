@@ -17,7 +17,7 @@
 
 package com.thebuzzmedia.exiftool.logs;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class LoggerSlf4jTest extends AbstractLoggerTest {
 
 	@Override
-	protected Logger getLogger() {
+	Logger getLogger() {
 		org.slf4j.Logger slf4j = mock(org.slf4j.Logger.class);
 
 		when(slf4j.isTraceEnabled()).thenReturn(true);
@@ -41,7 +41,7 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected Logger getLoggerWithoutDebug() {
+	Logger getLoggerWithoutDebug() {
 		org.slf4j.Logger slf4j = mock(org.slf4j.Logger.class);
 
 		when(slf4j.isTraceEnabled()).thenReturn(false);
@@ -54,7 +54,7 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected void verifyInfo(Logger logger, String message, Object... params) throws Exception {
+	void verifyInfo(Logger logger, String message, Object... params) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 
 		int nbParams = params.length;
@@ -73,7 +73,7 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected void verifyWarn(Logger logger, String message, Object... params) throws Exception {
+	void verifyWarn(Logger logger, String message, Object... params) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 
 		int nbParams = params.length;
@@ -92,7 +92,7 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected void verifyError(Logger logger, String message, Object... params) throws Exception {
+	void verifyError(Logger logger, String message, Object... params) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 
 		int nbParams = params.length;
@@ -111,19 +111,19 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected void verifyErrorException(Logger logger, String message, Exception ex) throws Exception {
+	void verifyErrorException(Logger logger, String message, Exception ex) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 		verify(slf4j).error(message, ex);
 	}
 
 	@Override
-	protected void verifyWarnException(Logger logger, String message, Exception ex) throws Exception {
+	void verifyWarnException(Logger logger, String message, Exception ex) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 		verify(slf4j).warn(message, ex);
 	}
 
 	@Override
-	protected void verifyDebug(Logger logger, String message, Object... params) throws Exception {
+	void verifyDebug(Logger logger, String message, Object... params) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 
 		int nbParams = params.length;
@@ -142,13 +142,13 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 	}
 
 	@Override
-	protected void verifyWithoutDebug(Logger logger, String message, Object... params) throws Exception {
+	void verifyWithoutDebug(Logger logger, String message, Object... params) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 		verify(slf4j, never()).debug(anyString(), any(Object[].class));
 	}
 
 	@Override
-	protected void verifyTrace(Logger logger, String message, Object... params) throws Exception {
+	void verifyTrace(Logger logger, String message, Object... params) {
 		org.slf4j.Logger slf4j = getSlf4j(logger);
 
 		int nbParams = params.length;
@@ -166,7 +166,7 @@ public class LoggerSlf4jTest extends AbstractLoggerTest {
 		}
 	}
 
-	private static org.slf4j.Logger getSlf4j(Logger logger) throws Exception {
+	private static org.slf4j.Logger getSlf4j(Logger logger) {
 		return readPrivateField(logger, "log");
 	}
 }

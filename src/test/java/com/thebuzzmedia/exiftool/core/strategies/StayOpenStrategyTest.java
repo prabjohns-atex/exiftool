@@ -36,8 +36,8 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.writePrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.writePrivateField;
 import static com.thebuzzmedia.exiftool.tests.TestConstants.BR;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -97,7 +97,7 @@ public class StayOpenStrategyTest {
 	}
 
 	@Test
-	public void it_should_create_stay_open_strategy() throws Exception {
+	public void it_should_create_stay_open_strategy() {
 		strategy = new StayOpenStrategy(scheduler);
 		assertThat(readPrivateField(strategy, "scheduler")).isSameAs(scheduler);
 		assertThat(readPrivateField(strategy, "process")).isNull();
@@ -116,9 +116,7 @@ public class StayOpenStrategyTest {
 		inOrder.verify(process).flush();
 		inOrder.verify(process).read(any(OutputHandler.class));
 
-		assertThat(readPrivateField(strategy, "process"))
-				.isNotNull()
-				.isSameAs(process);
+		assertThat(readPrivateField(strategy, "process")).isSameAs(process);
 
 		verifyStartProcess();
 		verifyExecutionArguments();
@@ -219,7 +217,7 @@ public class StayOpenStrategyTest {
 	}
 
 	@Test
-	public void it_should_check_if_process_is_running() throws Exception {
+	public void it_should_check_if_process_is_running() {
 		strategy = new StayOpenStrategy(scheduler);
 		assertThat(strategy.isRunning()).isFalse();
 
@@ -235,8 +233,6 @@ public class StayOpenStrategyTest {
 	private void verifyStartProcess() {
 		Command startCmd = cmdCaptor.getValue();
 		assertThat(startCmd.getArguments())
-				.isNotNull()
-				.isNotEmpty()
 				.hasSize(7)
 				.containsExactly(
 						exifTool, "-stay_open", "True", "-sep", "|>☃", "-@", "-"

@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.duration;
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.millis;
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.writePrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.writePrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.mock;
@@ -71,7 +71,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_create_default_scheduler() throws Exception {
+	public void it_should_create_default_scheduler() {
 		long delay = 10000;
 		DefaultScheduler scheduler = new DefaultScheduler(millis(delay));
 
@@ -81,7 +81,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_create_default_scheduler_with_specific_time_unit() throws Exception {
+	public void it_should_create_default_scheduler_with_specific_time_unit() {
 		long delay = 1;
 		TimeUnit timeUnit = TimeUnit.HOURS;
 
@@ -94,7 +94,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_start_scheduler() throws Exception {
+	public void it_should_start_scheduler() {
 		int delay = 10000;
 		TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 		SchedulerDuration executionDelay = duration(delay, timeUnit);
@@ -108,7 +108,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_stop_scheduler() throws Exception {
+	public void it_should_stop_scheduler() {
 		int delay = 10000;
 		TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 		SchedulerDuration executionDelay = duration(delay, timeUnit);
@@ -131,7 +131,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_shutdown_scheduler() throws Throwable {
+	public void it_should_shutdown_scheduler() {
 		int delay = 10000;
 		TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 		SchedulerDuration executionDelay = duration(delay, timeUnit);

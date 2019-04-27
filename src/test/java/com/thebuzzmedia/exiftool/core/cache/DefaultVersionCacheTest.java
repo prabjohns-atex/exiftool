@@ -21,7 +21,7 @@ import com.thebuzzmedia.exiftool.VersionCache;
 
 import java.util.concurrent.ConcurrentMap;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionUtils.readPrivateField;
+import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 
 public class DefaultVersionCacheTest extends AbstractVersionCacheTest<DefaultVersionCache> {
 
@@ -31,7 +31,7 @@ public class DefaultVersionCacheTest extends AbstractVersionCacheTest<DefaultVer
 	}
 
 	@Override
-	protected long size(VersionCache cache) throws Exception {
+	protected long size(VersionCache cache) {
 		return ((ConcurrentMap<?, ?>) readPrivateField(cache, "cache")).size();
 	}
 }

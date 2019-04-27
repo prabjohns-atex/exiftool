@@ -29,52 +29,52 @@ public class DefaultLoggerTest extends AbstractLoggerTest {
 	public SystemOutRule systemOutRule = new SystemOutRule();
 
 	@Override
-	protected Logger getLogger() {
+	Logger getLogger() {
 		return new DefaultLogger(true);
 	}
 
 	@Override
-	protected Logger getLoggerWithoutDebug() {
+	Logger getLoggerWithoutDebug() {
 		return new DefaultLogger(false);
 	}
 
 	@Override
-	protected void verifyInfo(Logger logger, String message, Object... params) {
+	void verifyInfo(Logger logger, String message, Object... params) {
 		verifyCall("INFO", message, params);
 	}
 
 	@Override
-	protected void verifyWarn(Logger logger, String message, Object... params) {
+	void verifyWarn(Logger logger, String message, Object... params) {
 		verifyCall("WARN", message, params);
 	}
 
 	@Override
-	protected void verifyError(Logger logger, String message, Object... params) {
+	void verifyError(Logger logger, String message, Object... params) {
 		verifyCall("ERROR", message, params);
 	}
 
 	@Override
-	protected void verifyErrorException(Logger logger, String message, Exception ex) {
+	void verifyErrorException(Logger logger, String message, Exception ex) {
 		verifyException("ERROR", message, ex);
 	}
 
 	@Override
-	protected void verifyWarnException(Logger logger, String message, Exception ex) {
+	void verifyWarnException(Logger logger, String message, Exception ex) {
 		verifyException("WARN", message, ex);
 	}
 
 	@Override
-	protected void verifyDebug(Logger logger, String message, Object... params) {
+	void verifyDebug(Logger logger, String message, Object... params) {
 		verifyCall("DEBUG", message, params);
 	}
 
 	@Override
-	protected void verifyWithoutDebug(Logger logger, String message, Object... params) {
+	void verifyWithoutDebug(Logger logger, String message, Object... params) {
 		assertThat(systemOutRule.getPendingOut()).isNotNull().isEmpty();
 	}
 
 	@Override
-	protected void verifyTrace(Logger logger, String message, Object... params) {
+	void verifyTrace(Logger logger, String message, Object... params) {
 		verifyCall("TRACE", message, params);
 	}
 
@@ -92,10 +92,7 @@ public class DefaultLoggerTest extends AbstractLoggerTest {
 		String template = toStringFormatMessage(message);
 		String msg = String.format(template, params);
 		String expectedMessage = String.format("[%s] [exiftool] %s" + BR, level, msg);
-		assertThat(systemOutRule.getPendingOut())
-				.isNotNull()
-				.isNotEmpty()
-				.isEqualTo(expectedMessage);
+		assertThat(systemOutRule.getPendingOut()).isEqualTo(expectedMessage);
 	}
 
 	private String toStringFormatMessage(String message) {

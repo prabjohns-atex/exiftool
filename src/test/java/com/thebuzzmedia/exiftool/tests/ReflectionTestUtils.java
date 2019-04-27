@@ -22,9 +22,9 @@ import java.lang.reflect.Field;
 /**
  * Reflection Utilities used in unit tests.
  */
-public final class ReflectionUtils {
+public final class ReflectionTestUtils {
 
-	private ReflectionUtils() {
+	private ReflectionTestUtils() {
 	}
 
 	/**
@@ -34,22 +34,33 @@ public final class ReflectionUtils {
 	 * @param name Name of the field to read.
 	 * @param <T> Type of class.
 	 * @return The value of given field (may be {@code null}).
-	 * @throws NoSuchFieldException   If the field does not exist.
-	 * @throws IllegalAccessException If the field is not accessible.
 	 */
-	public static <T> T readPrivateField(Object o, String name) throws NoSuchFieldException, IllegalAccessException {
+	public static <T> T readPrivateField(Object o, String name) {
 		return doRead(o.getClass(), o, name);
 	}
 
-	public static <T> T readStaticPrivateField(Class<?> klass, String name) throws NoSuchFieldException, IllegalAccessException {
+	/**
+	 * Read static private field on given class.
+	 *
+	 * @param klass The class.
+	 * @param name Name of the field.
+	 * @param <T> Type of field value.
+	 * @return The field value, may be {@code null}.
+	 */
+	public static <T> T readStaticPrivateField(Class<?> klass, String name) {
 		return doRead(klass, null, name);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> T doRead(Class<?> klass, Object instance, String name) throws NoSuchFieldException, IllegalAccessException {
-		Field field = klass.getDeclaredField(name);
-		field.setAccessible(true);
-		return (T) field.get(instance);
+	private static <T> T doRead(Class<?> klass, Object instance, String name) {
+		try {
+			Field field = klass.getDeclaredField(name);
+			field.setAccessible(true);
+			return (T) field.get(instance);
+		}
+		catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
 	}
 
 	/**
@@ -59,10 +70,8 @@ public final class ReflectionUtils {
 	 * @param name Name of the field to write.
 	 * @param value The value.
 	 * @param <T> Type of class.
-	 * @throws NoSuchFieldException   If the field does not exist.
-	 * @throws IllegalAccessException If the field is not accessible.
 	 */
-	public static <T> void writePrivateField(Object o, String name, T value) throws NoSuchFieldException, IllegalAccessException {
+	public static <T> void writePrivateField(Object o, String name, T value) {
 		doWrite(o.getClass(), o, name, value);
 	}
 
@@ -72,12 +81,15 @@ public final class ReflectionUtils {
 	 * @param name Name of the field to write.
 	 * @param value The value.
 	 * @param <T> Type of class.
-	 * @throws NoSuchFieldException   If the field does not exist.
-	 * @throws IllegalAccessException If the field is not accessible.
 	 */
-	private static <T, V> void doWrite(Class<T> klass, Object instance, String name, V value) throws NoSuchFieldException, IllegalAccessException {
-		Field field = klass.getDeclaredField(name);
-		field.setAccessible(true);
-		field.set(instance, value);
+	private static <T, V> void doWrite(Class<T> klass, Object instance, String name, V value) {
+		try {
+			Field field = klass.getDeclaredField(name);
+			field.setAccessible(true);
+			field.set(instance, value);
+		}
+		catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
 	}
 }

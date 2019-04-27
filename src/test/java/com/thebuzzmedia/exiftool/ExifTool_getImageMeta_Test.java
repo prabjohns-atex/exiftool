@@ -45,8 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thebuzzmedia.exiftool.tests.MockitoUtils.anyListOf;
-import static com.thebuzzmedia.exiftool.tests.TagUtils.parseTags;
+import static com.thebuzzmedia.exiftool.tests.MockitoTestUtils.anyListOf;
+import static com.thebuzzmedia.exiftool.tests.TagTestUtils.parseTags;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;

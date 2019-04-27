@@ -22,7 +22,6 @@ import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardTag;
-import com.thebuzzmedia.exiftool.tests.FileUtils;
 import com.thebuzzmedia.exiftool.tests.junit.OpenedProcessRule;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +32,8 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.util.Map;
 
-import static com.thebuzzmedia.exiftool.tests.TagUtils.parseTags;
+import static com.thebuzzmedia.exiftool.tests.FileTestUtils.copy;
+import static com.thebuzzmedia.exiftool.tests.TagTestUtils.parseTags;
 import static com.thebuzzmedia.exiftool.tests.TestConstants.EXIF_TOOL;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -132,7 +132,7 @@ public abstract class AbstractExifToolImgIT {
 	private void verifySetMeta(ExifTool exifTool) throws Exception {
 		File file = new File("src/test/resources/images/" + image());
 		File folder = tmp.newFolder("exif");
-		File tmpCopy = FileUtils.copy(file, folder);
+		File tmpCopy = copy(file, folder);
 		Map<Tag, String> meta = updateTags();
 
 		exifTool.setImageMeta(tmpCopy, StandardFormat.HUMAN_READABLE, meta);

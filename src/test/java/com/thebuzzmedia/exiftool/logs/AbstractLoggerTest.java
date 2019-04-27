@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class AbstractLoggerTest {
 
 	@Test
-	public void it_should_display_info() throws Exception {
+	public void it_should_display_info() {
 		String message = "message";
 		Logger logger = getLogger();
 		logger.info(message);
@@ -32,7 +32,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_info_with_one_parameter() throws Exception {
+	public void it_should_display_info_with_one_parameter() {
 		Logger logger = getLogger();
 		String message = "A message: {}";
 		String p1 = "test";
@@ -41,7 +41,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_info_with_two_parameters() throws Exception {
+	public void it_should_display_info_with_two_parameters() {
 		Logger logger = getLogger();
 		String message = "A message: {} // {}";
 		String p1 = "t1";
@@ -51,7 +51,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_warn() throws Exception {
+	public void it_should_display_warn() {
 		String message = "message";
 		Logger logger = getLogger();
 		logger.warn(message);
@@ -59,7 +59,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_warn_with_one_parameter() throws Exception {
+	public void it_should_display_warn_with_one_parameter() {
 		Logger logger = getLogger();
 		String message = "A message: {}";
 		String p1 = "test";
@@ -68,7 +68,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_warn_with_two_parameters() throws Exception {
+	public void it_should_display_warn_with_two_parameters() {
 		Logger logger = getLogger();
 		String message = "A message: {} // {}";
 		String p1 = "t1";
@@ -78,7 +78,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_error() throws Exception {
+	public void it_should_display_error() {
 		String message = "message";
 		Logger logger = getLogger();
 		logger.error(message);
@@ -86,7 +86,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_error_with_one_parameter() throws Exception {
+	public void it_should_display_error_with_one_parameter() {
 		Logger logger = getLogger();
 		String message = "A message: {}";
 		String p1 = "test";
@@ -95,7 +95,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_error_with_two_parameters() throws Exception {
+	public void it_should_display_error_with_two_parameters() {
 		Logger logger = getLogger();
 		String message = "A message: {} // {}";
 		String p1 = "t1";
@@ -105,7 +105,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_trace() throws Exception {
+	public void it_should_display_trace() {
 		String message = "message";
 		Logger logger = getLogger();
 		logger.trace(message);
@@ -113,7 +113,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_trace_with_one_parameter() throws Exception {
+	public void it_should_display_trace_with_one_parameter() {
 		Logger logger = getLogger();
 		String message = "A message: {}";
 		String p1 = "test";
@@ -122,7 +122,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_trace_with_two_parameters() throws Exception {
+	public void it_should_display_trace_with_two_parameters() {
 		Logger logger = getLogger();
 		String message = "A message: {} // {}";
 		String p1 = "t1";
@@ -132,7 +132,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_debug() throws Exception {
+	public void it_should_display_debug() {
 		String message = "message";
 		Logger logger = getLogger();
 		logger.debug(message);
@@ -140,7 +140,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_debug_with_one_parameter() throws Exception {
+	public void it_should_display_debug_with_one_parameter() {
 		Logger logger = getLogger();
 		String message = "A message: {}";
 		String p1 = "test";
@@ -149,7 +149,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_debug_with_two_parameters() throws Exception {
+	public void it_should_display_debug_with_two_parameters() {
 		Logger logger = getLogger();
 		String message = "A message: {} // {}";
 		String p1 = "t1";
@@ -159,7 +159,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_not_display_debug_if_disabled() throws Exception {
+	public void it_should_not_display_debug_if_disabled() {
 		String message = "message";
 		Logger loggerWithoutDebug = getLoggerWithoutDebug();
 		loggerWithoutDebug.debug(message);
@@ -176,7 +176,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_error_exception() throws Exception {
+	public void it_should_display_error_exception() {
 		RuntimeException ex = new RuntimeException("Error Message");
 		Logger logger = getLogger();
 		logger.error(ex.getMessage(), ex);
@@ -184,7 +184,7 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_warn_exception() throws Exception {
+	public void it_should_display_warn_exception() {
 		RuntimeException ex = new RuntimeException("Error Message");
 		Logger logger = getLogger();
 		logger.warn(ex.getMessage(), ex);
@@ -196,84 +196,76 @@ public abstract class AbstractLoggerTest {
 	 *
 	 * @return Logger.
 	 */
-	protected abstract Logger getLogger();
+	abstract Logger getLogger();
 
 	/**
 	 * Create logger, with debug disabled, to test.
 	 *
 	 * @return Logger.
 	 */
-	protected abstract Logger getLoggerWithoutDebug();
+	abstract Logger getLoggerWithoutDebug();
 
 	/**
 	 * Check info log.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyInfo(Logger logger, String message, Object... params) throws Exception;
+	abstract void verifyInfo(Logger logger, String message, Object... params);
 
 	/**
 	 * Check warn log.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyWarn(Logger logger, String message, Object... params) throws Exception;
+	abstract void verifyWarn(Logger logger, String message, Object... params);
 
 	/**
 	 * Check error log.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyError(Logger logger, String message, Object... params) throws Exception;
+	abstract void verifyError(Logger logger, String message, Object... params);
 
 	/**
 	 * Check exception log with ERROR level.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyErrorException(Logger logger, String message, Exception ex) throws Exception;
+	abstract void verifyErrorException(Logger logger, String message, Exception ex);
 
 	/**
 	 * Check exception log with WARN level.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyWarnException(Logger logger, String message, Exception ex) throws Exception;
+	abstract void verifyWarnException(Logger logger, String message, Exception ex);
 
 	/**
 	 * Check debug log.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyDebug(Logger logger, String message, Object... params) throws Exception;
+	abstract void verifyDebug(Logger logger, String message, Object... params);
 
 	/**
 	 * Check debug log with debug disabled.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyWithoutDebug(Logger logger, String message, Object... params) throws Exception;
+	abstract void verifyWithoutDebug(Logger logger, String message, Object... params);
 
 	/**
 	 * Check trace log.
 	 *
 	 * @param logger Tested logger.
 	 * @param message Expected message.
-	 * @throws Exception
 	 */
-	protected abstract void verifyTrace(Logger logger, String message, Object... params) throws Exception;
+	abstract void verifyTrace(Logger logger, String message, Object... params);
 }

@@ -40,11 +40,11 @@ import org.mockito.stubbing.Answer;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thebuzzmedia.exiftool.tests.MapUtils.newMap;
-import static com.thebuzzmedia.exiftool.tests.MockitoUtils.anyListOf;
+import static com.thebuzzmedia.exiftool.tests.MockitoTestUtils.anyListOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.ArgumentMatchers.any;
@@ -79,10 +79,10 @@ public class ExifTool_setImageMeta_Test {
 	@Before
 	public void setUp() throws Exception {
 		path = "exiftool";
-		tags = newMap(
-				StandardTag.APERTURE, "foo",
-				StandardTag.ARTIST, "bar"
-		);
+		tags = new LinkedHashMap<StandardTag, String>() {{
+			put(StandardTag.APERTURE, "foo");
+			put(StandardTag.ARTIST, "bar");
+		}};
 
 		CommandResult result = new CommandResultBuilder()
 				.output("9.36")
