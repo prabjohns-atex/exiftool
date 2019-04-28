@@ -32,7 +32,7 @@ import static java.util.Collections.unmodifiableList;
  * Default implementation for {@link Command} interface.
  * This implementation should only be used with {@link com.thebuzzmedia.exiftool.process.command.CommandBuilder} builder.
  */
-public class DefaultCommand implements Command {
+public final class DefaultCommand implements Command {
 
 	/**
 	 * List of arguments:
@@ -91,6 +91,6 @@ public class DefaultCommand implements Command {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(cmd);
+		return Objects.hash(cmd);
 	}
 }

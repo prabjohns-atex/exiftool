@@ -102,12 +102,12 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_check_that_version_is_not_supported() throws Exception {
+	public void it_should_check_that_version_is_not_supported() {
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		Collection<ExecutionStrategy> strategies = asList(s1, s2);
 
-		Version version = mock(Version.class);
+		Version version = new Version("8.0.0");
 		when(s1.isSupported(version)).thenReturn(true);
 		when(s2.isSupported(version)).thenReturn(false);
 
@@ -116,12 +116,12 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_check_that_version_is_supported() throws Exception {
+	public void it_should_check_that_version_is_supported() {
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		Collection<ExecutionStrategy> strategies = asList(s1, s2);
 
-		Version version = mock(Version.class);
+		Version version = new Version("9.0.0");
 		when(s1.isSupported(version)).thenReturn(true);
 		when(s2.isSupported(version)).thenReturn(true);
 
@@ -395,7 +395,7 @@ public class PoolStrategyTest {
 				.contains(ex1, ex2);
 	}
 
-	private PoolStrategy runPool(ExecutionStrategy s1, ExecutionStrategy s2, TaskFactory taskFactory) throws Exception {
+	private void runPool(ExecutionStrategy s1, ExecutionStrategy s2, TaskFactory taskFactory) throws Exception {
 		pool = new PoolStrategy(asList(s1, s2));
 
 		// Start a thread with strategy #1
@@ -415,8 +415,6 @@ public class PoolStrategyTest {
 		// Start new thread used to close pool.
 		Thread t2 = new Thread(taskFactory.create(pool));
 		t2.start();
-
-		return pool;
 	}
 
 	private interface TaskFactory {

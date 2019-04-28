@@ -18,6 +18,7 @@
 package com.thebuzzmedia.exiftool.process.executor;
 
 import com.thebuzzmedia.exiftool.process.CommandResult;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,34 +48,12 @@ public class DefaultCommandResultTest {
 	}
 
 	@Test
-	public void it_should_implement_equals() {
-		CommandResult r1 = new DefaultCommandResult(0, "");
-		CommandResult r2 = new DefaultCommandResult(0, "");
-		CommandResult r3 = new DefaultCommandResult(0, "");
-		CommandResult r4 = new DefaultCommandResult(1, "");
-
-		assertThat(r1).isNotEqualTo(r4);
-		assertThat(r1).isNotEqualTo(new Object());
-		assertThat(r1).isEqualTo(r1);
-
-		assertThat(r1.equals(r2)).isTrue();
-		assertThat(r2.equals(r1)).isTrue();
-
-		assertThat(r1.equals(r2)).isTrue();
-		assertThat(r2.equals(r3)).isTrue();
-		assertThat(r1.equals(r3)).isTrue();
-	}
-
-	@Test
-	public void it_should_implement_hashCode() {
-		CommandResult r1 = new DefaultCommandResult(0, "");
-		CommandResult r2 = new DefaultCommandResult(0, "");
-		assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+	public void it_should_implement_equals_and_hashCode() {
+		EqualsVerifier.forClass(DefaultCommandResult.class).verify();
 	}
 
 	@Test
 	public void it_should_implement_toString() {
-		CommandResult r1 = new DefaultCommandResult(0, "foo");
-		assertThat(r1.toString()).isEqualTo("[0] foo");
+		assertThat(new DefaultCommandResult(0, "foo")).hasToString("[0] foo");
 	}
 }

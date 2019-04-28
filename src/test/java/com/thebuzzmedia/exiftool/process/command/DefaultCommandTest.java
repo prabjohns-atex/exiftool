@@ -18,6 +18,7 @@
 package com.thebuzzmedia.exiftool.process.command;
 
 import com.thebuzzmedia.exiftool.process.Command;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -39,5 +40,10 @@ public class DefaultCommandTest {
 		Command command = new DefaultCommand("exiftool", asList("-ver", "-stay_open"));
 		assertThat(command.toString()).isEqualTo("exiftool -ver -stay_open");
 		assertThat(command.getArguments()).isEqualTo(asList("exiftool", "-ver", "-stay_open"));
+	}
+
+	@Test
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(DefaultCommand.class).verify();
 	}
 }

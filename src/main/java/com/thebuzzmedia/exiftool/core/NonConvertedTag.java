@@ -33,16 +33,24 @@ import java.util.Objects;
  *
  * @author Jack (jack@pixbits.com)
  */
+public final class NonConvertedTag implements Tag {
 
-public class NonConvertedTag implements Tag {
-
-	public static Tag of(final Tag original) {
+	/**
+	 * Create the tag from given original one.
+	 *
+	 * @param original The original one.
+	 * @return The new tag.
+	 */
+	public static Tag of(Tag original) {
 		return new NonConvertedTag(original);
 	}
 
+	/**
+	 * The original tag.
+	 */
 	private final Tag original;
 
-	public NonConvertedTag(Tag original) {
+	private NonConvertedTag(Tag original) {
 		this.original = original;
 	}
 

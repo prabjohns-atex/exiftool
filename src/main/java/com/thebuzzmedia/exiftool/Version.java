@@ -29,7 +29,7 @@ import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notBlank;
  *   <li>A patch identifier.</li>
  * </ul>
  */
-public class Version implements Comparable<Version> {
+public final class Version implements Comparable<Version> {
 
 	/**
 	 * Major Version Identifier.

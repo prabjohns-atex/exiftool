@@ -26,7 +26,7 @@ import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
 /**
  * A duration, represented by a delay and a time unit.
  */
-public class SchedulerDuration {
+public final class SchedulerDuration {
 
 	/**
 	 * Create new duration in seconds.

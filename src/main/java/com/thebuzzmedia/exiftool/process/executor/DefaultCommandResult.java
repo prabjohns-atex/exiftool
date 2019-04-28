@@ -37,7 +37,7 @@ import static java.lang.String.format;
  *
  * <strong>Note:</strong> this implementation is immutable and thread safe.
  */
-public class DefaultCommandResult implements CommandResult {
+public final class DefaultCommandResult implements CommandResult {
 
 	/**
 	 * Exit status, result of command execution.

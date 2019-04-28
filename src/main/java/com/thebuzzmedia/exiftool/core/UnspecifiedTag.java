@@ -36,9 +36,12 @@ import static com.thebuzzmedia.exiftool.Constants.SEPARATOR;
  * @author David Edwards (david@more.fool.me.uk)
  */
 
-public class UnspecifiedTag implements Tag {
+public final class UnspecifiedTag implements Tag {
 
-	private String name;
+	/**
+	 * The tag name.
+	 */
+	private final String name;
 
 	public UnspecifiedTag(String name) {
 		this.name = name;

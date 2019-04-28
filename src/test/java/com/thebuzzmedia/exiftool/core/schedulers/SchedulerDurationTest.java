@@ -17,6 +17,7 @@
 
 package com.thebuzzmedia.exiftool.core.schedulers;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -50,5 +51,10 @@ public class SchedulerDurationTest {
 		SchedulerDuration duration = millis(delay);
 		assertThat(duration.getDelay()).isEqualTo(delay);
 		assertThat(duration.getTimeUnit()).isEqualTo(TimeUnit.MILLISECONDS);
+	}
+
+	@Test
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(SchedulerDuration.class).verify();
 	}
 }

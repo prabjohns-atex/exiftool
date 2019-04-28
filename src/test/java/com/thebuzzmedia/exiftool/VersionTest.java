@@ -17,6 +17,7 @@
 
 package com.thebuzzmedia.exiftool;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,45 +44,14 @@ public class VersionTest {
 
 	@Test
 	public void it_should_implement_to_string() {
-		Version v1 = new Version("1");
-		assertThat(v1.toString()).isEqualTo("1.0.0");
-
-		Version v2 = new Version("1.1");
-		assertThat(v2.toString()).isEqualTo("1.1.0");
-
-		Version v3 = new Version("1.1.1");
-		assertThat(v3.toString()).isEqualTo("1.1.1");
+		assertThat(new Version("1")).hasToString("1.0.0");
+		assertThat(new Version("1.1")).hasToString("1.1.0");
+		assertThat(new Version("1.1.1")).hasToString("1.1.1");
 	}
 
 	@Test
-	public void it_should_implement_equals() {
-		Version v1 = new Version("1.1.1");
-		Version v2 = new Version("1.1.1");
-		Version v3 = new Version("1.1.1");
-		Version v4 = new Version("2.0.0");
-
-		assertThat(v1.equals(v4)).isFalse();
-		assertThat(v4.equals(v1)).isFalse();
-
-		// Reflective
-		assertThat(v1.equals(v1)).isTrue();
-
-		// Symmetric
-		assertThat(v1.equals(v2)).isTrue();
-		assertThat(v2.equals(v1)).isTrue();
-
-		// Transitive
-		assertThat(v2.equals(v3)).isTrue();
-		assertThat(v1.equals(v3)).isTrue();
-	}
-
-	@Test
-	public void it_should_implement_hash_code() {
-		Version v1 = new Version("1.1.1");
-		Version v2 = new Version("1.1.1");
-
-		assertThat(v1.equals(v2)).isTrue();
-		assertThat(v1.hashCode()).isEqualTo(v2.hashCode());
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(Version.class).verify();
 	}
 
 	@Test
