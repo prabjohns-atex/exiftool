@@ -17,6 +17,8 @@
 
 package com.thebuzzmedia.exiftool.core.schedulers;
 
+import com.thebuzzmedia.exiftool.commons.lang.ToStringBuilder;
+
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -100,12 +102,10 @@ public final class SchedulerDuration {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName()
-				+ "{ "
-				+   "delay: " + delay + ", "
-				+   "timeUnit: " + timeUnit
-				+ "}";
-
+		return ToStringBuilder.create(getClass())
+				.append("delay", delay)
+				.append("timeUnit", timeUnit)
+				.build();
 	}
 
 	@Override

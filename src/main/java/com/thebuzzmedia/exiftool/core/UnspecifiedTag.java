@@ -19,6 +19,7 @@
 package com.thebuzzmedia.exiftool.core;
 
 import com.thebuzzmedia.exiftool.Tag;
+import com.thebuzzmedia.exiftool.commons.lang.ToStringBuilder;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -66,7 +67,9 @@ public final class UnspecifiedTag implements Tag {
 
 	@Override
 	public String toString() {
-		return name;
+		return ToStringBuilder.create(getClass())
+				.append("name", name)
+				.build();
 	}
 
 	@Override

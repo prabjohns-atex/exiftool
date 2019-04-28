@@ -47,4 +47,14 @@ public class UnspecifiedTagTest {
 	public void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(UnspecifiedTag.class).verify();
 	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		UnspecifiedTag tag = new UnspecifiedTag("a name");
+		assertThat(tag).hasToString(
+				"UnspecifiedTag{" +
+					"name: \"a name\"" +
+				"}"
+		);
+	}
 }

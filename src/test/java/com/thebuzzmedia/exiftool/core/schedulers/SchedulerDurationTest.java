@@ -28,6 +28,7 @@ import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.second
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SchedulerDurationTest {
+
 	@Test
 	public void it_should_create_duration() {
 		long delay = 1;
@@ -56,5 +57,16 @@ public class SchedulerDurationTest {
 	@Test
 	public void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(SchedulerDuration.class).verify();
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		SchedulerDuration duration = millis(1);
+		assertThat(duration).hasToString(
+				"SchedulerDuration{" +
+					"delay: 1, " +
+					"timeUnit: MILLISECONDS" +
+				"}"
+		);
 	}
 }

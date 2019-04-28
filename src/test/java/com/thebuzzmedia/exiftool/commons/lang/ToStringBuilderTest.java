@@ -15,26 +15,29 @@
  * limitations under the License.
  */
 
-package com.thebuzzmedia.exiftool.core;
+package com.thebuzzmedia.exiftool.commons.lang;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NonConvertedTagTest {
+public class ToStringBuilderTest {
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
-		EqualsVerifier.forClass(NonConvertedTag.class).verify();
-	}
+	public void it_should_serialize_to_string() {
+		String value = ToStringBuilder.create(getClass())
+				.append("str", "given str")
+				.append("nb", 10L)
+				.append("time", TimeUnit.MILLISECONDS)
+				.build();
 
-	@Test
-	public void it_should_implement_to_string() {
-		NonConvertedTag t = NonConvertedTag.of(StandardTag.AUTHOR);
-		assertThat(t).hasToString(
-				"NonConvertedTag{" +
-					"original: AUTHOR" +
+		assertThat(value).isEqualTo(
+				"ToStringBuilderTest{" +
+					"str: \"given str\", " +
+					"nb: 10, " +
+					"time: MILLISECONDS" +
 				"}"
 		);
 	}

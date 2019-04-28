@@ -19,6 +19,7 @@
 package com.thebuzzmedia.exiftool.core;
 
 import com.thebuzzmedia.exiftool.Tag;
+import com.thebuzzmedia.exiftool.commons.lang.ToStringBuilder;
 
 import java.util.Objects;
 
@@ -41,7 +42,7 @@ public final class NonConvertedTag implements Tag {
 	 * @param original The original one.
 	 * @return The new tag.
 	 */
-	public static Tag of(Tag original) {
+	public static NonConvertedTag of(Tag original) {
 		return new NonConvertedTag(original);
 	}
 
@@ -71,7 +72,9 @@ public final class NonConvertedTag implements Tag {
 
 	@Override
 	public String toString() {
-		return original.toString();
+		return ToStringBuilder.create(getClass())
+				.append("original", original)
+				.build();
 	}
 
 	@Override
