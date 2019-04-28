@@ -27,10 +27,9 @@ import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
 import com.thebuzzmedia.exiftool.tests.builders.FileBuilder;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -49,7 +48,7 @@ import static com.thebuzzmedia.exiftool.tests.MockitoTestUtils.anyListOf;
 import static com.thebuzzmedia.exiftool.tests.TagTestUtils.parseTags;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
@@ -60,9 +59,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ExifTool_getImageMeta_Test {
-
-	@Rule
-	public ExpectedException thrown = none();
 
 	private String path;
 
@@ -94,55 +90,99 @@ public class ExifTool_getImageMeta_Test {
 	}
 
 	@Test
-	public void it_should_fail_if_image_is_null() throws Exception {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Image cannot be null and must be a valid stream of image data.");
-		exifTool.getImageMeta(null, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
+	public void it_should_fail_if_image_is_null() {
+		ThrowingCallable getImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.getImageMeta(null, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
+			}
+		};
+
+		assertThatThrownBy(getImageMeta)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("Image cannot be null and must be a valid stream of image data.");
 	}
 
 	@Test
-	public void it_should_fail_if_format_is_null() throws Exception {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Format cannot be null.");
-		exifTool.getImageMeta(mock(File.class), null, asList((Tag[]) StandardTag.values()));
+	public void it_should_fail_if_format_is_null() {
+		ThrowingCallable getImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.getImageMeta(mock(File.class), null, asList((Tag[]) StandardTag.values()));
+			}
+		};
+
+		assertThatThrownBy(getImageMeta)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("Format cannot be null.");
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_null() throws Exception {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
-		exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, null);
+	public void it_should_fail_if_tags_is_null() {
+		ThrowingCallable getImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, null);
+			}
+		};
+
+		assertThatThrownBy(getImageMeta)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_empty() throws Exception {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
-		exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.<Tag>emptyList());
+	public void it_should_fail_if_tags_is_empty() {
+		ThrowingCallable getImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.<Tag>emptyList());
+			}
+		};
+
+		assertThatThrownBy(getImageMeta)
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
 	}
 
 	@Test
-	public void it_should_fail_with_unknown_file() throws Exception {
-		thrown.expect(UnreadableFileException.class);
-		thrown.expectMessage("Unable to read the given image [/tmp/foo.png], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.");
+	public void it_should_fail_with_unknown_file() {
+		final File image = new FileBuilder("foo.png").exists(false).build();
 
-		File image = new FileBuilder("foo.png")
-				.exists(false)
-				.build();
+		ThrowingCallable getImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
+			}
+		};
 
-		exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
+		assertThatThrownBy(getImageMeta)
+				.isInstanceOf(UnreadableFileException.class)
+				.hasMessage(
+						"Unable to read the given image [/tmp/foo.png], " +
+								"ensure that the image exists at the given withPath and that the " +
+								"executing Java process has permissions to read it."
+				);
 	}
 
 	@Test
-	public void it_should_fail_with_non_readable_file() throws Exception {
-		thrown.expect(UnreadableFileException.class);
-		thrown.expectMessage("Unable to read the given image [/tmp/foo.png], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.");
+	public void it_should_fail_with_non_readable_file() {
+		final File image = new FileBuilder("foo.png").canRead(false).build();
 
-		File image = new FileBuilder("foo.png")
-				.canRead(false)
-				.build();
+		ThrowingCallable getImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
+			}
+		};
 
-		exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
+		assertThatThrownBy(getImageMeta)
+				.isInstanceOf(UnreadableFileException.class)
+				.hasMessage(
+						"Unable to read the given image [/tmp/foo.png], " +
+								"ensure that the image exists at the given withPath and that the " +
+								"executing Java process has permissions to read it."
+				);
 	}
 
 	@Test
@@ -279,13 +319,13 @@ public class ExifTool_getImageMeta_Test {
 
 		private final String end;
 
-		public ReadTagsAnswer(Map<Tag, String> tags, String end) {
+		private ReadTagsAnswer(Map<Tag, String> tags, String end) {
 			this.tags = tags;
 			this.end = end;
 		}
 
 		@Override
-		public Void answer(InvocationOnMock invocation) throws Throwable {
+		public Void answer(InvocationOnMock invocation) {
 			OutputHandler handler = (OutputHandler) invocation.getArguments()[3];
 
 			// Read tags

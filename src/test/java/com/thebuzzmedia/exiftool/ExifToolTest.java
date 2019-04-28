@@ -22,10 +22,9 @@ import com.thebuzzmedia.exiftool.process.Command;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -35,7 +34,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readStaticPrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -45,9 +44,6 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("resource")
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class ExifToolTest {
-
-	@Rule
-	public ExpectedException thrown = none();
 
 	@Mock
 	private CommandExecutor executor;
@@ -61,15 +57,13 @@ public class ExifToolTest {
 	@Captor
 	private ArgumentCaptor<Version> versionCaptor;
 
-	private CommandResult v9_36;
-
 	private String path;
 
 	@Before
 	public void setUp() throws Exception {
 		path = "exiftool";
 
-		v9_36 = new CommandResultBuilder()
+		CommandResult v9_36 = new CommandResultBuilder()
 				.output("9.36")
 				.build();
 
@@ -84,37 +78,72 @@ public class ExifToolTest {
 
 	@Test
 	public void it_should_not_create_exiftool_if_path_is_null() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("ExifTool path should not be null");
-		new ExifTool(null, executor, strategy);
+		ThrowingCallable newExifTool = new ThrowingCallable() {
+			@Override
+			public void call() {
+				new ExifTool(null, executor, strategy);
+			}
+		};
+
+		assertThatThrownBy(newExifTool)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("ExifTool path should not be null");
 	}
 
 	@Test
 	public void it_should_not_create_exiftool_if_path_is_empty() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("ExifTool path should not be null");
-		new ExifTool("", executor, strategy);
+		ThrowingCallable newExifTool = new ThrowingCallable() {
+			@Override
+			public void call() {
+				new ExifTool("", executor, strategy);
+			}
+		};
+
+		assertThatThrownBy(newExifTool)
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("ExifTool path should not be null");
 	}
 
 	@Test
 	public void it_should_not_create_exiftool_if_path_is_blank() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("ExifTool path should not be null");
-		new ExifTool("  ", executor, strategy);
+		ThrowingCallable newExifTool = new ThrowingCallable() {
+			@Override
+			public void call() {
+				new ExifTool("  ", executor, strategy);
+			}
+		};
+
+		assertThatThrownBy(newExifTool)
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("ExifTool path should not be null");
 	}
 
 	@Test
 	public void it_should_not_create_exiftool_if_executor_is_null() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Executor should not be null");
-		new ExifTool(path, null, strategy);
+		ThrowingCallable newExifTool = new ThrowingCallable() {
+			@Override
+			public void call() {
+				new ExifTool(path, null, strategy);
+			}
+		};
+
+		assertThatThrownBy(newExifTool)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("Executor should not be null");
 	}
 
 	@Test
 	public void it_should_not_create_exiftool_if_strategy_is_null() {
-		thrown.expect(NullPointerException.class);
-		thrown.expectMessage("Execution strategy should not be null");
-		new ExifTool(path, executor, null);
+		ThrowingCallable newExifTool = new ThrowingCallable() {
+			@Override
+			public void call() {
+				new ExifTool(path, executor, null);
+			}
+		};
+
+		assertThatThrownBy(newExifTool)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("Execution strategy should not be null");
 	}
 
 	@Test
@@ -206,13 +235,19 @@ public class ExifToolTest {
 	public void it_should_not_create_exiftool_instance_if_strategy_is_not_supported() {
 		when(strategy.isSupported(any(Version.class))).thenReturn(false);
 
-		thrown.expect(UnsupportedFeatureException.class);
-		thrown.expectMessage(
-				"Use of feature requires version 9.36.0 or higher of the native ExifTool program. " +
-						"The version of ExifTool referenced by the path '" + path + "' is not high enough. " +
-						"You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception."
-		);
+		ThrowingCallable newExifTool = new ThrowingCallable() {
+			@Override
+			public void call() {
+				new ExifTool(path, executor, strategy);
+			}
+		};
 
-		new ExifTool(path, executor, strategy);
+		assertThatThrownBy(newExifTool)
+				.isInstanceOf(UnsupportedFeatureException.class)
+				.hasMessage(
+						"Use of feature requires version 9.36.0 or higher of the native ExifTool program. " +
+								"The version of ExifTool referenced by the path '" + path + "' is not high enough. " +
+								"You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception."
+				);
 	}
 }

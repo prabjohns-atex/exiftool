@@ -17,9 +17,8 @@
 
 package com.thebuzzmedia.exiftool.core.schedulers;
 
-import org.junit.Rule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
@@ -29,7 +28,7 @@ import java.util.TimerTask;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.writePrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -38,14 +37,18 @@ import static org.mockito.Mockito.verify;
 
 public class TimerSchedulerTest {
 
-	@Rule
-	public ExpectedException thrown = none();
-
 	@Test
 	public void it_should_not_create_scheduler_for_invalid_delay() {
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("Delay must be strictly positive");
-		new TimerScheduler("foo", -1);
+		ThrowingCallable newTimerScheduler = new ThrowingCallable() {
+			@Override
+			public void call() {
+				new TimerScheduler("foo", -1);
+			}
+		};
+
+		assertThatThrownBy(newTimerScheduler)
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Delay must be strictly positive");
 	}
 
 	@Test
