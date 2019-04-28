@@ -17,8 +17,7 @@
 
 package com.thebuzzmedia.exiftool.core.schedulers;
 
-import com.thebuzzmedia.exiftool.commons.lang.Objects;
-
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isPositive;
@@ -108,6 +107,7 @@ public class SchedulerDuration {
 				+ "}";
 
 	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
@@ -116,7 +116,7 @@ public class SchedulerDuration {
 
 		if (o instanceof SchedulerDuration) {
 			SchedulerDuration d = (SchedulerDuration) o;
-			return delay == d.delay && timeUnit == d.timeUnit;
+			return Objects.equals(delay, d.delay) && Objects.equals(timeUnit, d.timeUnit);
 		}
 
 		return false;
@@ -124,6 +124,6 @@ public class SchedulerDuration {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(delay, timeUnit);
+		return Objects.hash(delay, timeUnit);
 	}
 }

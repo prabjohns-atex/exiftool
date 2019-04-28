@@ -17,7 +17,7 @@
 
 package com.thebuzzmedia.exiftool;
 
-import com.thebuzzmedia.exiftool.commons.lang.Objects;
+import java.util.Objects;
 
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notBlank;
 
@@ -95,7 +95,7 @@ public class Version implements Comparable<Version> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(major, minor, patch);
+		return Objects.hash(major, minor, patch);
 	}
 
 	@Override
@@ -106,9 +106,7 @@ public class Version implements Comparable<Version> {
 
 		if (o instanceof Version) {
 			Version v = (Version) o;
-			return v.major == major
-					&& v.minor == minor
-					&& v.patch == patch;
+			return Objects.equals(v.major, major) && Objects.equals(v.minor, minor) && Objects.equals(v.patch, patch);
 		}
 
 		return false;

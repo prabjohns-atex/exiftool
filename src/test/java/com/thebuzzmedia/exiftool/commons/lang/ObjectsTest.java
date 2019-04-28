@@ -30,9 +30,7 @@ public class ObjectsTest {
 
 		String foo = Objects.firstNonNull(v1, v2);
 
-		assertThat(foo)
-				.isNotNull()
-				.isEqualTo(v1);
+		assertThat(foo).isEqualTo(v1);
 	}
 
 	@Test
@@ -42,9 +40,7 @@ public class ObjectsTest {
 
 		String foo = Objects.firstNonNull(v1, v2);
 
-		assertThat(foo)
-				.isNotNull()
-				.isEqualTo(v2);
+		assertThat(foo).isEqualTo(v2);
 	}
 
 	@Test
@@ -57,28 +53,6 @@ public class ObjectsTest {
 
 		String foo = Objects.firstNonNull(v1, v2, o1, o2, o3);
 
-		assertThat(foo)
-				.isNotNull()
-				.isEqualTo(o2);
-	}
-
-	@Test
-	public void it_should_compute_hash_code() {
-		assertThat(Objects.hashCode((Object[]) null)).isZero();
-		assertThat(Objects.hashCode("foobar")).isNotNull();
-
-		int h1 = Objects.hashCode("foo");
-		int h2 = Objects.hashCode("foo");
-		assertThat(h1).isEqualTo(h2);
-	}
-
-	@Test
-	public void it_should_get_equality_of_values() {
-		assertThat(Objects.equals(null, null)).isTrue();
-		assertThat(Objects.equals(null, "foo")).isFalse();
-		assertThat(Objects.equals("foo", null)).isFalse();
-		assertThat(Objects.equals("foo", "foo")).isTrue();
-		assertThat(Objects.equals("bar", "foo")).isFalse();
-		assertThat(Objects.equals("foo", "bar")).isFalse();
+		assertThat(foo).isEqualTo(o2);
 	}
 }

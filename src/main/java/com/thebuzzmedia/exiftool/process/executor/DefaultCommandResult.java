@@ -17,8 +17,9 @@
 
 package com.thebuzzmedia.exiftool.process.executor;
 
-import com.thebuzzmedia.exiftool.commons.lang.Objects;
 import com.thebuzzmedia.exiftool.process.CommandResult;
+
+import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -92,8 +93,7 @@ public class DefaultCommandResult implements CommandResult {
 
 		if (o instanceof DefaultCommandResult) {
 			DefaultCommandResult r = (DefaultCommandResult) o;
-			return Objects.equals(exitStatus, r.exitStatus)
-					&& Objects.equals(output, r.output);
+			return Objects.equals(exitStatus, r.exitStatus) && Objects.equals(output, r.output);
 		}
 
 		return false;
@@ -101,6 +101,6 @@ public class DefaultCommandResult implements CommandResult {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(exitStatus, output);
+		return Objects.hash(exitStatus, output);
 	}
 }

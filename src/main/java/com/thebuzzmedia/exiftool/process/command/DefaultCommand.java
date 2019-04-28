@@ -17,11 +17,11 @@
 
 package com.thebuzzmedia.exiftool.process.command;
 
-import com.thebuzzmedia.exiftool.commons.lang.Objects;
 import com.thebuzzmedia.exiftool.process.Command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.thebuzzmedia.exiftool.commons.iterables.Collections.isEmpty;
 import static com.thebuzzmedia.exiftool.commons.iterables.Collections.join;
