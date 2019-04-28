@@ -27,7 +27,7 @@ import static java.lang.String.format;
  * not support (i.e. the version isn't new enough).
  *
  * @author Riyad Kalla (software@thebuzzmedia.com)
- * @author Mickael Jeanroy (mickael.jeanroy@gmail.com)
+ * @author Mickael Jeanroy
  * @since 1.1
  */
 @SuppressWarnings("serial")

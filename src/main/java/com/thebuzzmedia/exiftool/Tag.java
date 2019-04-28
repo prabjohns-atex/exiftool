@@ -47,7 +47,7 @@ package com.thebuzzmedia.exiftool;
  * any way they wish.
  *
  * @author Riyad Kalla (software@thebuzzmedia.com)
- * @author Mickael Jeanroy (mickael.jeanroy@gmail.com)
+ * @author Mickael Jeanroy
  * @since 1.1
  */
 public interface Tag {

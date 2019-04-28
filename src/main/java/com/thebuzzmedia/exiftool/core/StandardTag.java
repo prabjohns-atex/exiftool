@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
  * used tag that should be added to it.
  *
  * @author Riyad Kalla (software@thebuzzmedia.com)
- * @author Mickael Jeanroy (mickael.jeanroy@gmail.com)
+ * @author Mickael Jeanroy
  * @since 1.1
  */
 public enum StandardTag implements Tag {

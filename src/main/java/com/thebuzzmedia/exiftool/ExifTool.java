@@ -267,7 +267,7 @@ import static java.util.Collections.singleton;
  * that you might want to look at.
  *
  * @author Riyad Kalla (software@thebuzzmedia.com)
- * @author Mickael Jeanroy (mickael.jeanroy@gmail.com)
+ * @author Mickael Jeanroy
  * @since 1.1
  */
 public class ExifTool implements AutoCloseable {
