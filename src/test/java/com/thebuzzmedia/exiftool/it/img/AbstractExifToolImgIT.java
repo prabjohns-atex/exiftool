@@ -173,11 +173,12 @@ public abstract class AbstractExifToolImgIT {
 		Map<String, Object> parsedResults = parseTags(results);
 		for (Map.Entry<Tag, String> entry : expectations.entrySet()) {
 			Tag tag = entry.getKey();
+			Object result = parsedResults.get(tag.getName());
+
 			assertThat(parsedResults)
 					.overridingErrorMessage(String.format("Result should contain tag %s", tag))
 					.containsKey(tag.getDisplayName());
 
-			Object result = parsedResults.get(tag.getName());
 			assertThat(((String[]) result)[0])
 					.overridingErrorMessage(String.format("Result should contain tag %s with value %s", tag, entry.getValue()))
 					.isEqualToIgnoringCase(entry.getValue());
