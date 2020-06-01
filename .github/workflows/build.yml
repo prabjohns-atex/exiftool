@@ -26,7 +26,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
+        os: [ ubuntu-latest, macos-latest ]
         java: [ 7, 8, 9, 10, 11, 12, 13 ]
 
     steps:
