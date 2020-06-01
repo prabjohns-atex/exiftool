@@ -24,11 +24,14 @@ import com.thebuzzmedia.exiftool.exceptions.ExifToolNotFoundException;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.util.UUID;
 
 import static com.thebuzzmedia.exiftool.tests.TestConstants.EXIF_TOOL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.filter;
 
 public abstract class AbstractExifToolIT {
 
@@ -47,10 +50,10 @@ public abstract class AbstractExifToolIT {
 
 	@Test
 	public void it_should_fail_with_missing_exiftool() {
-		final String path = "/" + UUID.randomUUID() + "/exiftool";
+		final String separator = FileSystems.getDefault().getSeparator();
+		final String path = separator + UUID.randomUUID() + separator + "exiftool";
 		final ExifToolBuilder builder = create().withPath(path);
-
-		ThrowingCallable build = new ThrowingCallable() {
+		final ThrowingCallable build = new ThrowingCallable() {
 			@Override
 			public void call() {
 				builder.build();
@@ -60,7 +63,7 @@ public abstract class AbstractExifToolIT {
 		assertThatThrownBy(build)
 				.isInstanceOf(ExifToolNotFoundException.class)
 				.hasMessageContaining("Cannot run program \"" + path + "\"")
-				.hasMessageEndingWith("error=2, No such file or directory");
+				.hasMessageContaining("error=2");
 	}
 
 	abstract ExifToolBuilder create();

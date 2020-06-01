@@ -57,12 +57,12 @@ public class ExifToolCustomExecutorIT extends AbstractExifToolIT {
 		}
 
 		@Override
-		public CommandResult execute(Command command, OutputHandler handler) throws IOException {
+		public CommandResult execute(Command command, OutputHandler handler) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public CommandProcess start(Command command) throws IOException {
+		public CommandProcess start(Command command) {
 			throw new UnsupportedOperationException();
 		}
 

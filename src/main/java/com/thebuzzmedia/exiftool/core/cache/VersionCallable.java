@@ -65,7 +65,7 @@ class VersionCallable implements Callable<Version> {
 	}
 
 	@Override
-	public Version call() throws Exception {
+	public Version call() {
 		log.debug("Checking exiftool (path: {}) version", exifTool);
 
 		try {
@@ -93,40 +93,7 @@ class VersionCallable implements Callable<Version> {
 		}
 		catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
-			throw new ExifToolNotFoundException(ex, exifTool, failure(ex));
-		}
-	}
-
-	private static CommandResult failure(IOException ex) {
-		return new IOExceptionResult(ex.getMessage());
-	}
-
-	private static class IOExceptionResult implements CommandResult {
-
-		private final String message;
-
-		private IOExceptionResult(String message) {
-			this.message = message;
-		}
-
-		@Override
-		public int getExitStatus() {
-			return -1;
-		}
-
-		@Override
-		public boolean isSuccess() {
-			return false;
-		}
-
-		@Override
-		public boolean isFailure() {
-			return true;
-		}
-
-		@Override
-		public String getOutput() {
-			return message;
+			throw new ExifToolNotFoundException(ex, exifTool);
 		}
 	}
 }

@@ -54,9 +54,8 @@ public class ExifToolNotFoundException extends AbstractExifException {
 	 *
 	 * @param ex The original exception.
 	 * @param path ExifTool path defined during command execution.
-	 * @param result The result triggered during command execution.
 	 */
-	public ExifToolNotFoundException(IOException ex, String path, CommandResult result) {
+	public ExifToolNotFoundException(IOException ex, String path) {
 		super(ex);
 		this.path = path;
 		this.result = null;
