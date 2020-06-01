@@ -19,7 +19,6 @@ package com.thebuzzmedia.exiftool.it.img;
 
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
-import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +27,12 @@ import java.util.Map;
 public class ExifTool_IMG12_IT extends AbstractExifToolImgIT {
 
 	@Override
-	protected String image() {
+	String image() {
 		return "83357962-80c4b700-a378-11ea-9b05-63745c0c7fcf.jpg";
 	}
 
 	@Override
-	protected Map<Tag, String> expectations() {
+	Map<Tag, String> expectations() {
 		return new HashMap<Tag, String>() {
 			{
 				put(StandardTag.ISO, "200");
@@ -72,7 +71,7 @@ public class ExifTool_IMG12_IT extends AbstractExifToolImgIT {
 	}
 
 	@Override
-	protected Map<Tag, String> updateTags() {
+	Map<Tag, String> updateTags() {
 		return new HashMap<Tag, String>() {{
 			put(StandardTag.COMMENT, "Hello =World");
 			put(StandardTag.AUTHOR, "mjeanroy");

@@ -34,7 +34,6 @@ import org.assertj.core.api.Condition;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.io.File;
 import java.util.concurrent.BlockingQueue;
@@ -44,8 +43,8 @@ import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.durati
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ExifToolBuilderTest {
 
@@ -55,22 +54,18 @@ public class ExifToolBuilderTest {
 			"exiftool.processCleanupDelay"
 	);
 
-	@Mock
 	private CommandExecutor executor;
-
-	@Mock
 	private ExecutionStrategy strategy;
-
-	@Mock
 	private Scheduler scheduler;
-
 	private String path;
 
 	private ExifToolBuilder builder;
 
 	@Before
 	public void setUp() throws Exception {
-		initMocks(this);
+		executor = mock(CommandExecutor.class);
+		strategy = mock(ExecutionStrategy.class);
+		scheduler = mock(Scheduler.class);
 
 		builder = new ExifToolBuilder();
 		path = "/foo";

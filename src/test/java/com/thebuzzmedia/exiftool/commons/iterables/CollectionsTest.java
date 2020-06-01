@@ -21,9 +21,12 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -35,21 +38,28 @@ public class CollectionsTest {
 	@Test
 	public void it_should_check_if_collection_is_empty() {
 		assertThat(Collections.isEmpty(null)).isTrue();
-		assertThat(Collections.isEmpty(java.util.Collections.emptyList())).isTrue();
+		assertThat(Collections.isEmpty(emptyList())).isTrue();
 		assertThat(Collections.isEmpty(asList(1, 2, 3))).isFalse();
+	}
+
+	@Test
+	public void it_should_check_if_collection_is_not_empty() {
+		assertThat(Collections.isNotEmpty(null)).isFalse();
+		assertThat(Collections.isNotEmpty(emptyList())).isFalse();
+		assertThat(Collections.isNotEmpty(asList(1, 2, 3))).isTrue();
 	}
 
 	@Test
 	public void it_should_get_size_of_collection() {
 		assertThat(Collections.size(null)).isZero();
-		assertThat(Collections.size(java.util.Collections.emptyList())).isZero();
+		assertThat(Collections.size(emptyList())).isZero();
 		assertThat(Collections.size(asList(1, 2, 3))).isEqualTo(3);
 	}
 
 	@Test
 	public void it_should_join_collection() {
 		assertThat(Collections.join(null, " ")).isEqualTo("");
-		assertThat(Collections.join(java.util.Collections.emptyList(), " ")).isEqualTo("");
+		assertThat(Collections.join(emptyList(), " ")).isEqualTo("");
 		assertThat(Collections.join(asList("foo"), " ")).isEqualTo("foo");
 		assertThat(Collections.join(asList("foo", "bar"), " ")).isEqualTo("foo bar");
 	}
@@ -85,5 +95,37 @@ public class CollectionsTest {
 						input1 + "from_mapper",
 						input2 + "from_mapper"
 				);
+	}
+
+	@Test
+	public void it_should_add_all_iterable_elements_in_a_null_safe_way_1() {
+		Collection<String> collection = new ArrayList<>();
+		Iterable<String> iterable = null;
+
+		Collections.addAll(collection, iterable);
+
+		assertThat(collection).isNotNull().isEmpty();
+	}
+
+	@Test
+	public void it_should_add_all_iterable_elements_in_a_null_safe_way_2() {
+		Collection<String> collection = null;
+		Iterable<String> iterable = new ArrayList<>();
+
+		Collections.addAll(collection, iterable);
+
+		assertThat(collection).isNull();
+	}
+
+	@Test
+	public void it_should_add_all_iterable_elements() {
+		Collection<String> collection = new ArrayList<>();
+		Iterable<String> iterable = asList("one", "two", "three");
+
+		Collections.addAll(collection, iterable);
+
+		assertThat(collection).hasSameSizeAs(iterable).containsExactlyElementsOf(
+				iterable
+		);
 	}
 }

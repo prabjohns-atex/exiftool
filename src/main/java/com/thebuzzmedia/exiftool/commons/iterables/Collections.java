@@ -36,10 +36,21 @@ public final class Collections {
 	 *
 	 * @param values Collection of values.
 	 * @param <T> Type of element in collection.
-	 * @return True if collection is empty (null or empty), false otherwise.
+	 * @return {@code true} if collection is empty ({@code null} or empty), {@code false} otherwise.
 	 */
 	public static <T> boolean isEmpty(Collection<T> values) {
 		return values == null || values.isEmpty();
+	}
+
+	/**
+	 * Check if collection is not empty (not {@code null} and not empty).
+	 *
+	 * @param values Collection of values.
+	 * @param <T> Type of element in collection.
+	 * @return {@code true} if collection is not empty (not {@code null} and not empty), {@code false} otherwise.
+	 */
+	public static <T> boolean isNotEmpty(Collection<T> values) {
+		return !isEmpty(values);
 	}
 
 	/**
@@ -87,7 +98,7 @@ public final class Collections {
 	 * @param <U> Type of output.
 	 * @return New list of outputs.
 	 */
-	public static <T, U> List<U> map(List<T> inputs, Mapper<T, U> mapper) {
+	public static <T, U> List<U> map(Collection<T> inputs, Mapper<T, U> mapper) {
 		List<U> outputs = new ArrayList<>(inputs.size());
 		for (T input : inputs) {
 			U output = mapper.map(input);
@@ -95,5 +106,22 @@ public final class Collections {
 		}
 
 		return outputs;
+	}
+
+	/**
+	 * Add all elements of given iterable structure to given collection.
+	 *
+	 * @param collection The collection.
+	 * @param iterable The iterable structure.
+	 * @param <T> Type of elements.
+	 */
+	public static <T> void addAll(Collection<T> collection, Iterable<T> iterable) {
+		if (iterable == null || collection == null) {
+			return;
+		}
+
+		for (T value : iterable) {
+			collection.add(value);
+		}
 	}
 }

@@ -18,6 +18,7 @@
 package com.thebuzzmedia.exiftool;
 
 import com.thebuzzmedia.exiftool.core.StandardFormat;
+import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.exceptions.UnwritableFileException;
 import com.thebuzzmedia.exiftool.process.Command;
@@ -29,12 +30,8 @@ import com.thebuzzmedia.exiftool.tests.builders.FileBuilder;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.io.File;
@@ -54,26 +51,19 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 public class ExifTool_setImageMeta_Test {
 
 	private String path;
-
-	@Mock
 	private CommandExecutor executor;
-
-	@Mock
 	private ExecutionStrategy strategy;
-
-	@Captor
-	private ArgumentCaptor<List<String>> argsCaptor;
+	private Map<StandardTag, String> tags;
 
 	private ExifTool exifTool;
 
-	private Map<StandardTag, String> tags;
-
 	@Before
 	public void setUp() throws Exception {
+		executor = mock(CommandExecutor.class);
+		strategy = mock(ExecutionStrategy.class);
 		path = "exiftool";
 		tags = new LinkedHashMap<StandardTag, String>() {{
 			put(StandardTag.APERTURE, "foo");
@@ -108,10 +98,12 @@ public class ExifTool_setImageMeta_Test {
 
 	@Test
 	public void it_should_fail_if_format_is_null() {
-		ThrowingCallable setImageMeta = new ThrowingCallable() {
+		final Format format = null;
+		final Map<StandardTag, String> tags = ExifTool_setImageMeta_Test.this.tags;
+		final ThrowingCallable setImageMeta = new ThrowingCallable() {
 			@Override
 			public void call() throws Throwable {
-				exifTool.setImageMeta(mock(File.class), null, tags);
+				exifTool.setImageMeta(mock(File.class), format, tags);
 			}
 		};
 
@@ -121,11 +113,29 @@ public class ExifTool_setImageMeta_Test {
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_null() {
-		ThrowingCallable setImageMeta = new ThrowingCallable() {
+	public void it_should_fail_if_options_is_null() {
+		final ExifToolOptions options = null;
+		final Map<StandardTag, String> tags = ExifTool_setImageMeta_Test.this.tags;
+		final ThrowingCallable setImageMeta = new ThrowingCallable() {
 			@Override
 			public void call() throws Throwable {
-				exifTool.setImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, null);
+				exifTool.setImageMeta(mock(File.class), options, tags);
+			}
+		};
+
+		assertThatThrownBy(setImageMeta)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("Options cannot be null.");
+	}
+
+	@Test
+	public void it_should_fail_if_tags_is_null() {
+		final StandardFormat format = StandardFormat.HUMAN_READABLE;
+		final Map<? extends Tag, String> tags = null;
+		final ThrowingCallable setImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.setImageMeta(mock(File.class), format, tags);
 			}
 		};
 
@@ -189,82 +199,106 @@ public class ExifTool_setImageMeta_Test {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_set_image_meta_data() throws Exception {
-		final File image = new FileBuilder("foo.png").build();
-		final Format format = StandardFormat.HUMAN_READABLE;
+		File image = new FileBuilder("foo.png").build();
+		Format format = StandardFormat.HUMAN_READABLE;
 
-		doAnswer(new WriteTagsAnswer())
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new WriteTagsAnswer()).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		exifTool.setImageMeta(image, format, tags);
 
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
 		List<String> args = argsCaptor.getValue();
-		assertThat(args)
-				.isNotEmpty()
-				.isNotNull()
-				.hasSize(5)
-				.containsExactly(
-						"-S",
-						"-ApertureValue=foo",
-						"-Artist=bar",
-						"/tmp/foo.png",
-						"-execute"
-				);
+		assertThat(args).hasSize(5).containsExactly(
+				"-S",
+				"-ApertureValue=foo",
+				"-Artist=bar",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_set_image_meta_data_in_numeric_format() throws Exception {
-		final File image = new FileBuilder("foo.png").build();
-		final Format format = StandardFormat.NUMERIC;
+		File image = new FileBuilder("foo.png").build();
+		Format format = StandardFormat.NUMERIC;
 
-		doAnswer(new WriteTagsAnswer())
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new WriteTagsAnswer()).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		exifTool.setImageMeta(image, format, tags);
 
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
 		List<String> args = argsCaptor.getValue();
-		assertThat(args)
-				.isNotEmpty()
-				.isNotNull()
-				.hasSize(6)
-				.containsExactly(
-						"-n",
-						"-S",
-						"-ApertureValue=foo",
-						"-Artist=bar",
-						"/tmp/foo.png",
-						"-execute"
-				);
+		assertThat(args).hasSize(6).containsExactly(
+				"-n",
+				"-S",
+				"-ApertureValue=foo",
+				"-Artist=bar",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_set_image_meta_data_in_numeric_format_by_default() throws Exception {
-		final File image = new FileBuilder("foo.png").build();
+		File image = new FileBuilder("foo.png").build();
 
-		doAnswer(new WriteTagsAnswer())
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new WriteTagsAnswer()).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		exifTool.setImageMeta(image, tags);
 
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
 		List<String> args = argsCaptor.getValue();
-		assertThat(args)
-				.isNotEmpty()
-				.isNotNull()
-				.hasSize(6)
-				.containsExactly(
-						"-n",
-						"-S",
-						"-ApertureValue=foo",
-						"-Artist=bar",
-						"/tmp/foo.png",
-						"-execute"
-				);
+		assertThat(args).hasSize(6).containsExactly(
+				"-n",
+				"-S",
+				"-ApertureValue=foo",
+				"-Artist=bar",
+				"/tmp/foo.png",
+				"-execute"
+		);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void it_should_set_image_meta_data_with_given_options() throws Exception {
+		File image = new FileBuilder("foo.png").build();
+		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.NUMERIC).withIgnoreMinorErrors(true).build();
+
+		doAnswer(new WriteTagsAnswer()).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
+
+		exifTool.setImageMeta(image, options, tags);
+
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
+		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
+
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).hasSize(7).containsExactly(
+				"-n",
+				"-m",
+				"-S",
+				"-ApertureValue=foo",
+				"-Artist=bar",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	private static class WriteTagsAnswer implements Answer<String> {
