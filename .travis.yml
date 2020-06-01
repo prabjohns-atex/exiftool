@@ -18,12 +18,15 @@
 language: java
 dist: trusty
 jdk:
+  - openjdk13
   - openjdk12
   - openjdk11
   - openjdk10
   - oraclejdk9
   - oraclejdk8
   - openjdk7
+
 os:
   - linux
+
 script: mvn clean verify
