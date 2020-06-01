@@ -18,6 +18,7 @@
 package com.thebuzzmedia.exiftool;
 
 import com.thebuzzmedia.exiftool.core.StandardFormat;
+import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
 import com.thebuzzmedia.exiftool.core.cache.VersionCacheFactory;
 import com.thebuzzmedia.exiftool.core.handlers.AllTagHandler;
@@ -32,11 +33,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
+import static com.thebuzzmedia.exiftool.commons.iterables.Collections.addAll;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isReadable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isWritable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notBlank;
@@ -417,10 +421,26 @@ public class ExifTool implements AutoCloseable {
 	 * @throws com.thebuzzmedia.exiftool.exceptions.UnreadableFileException If image cannot be read.
 	 */
 	public Map<Tag, String> getImageMeta(File image, Format format) throws IOException {
+		StandardOptions options = StandardOptions.builder().withFormat(format).build();
+		return getImageMeta(image, options);
+	}
 
+	/**
+	 * Parse image metadata for all tags.
+	 *
+	 * @param image Image.
+	 * @param options ExifTool options.
+	 * @return Pair of tag associated with the value.
+	 * @throws IOException If something bad happen during I/O operations.
+	 * @throws NullPointerException If one parameter is null.
+	 * @throws IllegalArgumentException If list of tag is empty.
+	 * @throws com.thebuzzmedia.exiftool.exceptions.UnreadableFileException If image cannot be read.
+	 */
+	public Map<Tag, String> getImageMeta(File image, ExifToolOptions options) throws IOException {
 		log.debug("Querying all tags from image: {}", image);
-
-		return getImageMeta(image, format, singleton(new UnspecifiedTag("All")), new AllTagHandler());
+		UnspecifiedTag all = new UnspecifiedTag("All");
+		Set<UnspecifiedTag> tags = singleton(all);
+		return getImageMeta(image, tags, options, new AllTagHandler());
 	}
 
 	/**
@@ -452,7 +472,25 @@ public class ExifTool implements AutoCloseable {
 	 * @throws com.thebuzzmedia.exiftool.exceptions.UnreadableFileException If image cannot be read.
 	 */
 	public Map<Tag, String> getImageMeta(File image, Format format, Collection<? extends Tag> tags) throws IOException {
+		notNull(format, "Format cannot be null.");
+		StandardOptions options = StandardOptions.builder().withFormat(format).build();
+		return getImageMeta(image, options, tags);
+	}
 
+	/**
+	 * Parse image metadata.
+	 *
+	 * @param image Image.
+	 * @param options ExifTool options.
+	 * @param tags List of tags to extract.
+	 * @return Pair of tag associated with the value.
+	 * @throws IOException If something bad happen during I/O operations.
+	 * @throws NullPointerException If one parameter is null.
+	 * @throws IllegalArgumentException If list of tag is empty.
+	 * @throws com.thebuzzmedia.exiftool.exceptions.UnreadableFileException If image cannot be read.
+	 */
+	public Map<Tag, String> getImageMeta(File image, ExifToolOptions options, Collection<? extends Tag> tags) throws IOException {
+		notNull(options, "Options cannot be null.");
 		notEmpty(tags, "Tags cannot be null and must contain 1 or more Tag to query the image for.");
 
 		log.debug("Querying {} tags from image: {}", tags.size(), image);
@@ -461,16 +499,16 @@ public class ExifTool implements AutoCloseable {
 		// and avoid collisions while inserting.
 		StandardTagHandler tagHandler = new StandardTagHandler(tags);
 
-		return getImageMeta(image, format, tags, tagHandler);
+		return getImageMeta(image, tags, options, tagHandler);
 	}
 
-	private Map<Tag, String> getImageMeta(File image, Format format, Collection<? extends Tag> tags, TagHandler tagHandler) throws IOException {
+	private Map<Tag, String> getImageMeta(File image, Collection<? extends Tag> tags, ExifToolOptions options, TagHandler tagHandler) throws IOException {
 		notNull(image, "Image cannot be null and must be a valid stream of image data.");
-		notNull(format, "Format cannot be null.");
+		notNull(options, "Options cannot be null.");
 		isReadable(image, "Unable to read the given image [%s], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.", image);
 
 		// Build list of exiftool arguments.
-		List<String> args = getImageMetaArguments(format, image, tags);
+		List<String> args = getImageMetaArguments(image, tags, options);
 
 		// Execute ExifTool command
 		strategy.execute(executor, path, args, tagHandler);
@@ -502,8 +540,22 @@ public class ExifTool implements AutoCloseable {
 	 * @throws IOException If an error occurs during write operation.
 	 */
 	public void setImageMeta(File image, Format format, Map<? extends Tag, String> tags) throws IOException {
-		notNull(image, "Image cannot be null and must be a valid stream of image data.");
 		notNull(format, "Format cannot be null.");
+		ExifToolOptions options = StandardOptions.builder().withFormat(format).build();
+		setImageMeta(image, options, tags);
+	}
+
+	/**
+	 * Write image metadata in a specific format.
+	 *
+	 * @param image Image.
+	 * @param options ExifTool options.
+	 * @param tags Tags to write.
+	 * @throws IOException If an error occurs during write operation.
+	 */
+	public void setImageMeta(File image, ExifToolOptions options, Map<? extends Tag, String> tags) throws IOException {
+		notNull(image, "Image cannot be null and must be a valid stream of image data.");
+		notNull(options, "Options cannot be null.");
 		notEmpty(tags, "Tags cannot be null and must contain 1 or more Tag to query the image for.");
 		isWritable(image, "Unable to read the given image [%s], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.", image);
 
@@ -512,7 +564,7 @@ public class ExifTool implements AutoCloseable {
 		long startTime = System.currentTimeMillis();
 
 		// Get arguments
-		List<String> args = setImageMetaArguments(format, image, tags);
+		List<String> args = setImageMetaArguments(image, tags, options);
 
 		// Execute ExifTool command
 		strategy.execute(executor, path, args, stopHandler());
@@ -524,19 +576,17 @@ public class ExifTool implements AutoCloseable {
 	 * Build argument list to parse image metadata using exiftool command
 	 * line.
 	 *
-	 * @param format Output format.
 	 * @param image Image.
 	 * @param tags List of tags.
+	 * @param options ExifTool options.
 	 * @return List of associated arguments.
 	 */
-	private List<String> getImageMetaArguments(Format format, File image, Collection<? extends Tag> tags) {
+	private List<String> getImageMetaArguments(File image, Collection<? extends Tag> tags, ExifToolOptions options) {
 		// Create list of arguments: deduce expected number of arguments.
-		List<String> formatArgs = format.getArgs();
-		int nbArgs = tags.size() + formatArgs.size() + 3;
-		List<String> args = new ArrayList<>(nbArgs);
+		Set<String> args = new LinkedHashSet<>();
 
 		// Format output.
-		args.addAll(formatArgs);
+		addAll(args, options.serialize());
 
 		// Compact output.
 		args.add("-S");
@@ -553,25 +603,23 @@ public class ExifTool implements AutoCloseable {
 		// This argument will only be used by exiftool if stay_open flag has been set.
 		args.add("-execute");
 
-		return args;
+		return new ArrayList<>(args);
 	}
 
 	/**
 	 * Build argument list to parse image metadata using exiftool command
 	 * line.
 	 *
-	 * @param format Output format.
 	 * @param image Image.
 	 * @param tags List of tags.
+	 * @param options ExifTool options.
 	 * @return List of associated arguments.
 	 */
-	private List<String> setImageMetaArguments(Format format, File image, Map<? extends Tag, String> tags) {
-		List<String> formatArgs = format.getArgs();
-		int nbArgs = tags.size() + formatArgs.size() + 3;
-		List<String> args = new ArrayList<>(nbArgs);
+	private List<String> setImageMetaArguments(File image, Map<? extends Tag, String> tags, ExifToolOptions options) {
+		Set<String> args = new LinkedHashSet<>();
 
-		// Format output.
-		args.addAll(formatArgs);
+		// Options.
+		addAll(args, options.serialize());
 
 		// Compact output.
 		args.add("-S");
@@ -588,6 +636,6 @@ public class ExifTool implements AutoCloseable {
 		// This argument will only be used by exiftool if stay_open flag has been set.
 		args.add("-execute");
 
-		return args;
+		return new ArrayList<>(args);
 	}
 }

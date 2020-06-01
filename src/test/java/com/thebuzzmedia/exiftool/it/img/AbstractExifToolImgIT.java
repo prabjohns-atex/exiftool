@@ -19,8 +19,10 @@ package com.thebuzzmedia.exiftool.it.img;
 
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
+import com.thebuzzmedia.exiftool.ExifToolOptions;
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardFormat;
+import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.tests.junit.OpenedProcessRule;
 import org.junit.After;
@@ -43,9 +45,7 @@ public abstract class AbstractExifToolImgIT {
 	private static final String PATH = EXIF_TOOL.getAbsolutePath();
 
 	private ExifTool exifTool;
-
 	private ExifTool exifToolStayOpen;
-
 	private ExifTool exifToolPool;
 
 	@Rule
@@ -130,12 +130,13 @@ public abstract class AbstractExifToolImgIT {
 	}
 
 	private void verifySetMeta(ExifTool exifTool) throws Exception {
+		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.HUMAN_READABLE).build();
 		File file = new File("src/test/resources/images/" + image());
 		File folder = tmp.newFolder("exif");
 		File tmpCopy = copy(file, folder);
 		Map<Tag, String> meta = updateTags();
 
-		exifTool.setImageMeta(tmpCopy, StandardFormat.HUMAN_READABLE, meta);
+		exifTool.setImageMeta(tmpCopy, options, meta);
 
 		Tag[] tags = new Tag[meta.size()];
 		int i = 0;
@@ -148,7 +149,8 @@ public abstract class AbstractExifToolImgIT {
 	}
 
 	private void checkMeta(ExifTool exifTool, File image, Tag[] tags, Map<Tag, String> expectations) throws Exception {
-		Map<Tag, String> results = exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList(tags));
+		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.HUMAN_READABLE).build();
+		Map<Tag, String> results = exifTool.getImageMeta(image, options, asList(tags));
 		assertThat(results).hasSize(expectations.size());
 
 		for (Map.Entry<Tag, String> entry : results.entrySet()) {
@@ -166,7 +168,8 @@ public abstract class AbstractExifToolImgIT {
 	}
 
 	private void checkAllMetaContains(ExifTool exifTool, File image, Map<Tag, String> expectations) throws Exception {
-		Map<Tag, String> results = exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE);
+		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.HUMAN_READABLE).build();
+		Map<Tag, String> results = exifTool.getImageMeta(image, options);
 		assertThat(results).isNotEmpty();
 		assertThat(results.size()).isGreaterThanOrEqualTo(expectations.size());
 
@@ -185,9 +188,9 @@ public abstract class AbstractExifToolImgIT {
 		}
 	}
 
-	protected abstract String image();
+	abstract String image();
 
-	protected abstract Map<Tag, String> expectations();
+	abstract Map<Tag, String> expectations();
 
-	protected abstract Map<Tag, String> updateTags();
+	abstract Map<Tag, String> updateTags();
 }

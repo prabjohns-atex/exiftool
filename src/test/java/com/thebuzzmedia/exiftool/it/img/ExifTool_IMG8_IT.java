@@ -27,12 +27,12 @@ import java.util.Map;
 public class ExifTool_IMG8_IT extends AbstractExifToolImgIT {
 
 	@Override
-	protected String image() {
+	String image() {
 		return "panasonic-dmc-gf3-flower.jpg";
 	}
 
 	@Override
-	protected Map<Tag, String> expectations() {
+	Map<Tag, String> expectations() {
 		return new HashMap<Tag, String>() {
 			{
 				put(StandardTag.METERING_MODE, "Multi-segment");
@@ -72,7 +72,7 @@ public class ExifTool_IMG8_IT extends AbstractExifToolImgIT {
 	}
 
 	@Override
-	protected Map<Tag, String> updateTags() {
+	Map<Tag, String> updateTags() {
 		return new HashMap<Tag, String>() {{
 			put(StandardTag.COMMENT, "Hello =World");
 			put(StandardTag.AUTHOR, "mjeanroy");

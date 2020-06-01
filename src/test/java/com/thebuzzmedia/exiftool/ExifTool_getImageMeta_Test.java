@@ -18,6 +18,7 @@
 package com.thebuzzmedia.exiftool;
 
 import com.thebuzzmedia.exiftool.core.StandardFormat;
+import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
 import com.thebuzzmedia.exiftool.exceptions.UnreadableFileException;
@@ -30,17 +31,14 @@ import com.thebuzzmedia.exiftool.tests.builders.FileBuilder;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,24 +55,18 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
 public class ExifTool_getImageMeta_Test {
 
 	private String path;
-
-	@Mock
 	private CommandExecutor executor;
-
-	@Mock
 	private ExecutionStrategy strategy;
-
-	@Captor
-	private ArgumentCaptor<List<String>> argsCaptor;
 
 	private ExifTool exifTool;
 
 	@Before
 	public void setUp() throws Exception {
+		executor = mock(CommandExecutor.class);
+		strategy = mock(ExecutionStrategy.class);
 		path = "exiftool";
 
 		CommandResult cmd = new CommandResultBuilder()
@@ -105,10 +97,12 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	public void it_should_fail_if_format_is_null() {
-		ThrowingCallable getImageMeta = new ThrowingCallable() {
+		final Format format = null;
+		final List<Tag> tags = asList((Tag[]) StandardTag.values());
+		final ThrowingCallable getImageMeta = new ThrowingCallable() {
 			@Override
 			public void call() throws Throwable {
-				exifTool.getImageMeta(mock(File.class), null, asList((Tag[]) StandardTag.values()));
+				exifTool.getImageMeta(mock(File.class), format, tags);
 			}
 		};
 
@@ -118,11 +112,29 @@ public class ExifTool_getImageMeta_Test {
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_null() {
-		ThrowingCallable getImageMeta = new ThrowingCallable() {
+	public void it_should_fail_if_options_is_null() {
+		final ExifToolOptions options = null;
+		final List<Tag> tags = asList((Tag[]) StandardTag.values());
+		final ThrowingCallable getImageMeta = new ThrowingCallable() {
 			@Override
 			public void call() throws Throwable {
-				exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, null);
+				exifTool.getImageMeta(mock(File.class), options, tags);
+			}
+		};
+
+		assertThatThrownBy(getImageMeta)
+				.isInstanceOf(NullPointerException.class)
+				.hasMessage("Options cannot be null.");
+	}
+
+	@Test
+	public void it_should_fail_if_tags_is_null() {
+		final Format format = StandardFormat.HUMAN_READABLE;
+		final Collection<? extends Tag> tags = null;
+		final ThrowingCallable getImageMeta = new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				exifTool.getImageMeta(mock(File.class), format, tags);
 			}
 		};
 
@@ -186,132 +198,244 @@ public class ExifTool_getImageMeta_Test {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_get_image_metadata() throws Exception {
 		// Given
-		final Format format = StandardFormat.HUMAN_READABLE;
-		final File image = new FileBuilder("foo.png").build();
-		final Map<Tag, String> tags = new HashMap<>();
+		Format format = StandardFormat.HUMAN_READABLE;
+		File image = new FileBuilder("foo.png").build();
+
+		Map<Tag, String> tags = new LinkedHashMap<>();
 		tags.put(StandardTag.ARTIST, "bar");
 		tags.put(StandardTag.COMMENT, "foo");
 
-		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new ReadTagsAnswer(tags, "{ready}")).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image, format, tags.keySet());
 
 		// Then
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
+		assertThat(results).hasSize(tags.size()).isEqualTo(tags);
 
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(tags.size())
-				.isEqualTo(tags);
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).isNotEmpty().containsExactly(
+				"-S",
+				"-Artist",
+				"-XPComment",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_get_image_metadata_in_numeric_format() throws Exception {
 		// Given
-		final Format format = StandardFormat.NUMERIC;
-		final File image = new FileBuilder("foo.png").build();
-		final Map<Tag, String> tags = new HashMap<>();
+		Format format = StandardFormat.NUMERIC;
+		File image = new FileBuilder("foo.png").build();
+
+		Map<Tag, String> tags = new LinkedHashMap<>();
 		tags.put(StandardTag.ARTIST, "foo");
 		tags.put(StandardTag.COMMENT, "bar");
 
-		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new ReadTagsAnswer(tags, "{ready}")).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image, format, tags.keySet());
 
 		// Then
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
+		assertThat(results).hasSize(tags.size()).isEqualTo(tags);
 
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(tags.size())
-				.isEqualTo(tags);
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).isNotEmpty().containsExactly(
+				"-n",
+				"-S",
+				"-Artist",
+				"-XPComment",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_get_image_metadata_in_numeric_format_by_default() throws Exception {
 		// Given
-		final File image = new FileBuilder("foo.png").build();
-		final Map<Tag, String> tags = new HashMap<>();
+		File image = new FileBuilder("foo.png").build();
+		Map<Tag, String> tags = new LinkedHashMap<>();
 		tags.put(StandardTag.ARTIST, "foo");
 		tags.put(StandardTag.COMMENT, "bar");
 
-		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new ReadTagsAnswer(tags, "{ready}")).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image, tags.keySet());
 
 		// Then
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
+		assertThat(results).hasSize(tags.size()).isEqualTo(tags);
 
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(tags.size())
-				.isEqualTo(tags);
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).isNotEmpty().containsExactly(
+				"-n",
+				"-S",
+				"-Artist",
+				"-XPComment",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_get_all_image_metadata_if_no_tags_specified() throws Exception {
 		// Given
-		final Format format = StandardFormat.HUMAN_READABLE;
-		final File image = new FileBuilder("foo.png").build();
-		final Map<Tag, String> tags = new HashMap<>();
+		Format format = StandardFormat.HUMAN_READABLE;
+		File image = new FileBuilder("foo.png").build();
+
+		Map<Tag, String> tags = new LinkedHashMap<>();
 		tags.put(new UnspecifiedTag("Artist"), "bar");
 		tags.put(new UnspecifiedTag("XPComment"), "foo");
 		tags.put(new UnspecifiedTag("CustomTag"), "baz");
 
-		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new ReadTagsAnswer(tags, "{ready}")).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image, format);
 
 		// Then
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(tags.size());
+		assertThat(results).hasSize(tags.size());
+		assertThat(parseTags(results)).containsAllEntriesOf(parseTags(tags));
 
-		assertThat(parseTags(results))
-				.containsAllEntriesOf(parseTags(tags));
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).isNotEmpty().containsExactly(
+				"-S",
+				"-All",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void it_should_get_all_image_metadata_in_numeric_format_by_default() throws Exception {
 		// Given
-		final File image = new FileBuilder("foo.png").build();
-		final Map<Tag, String> tags = new HashMap<>();
+		File image = new FileBuilder("foo.png").build();
+
+		Map<Tag, String> tags = new LinkedHashMap<>();
 		tags.put(new UnspecifiedTag("Artist"), "foo");
 		tags.put(new UnspecifiedTag("XPComment"), "bar");
 		tags.put(new UnspecifiedTag("CustomTag"), "baz");
 
-		doAnswer(new ReadTagsAnswer(tags, "{ready}"))
-				.when(strategy).execute(same(executor), same(path), anyListOf(String.class), any(OutputHandler.class));
+		doAnswer(new ReadTagsAnswer(tags, "{ready}")).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
 
 		// When
 		Map<Tag, String> results = exifTool.getImageMeta(image);
 
 		// Then
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
 
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(tags.size());
+		assertThat(results).hasSize(tags.size());
+		assertThat(parseTags(results)).containsAllEntriesOf(parseTags(tags));
 
-		assertThat(parseTags(results))
-				.containsAllEntriesOf(parseTags(tags));
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).isNotEmpty().containsExactly(
+				"-n",
+				"-S",
+				"-All",
+				"/tmp/foo.png",
+				"-execute"
+		);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void it_should_get_image_metadata_using_custom_options() throws Exception {
+		// Given
+		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.NUMERIC).withIgnoreMinorErrors(true).build();
+		File image = new FileBuilder("foo.png").build();
+
+		Map<Tag, String> tags = new LinkedHashMap<>();
+		tags.put(StandardTag.ARTIST, "foo");
+		tags.put(StandardTag.COMMENT, "bar");
+
+		doAnswer(new ReadTagsAnswer(tags, "{ready}")).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
+
+		// When
+		Map<Tag, String> results = exifTool.getImageMeta(image, options, tags.keySet());
+
+		// Then
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
+		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
+		assertThat(results).hasSize(tags.size()).isEqualTo(tags);
+
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).isNotEmpty().containsExactly(
+				"-n",
+				"-m",
+				"-S",
+				"-Artist",
+				"-XPComment",
+				"/tmp/foo.png",
+				"-execute"
+		);
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void it_should_get_all_image_metadata_using_custom_options() throws Exception {
+		// Given
+		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.NUMERIC).withIgnoreMinorErrors(true).build();
+		File image = new FileBuilder("foo.png").build();
+
+		Map<Tag, String> tags = new LinkedHashMap<>();
+		tags.put(new UnspecifiedTag("Artist"), "foo");
+		tags.put(new UnspecifiedTag("XPComment"), "bar");
+		tags.put(new UnspecifiedTag("CustomTag"), "baz");
+
+		doAnswer(new ReadTagsAnswer(tags, "{ready}")).when(strategy).execute(
+				same(executor), same(path), anyListOf(String.class), any(OutputHandler.class)
+		);
+
+		// When
+		Map<Tag, String> results = exifTool.getImageMeta(image, options);
+
+		// Then
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
+		verify(strategy).execute(same(executor), same(path), argsCaptor.capture(), any(OutputHandler.class));
+
+		assertThat(results).hasSize(tags.size());
+		assertThat(parseTags(results)).containsAllEntriesOf(parseTags(tags));
+
+		List<String> args = argsCaptor.getValue();
+		assertThat(args).isNotEmpty().containsExactly(
+				"-n",
+				"-m",
+				"-S",
+				"-All",
+				"/tmp/foo.png",
+				"-execute"
+		);
 	}
 
 	private static class ReadTagsAnswer implements Answer<Void> {

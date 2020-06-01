@@ -29,12 +29,12 @@ import static com.thebuzzmedia.exiftool.tests.TestConstants.IS_WINDOWS;
 public class ExifTool_IMG7_IT extends AbstractExifToolImgIT {
 
 	@Override
-	protected String image() {
+	String image() {
 		return "palm-pre-menu.jpg";
 	}
 
 	@Override
-	protected Map<Tag, String> expectations() {
+	Map<Tag, String> expectations() {
 		// Results extracted with exiftool 10.07.
 		return new HashMap<Tag, String>() {
 			{
@@ -67,7 +67,7 @@ public class ExifTool_IMG7_IT extends AbstractExifToolImgIT {
 	}
 
 	@Override
-	protected Map<Tag, String> updateTags() {
+	Map<Tag, String> updateTags() {
 		return new HashMap<Tag, String>() {{
 			put(StandardTag.FLASH, "Auto, Did not fire");
 		}};

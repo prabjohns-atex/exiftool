@@ -18,29 +18,51 @@
 package com.thebuzzmedia.exiftool;
 
 import com.thebuzzmedia.exiftool.core.StandardFormat;
+import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 
 public class Example {
 	public static void main(String[] args) throws Exception {
-
+		String os = System.getProperty("os.name");
+		boolean windows = os.toLowerCase().contains("windows");
+		String basePath = "src/test/resources/exiftool-10_16/";
+		String binaryPath = windows ? "windows/exiftool.exe" : "unix/exiftool";
+		File binary = new File(basePath + binaryPath);
 		ExifTool tool = new ExifToolBuilder()
+				.withPath(binary.getAbsolutePath())
 				.enableStayOpen()
 				.build();
 
 		File directory = new File("src/test/resources/images");
 		File[] files = directory.listFiles();
+		if (files == null) {
+			System.out.println("No images to scan.");
+			return;
+		}
+
 		System.out.println("Images to scan: ");
 		for (File f : files) {
 			System.out.println("  - " + f.getName());
 		}
 
+		ExifToolOptions options = StandardOptions.builder()
+				.withFormat(StandardFormat.HUMAN_READABLE)
+				.withIgnoreMinorErrors(true)
+				.build();
+
 		for (File f : files) {
 			System.out.println("\n[" + f.getName() + "]");
-			System.out.println(tool.getImageMeta(f, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values())));
+
+			List<Tag> tags = asList((Tag[]) StandardTag.values());
+			Map<Tag, String> exifData = tool.getImageMeta(f, options, tags);
+			System.out.println(exifData);
 		}
 
 		tool.close();

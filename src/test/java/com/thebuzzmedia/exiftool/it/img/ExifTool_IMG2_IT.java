@@ -27,12 +27,12 @@ import java.util.Map;
 public class ExifTool_IMG2_IT extends AbstractExifToolImgIT {
 
 	@Override
-	protected String image() {
+	String image() {
 		return "htc-glacier-cat-ladder.jpg";
 	}
 
 	@Override
-	protected Map<Tag, String> expectations() {
+	Map<Tag, String> expectations() {
 		return new HashMap<Tag, String>() {
 			{
 				put(StandardTag.GPS_LONGITUDE, "111 deg 7' 42.12\" W");
@@ -63,7 +63,7 @@ public class ExifTool_IMG2_IT extends AbstractExifToolImgIT {
 	}
 
 	@Override
-	protected Map<Tag, String> updateTags() {
+	Map<Tag, String> updateTags() {
 		return new HashMap<Tag, String>() {{
 			put(StandardTag.COMMENT, "Hello =World");
 			put(StandardTag.AUTHOR, "mjeanroy");
