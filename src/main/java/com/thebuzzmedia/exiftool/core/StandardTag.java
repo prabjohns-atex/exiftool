@@ -20,6 +20,7 @@ package com.thebuzzmedia.exiftool.core;
 import com.thebuzzmedia.exiftool.Constants;
 import com.thebuzzmedia.exiftool.Tag;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -178,6 +179,14 @@ public enum StandardTag implements Tag {
 		DOUBLE {
 			@Override
 			public <T> T parse(String value) {
+				if (Objects.equals("inf", value)) {
+					return (T) Double.valueOf(Double.POSITIVE_INFINITY);
+				}
+
+				if (Objects.equals(value, "undef")) {
+					return (T) Double.valueOf(Double.NaN);
+				}
+
 				return (T) Double.valueOf(Double.parseDouble(value));
 			}
 		},

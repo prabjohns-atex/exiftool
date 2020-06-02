@@ -23,6 +23,7 @@ import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.tests.junit.OpenedProcessRule;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -79,49 +80,59 @@ public abstract class AbstractExifToolImgIT {
 	}
 
 	@Test
-	public void testGetImageMeta() throws Exception {
+	public void test_get_image_meta() throws Exception {
 		verifyGetMeta(exifTool);
 	}
 
 	@Test
-	public void testGetAllImageMeta() throws Exception {
+	public void test_parse_image_meta() throws Exception {
+		verifyParsingMeta(exifTool);
+	}
+
+	@Test
+	public void test_get_all_image_meta() throws Exception {
 		verifyGetAllMeta(exifTool);
 	}
 
 	@Test
-	public void testGetImageMeta_stay_open() throws Exception {
+	public void test_get_image_meta_stay_open() throws Exception {
 		verifyGetMeta(exifToolStayOpen);
 	}
 
 	@Test
-	public void testGetImageMeta_stay_open_two_times() throws Exception {
+	public void test_get_image_meta_stay_open_two_times() throws Exception {
 		verifyGetMeta(exifToolStayOpen);
 		verifyGetMeta(exifToolStayOpen);
 	}
 
 	@Test
-	public void testGetImageMeta_Pool() throws Exception {
+	public void test_get_image_meta_pool() throws Exception {
 		verifyGetMeta(exifToolPool);
 	}
 
 	@Test
-	public void testSetImageMeta() throws Exception {
+	public void test_set_image_meta() throws Exception {
 		verifySetMeta(exifTool);
 	}
 
 	@Test
-	public void testSetImageMeta_stay_open() throws Exception {
+	public void test_set_image_meta_stay_open() throws Exception {
 		verifySetMeta(exifToolStayOpen);
 	}
 
 	@Test
-	public void testSetImageMeta_pool() throws Exception {
+	public void test_set_image_meta_pool() throws Exception {
 		verifySetMeta(exifToolPool);
 	}
 
 	private void verifyGetMeta(ExifTool exifTool) throws Exception {
 		File file = new File("src/test/resources/images/" + image());
 		checkMeta(exifTool, file, StandardTag.values(), expectations());
+	}
+
+	private void verifyParsingMeta(ExifTool exifTool) throws Exception {
+		File file = new File("src/test/resources/images/" + image());
+		checkMetaParsing(exifTool, file, StandardTag.values());
 	}
 
 	private void verifyGetAllMeta(ExifTool exifTool) throws Exception {
@@ -151,18 +162,45 @@ public abstract class AbstractExifToolImgIT {
 		Map<Tag, String> results = exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList(tags));
 		assertThat(results).hasSize(expectations.size());
 
+		SoftAssertions softly = new SoftAssertions();
+
 		for (Map.Entry<Tag, String> entry : results.entrySet()) {
 			Tag tag = entry.getKey();
-			assertThat(expectations)
+			String result = entry.getValue();
+			String expectation = expectations.get(tag);
+
+			softly.assertThat(expectations)
 					.overridingErrorMessage(String.format("Result should contain tag %s", tag))
 					.containsKey(tag);
 
-			String result = entry.getValue();
-			String expectation = expectations.get(tag);
-			assertThat(result)
-					.overridingErrorMessage(String.format("Result should contain tag %s with value %s", tag, expectation))
+			softly.assertThat(result)
+					.overridingErrorMessage(String.format("Result should contain tag %s with value %s but was %s", tag, expectation, result))
 					.isEqualToIgnoringCase(expectation);
 		}
+
+		softly.assertAll();
+	}
+
+	private void checkMetaParsing(ExifTool exifTool, File image, Tag[] tags) throws Exception {
+		Map<Tag, String> results = exifTool.getImageMeta(image, StandardFormat.NUMERIC, asList(tags));
+
+		SoftAssertions softly = new SoftAssertions();
+
+		for (Map.Entry<Tag, String> entry : results.entrySet()) {
+			Tag tag = entry.getKey();
+			String result = entry.getValue();
+
+			try {
+				softly.assertThat(tag.parse(result))
+						.overridingErrorMessage(String.format("Cannot parse tag %s with value %s", tag, result))
+						.isNotNull();
+			}
+			catch (Exception ex) {
+				softly.fail(ex.getMessage() + " -- " + String.format("Cannot parse tag %s with value %s", tag, result));
+			}
+		}
+
+		softly.assertAll();
 	}
 
 	private void checkAllMetaContains(ExifTool exifTool, File image, Map<Tag, String> expectations) throws Exception {
@@ -171,18 +209,23 @@ public abstract class AbstractExifToolImgIT {
 		assertThat(results.size()).isGreaterThanOrEqualTo(expectations.size());
 
 		Map<String, Object> parsedResults = parseTags(results);
+
+		SoftAssertions softly = new SoftAssertions();
+
 		for (Map.Entry<Tag, String> entry : expectations.entrySet()) {
 			Tag tag = entry.getKey();
 			Object result = parsedResults.get(tag.getName());
 
-			assertThat(parsedResults)
+			softly.assertThat(parsedResults)
 					.overridingErrorMessage(String.format("Result should contain tag %s", tag))
 					.containsKey(tag.getDisplayName());
 
-			assertThat(((String[]) result)[0])
+			softly.assertThat(((String[]) result)[0])
 					.overridingErrorMessage(String.format("Result should contain tag %s with value %s", tag, entry.getValue()))
 					.isEqualToIgnoringCase(entry.getValue());
 		}
+
+		softly.assertAll();
 	}
 
 	protected abstract String image();
