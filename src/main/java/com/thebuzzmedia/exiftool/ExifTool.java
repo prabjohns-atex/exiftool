@@ -40,7 +40,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import static com.thebuzzmedia.exiftool.commons.iterables.Collections.addAll;
-import static com.thebuzzmedia.exiftool.commons.iterables.Collections.size;
+import static com.thebuzzmedia.exiftool.commons.iterables.Collections.toCollection;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isReadable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isWritable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notBlank;
@@ -591,8 +591,8 @@ public class ExifTool implements AutoCloseable {
 	}
 
 	private List<String> toArguments(File image, ExifToolOptions options, List<String> tags) {
-		Iterable<String> optionArgs = options.serialize();
-		int expectedSize = size(optionArgs) + tags.size() + 3;
+		Collection<String> optionArgs = toCollection(options.serialize());
+		int expectedSize = optionArgs.size() + tags.size() + 3;
 		List<String> args = new ArrayList<>(expectedSize);
 
 		// Options.

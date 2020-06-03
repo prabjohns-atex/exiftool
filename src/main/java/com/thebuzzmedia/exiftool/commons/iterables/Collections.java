@@ -61,21 +61,38 @@ public final class Collections {
 	 * @param <T> Type of element in collection.
 	 * @return Size of collection.
 	 */
-	public static <T> int size(Iterable<T> values) {
-		if (values == null) {
-			return 0;
+	public static <T> int size(Collection<T> values) {
+		return values == null ? 0 : values.size();
+	}
+
+	/**
+	 * Create in memory collection from given iterable elements.
+	 *
+	 * <ul>
+	 *   <li>If {@code iterables} is null, an empty array list is returned.</li>
+	 *   <li>If {@code iterables} is already an instance of {@link Collection}, it is returned.</li>
+	 *   <li>Otherwise, iterable structure is iterated and loaded into an {@link ArrayList}.</li>
+	 * </ul>
+	 *
+	 * @param iterables Given iterable.
+	 * @param <T> Type of element in iterable structure.
+	 * @return The collection result.
+	 */
+	public static <T> Collection<T> toCollection(Iterable<T> iterables) {
+		if (iterables == null) {
+			return new ArrayList<>(0);
 		}
 
-		if (values instanceof Collection) {
-			return ((Collection<T>) values).size();
+		if (iterables instanceof Collection) {
+			return (Collection<T>) iterables;
 		}
 
-		int size = 0;
-		for (T value : values) {
-			size++;
+		List<T> list = new ArrayList<>();
+		for (T value : iterables) {
+			list.add(value);
 		}
 
-		return size;
+		return list;
 	}
 
 	/**

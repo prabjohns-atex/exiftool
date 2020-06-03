@@ -28,6 +28,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -52,6 +53,13 @@ public class CollectionsTest {
 
 	@Test
 	public void it_should_get_size_of_collection() {
+		assertThat(Collections.size(null)).isZero();
+		assertThat(Collections.size(emptyList())).isZero();
+		assertThat(Collections.size(asList(1, 2, 3))).isEqualTo(3);
+	}
+
+	@Test
+	public void it_should_get_collection_from_iterable() {
 		Iterable<Integer> iterables = new Iterable<Integer>() {
 			@Override
 			public Iterator<Integer> iterator() {
@@ -77,17 +85,16 @@ public class CollectionsTest {
 			}
 		};
 
-		assertThat(Collections.size(null)).isZero();
-		assertThat(Collections.size(emptyList())).isZero();
-		assertThat(Collections.size(asList(1, 2, 3))).isEqualTo(3);
-		assertThat(Collections.size(iterables)).isEqualTo(3);
+		assertThat(Collections.toCollection(null)).isNotNull().isEmpty();
+		assertThat(Collections.toCollection(asList(1, 2, 3))).isEqualTo(asList(1, 2, 3));
+		assertThat(Collections.toCollection(iterables)).isEqualTo(asList(1, 2, 3));
 	}
 
 	@Test
 	public void it_should_join_collection() {
 		assertThat(Collections.join(null, " ")).isEqualTo("");
 		assertThat(Collections.join(emptyList(), " ")).isEqualTo("");
-		assertThat(Collections.join(asList("foo"), " ")).isEqualTo("foo");
+		assertThat(Collections.join(singletonList("foo"), " ")).isEqualTo("foo");
 		assertThat(Collections.join(asList("foo", "bar"), " ")).isEqualTo("foo bar");
 	}
 
@@ -99,7 +106,7 @@ public class CollectionsTest {
 		final String suffix = "from_mapper";
 		when(mapper.map(anyString())).thenAnswer(new Answer<String>() {
 			@Override
-			public String answer(InvocationOnMock invocation) throws Throwable {
+			public String answer(InvocationOnMock invocation) {
 				String input = (String) invocation.getArguments()[0];
 				return input + suffix;
 			}
