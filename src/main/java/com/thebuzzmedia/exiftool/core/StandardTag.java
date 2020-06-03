@@ -122,11 +122,16 @@ public enum StandardTag implements Tag {
 	AVG_BITRATE("AvgBitrate", Type.STRING),
 	MIME_TYPE("MIMEType", Type.STRING),
 	CREATE_DATE("CreateDate", Type.STRING),
-
-	/**
-	 * This tag is deprecated, use {@link #CREATE_DATE} instead.
-	 */
-	@Deprecated
+	AF_APERTURE("AFAperture", Type.DOUBLE),
+	EXPOSURE_DIFFERENCE("ExposureDifference", Type.STRING),
+	FOCUS_DISTANCE("FocusDistance", Type.STRING),
+	FOCUS_MODE("FocusMode", Type.STRING),
+	FOCUS_POSITION("FocusPosition", Type.STRING),
+	IMAGE_DATA_SIZE("ImageDataSize", Type.LONG),
+	LENS_F_STOPS("LensFStops", Type.STRING),
+	LENS_SPEC("LensSpec", Type.STRING),
+	MEGA_PIXELS("Megapixels", Type.DOUBLE),
+	QUALITY("Quality", Type.STRING),
 	CREATION_DATE("CreationDate", Type.STRING);
 
 	/**

@@ -162,8 +162,6 @@ public abstract class AbstractExifToolImgIT {
 	private void checkMeta(ExifTool exifTool, File image, Tag[] tags, Map<Tag, String> expectations) throws Exception {
 		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.HUMAN_READABLE).build();
 		Map<Tag, String> results = exifTool.getImageMeta(image, options, asList(tags));
-		assertThat(results).hasSize(expectations.size());
-
 		SoftAssertions softly = new SoftAssertions();
 
 		for (Map.Entry<Tag, String> entry : results.entrySet()) {
@@ -177,6 +175,20 @@ public abstract class AbstractExifToolImgIT {
 
 			softly.assertThat(result)
 					.overridingErrorMessage(String.format("Result should contain tag %s with value %s but was %s", tag, expectation, result))
+					.isEqualToIgnoringCase(expectation);
+		}
+
+		for (Map.Entry<Tag, String> entry : expectations.entrySet()) {
+			Tag tag = entry.getKey();
+			String expectation = entry.getValue();
+			String result = entry.getValue();
+
+			softly.assertThat(results)
+					.overridingErrorMessage(String.format("Expectations should contain tag %s", tag))
+					.containsKey(tag);
+
+			softly.assertThat(result)
+					.overridingErrorMessage(String.format("Expection should contain tag %s with value %s but was %s", tag, result, expectation))
 					.isEqualToIgnoringCase(expectation);
 		}
 

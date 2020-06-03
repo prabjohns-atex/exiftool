@@ -19,29 +19,37 @@ package com.thebuzzmedia.exiftool.core;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class StandardTagTest {
 
 	@Test
 	public void it_should_extract_IPTC_KEYWORD_with_a_single_value() {
-		final String value = "foo";
-		final String[] result = StandardTag.IPTC_KEYWORDS.parse(value);
-		assertThat(result)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1)
-				.contains(value);
+		String value = "foo";
+		String[] result = StandardTag.IPTC_KEYWORDS.parse(value);
+		assertThat(result).hasSize(1).contains(value);
 	}
 
 	@Test
 	public void it_should_extract_IPTC_KEYWORD_with_multiple_values() {
-		final String value = "foo|>☃bar";
-		final String[] result = StandardTag.IPTC_KEYWORDS.parse(value);
-		assertThat(result)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.contains("foo", "bar");
+		String value = "foo|>☃bar";
+		String[] result = StandardTag.IPTC_KEYWORDS.parse(value);
+		assertThat(result).hasSize(2).contains(
+				"foo", "bar"
+		);
+	}
+
+	@Test
+	public void it_should_not_contains_duplicate() {
+		StandardTag[] tags = StandardTag.values();
+		List<String> tagNames = new ArrayList<>(tags.length);
+		for (StandardTag tag : tags) {
+			tagNames.add(tag.getDisplayName());
+		}
+
+		assertThat(tagNames).doesNotHaveDuplicates();
 	}
 }

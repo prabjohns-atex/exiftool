@@ -77,6 +77,9 @@ public class ExifTool_IMG1_IT extends AbstractExifToolImgIT {
 				put(StandardTag.OWNER_NAME, "");
 				put(StandardTag.COPYRIGHT, "");
 				put(StandardTag.CREATE_DATE, "2011:04:30 08:35:00");
+				put(StandardTag.QUALITY, "Fine");
+				put(StandardTag.FOCUS_MODE, "One-shot AF");
+				put(StandardTag.MEGA_PIXELS, "17.9");
 			}
 		};
 	}

@@ -66,6 +66,8 @@ public class ExifTool_IMG12_IT extends AbstractExifToolImgIT {
 				put(StandardTag.FILE_SIZE, "47 kB");
 				put(StandardTag.MIME_TYPE, "image/jpeg");
 				put(StandardTag.CREATE_DATE, "2020:05:31 16:00:22");
+				put(StandardTag.FOCUS_MODE, "Auto");
+				put(StandardTag.MEGA_PIXELS, "0.011");
 			}
 		};
 	}

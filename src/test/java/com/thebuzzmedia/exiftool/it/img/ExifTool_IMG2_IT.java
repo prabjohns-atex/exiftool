@@ -58,6 +58,7 @@ public class ExifTool_IMG2_IT extends AbstractExifToolImgIT {
 				put(StandardTag.IMAGE_WIDTH, "2592");
 				put(StandardTag.MAKE, "HTC");
 				put(StandardTag.CREATE_DATE, "2011:08:10 09:50:45");
+				put(StandardTag.MEGA_PIXELS, "3.8");
 			}
 		};
 	}
