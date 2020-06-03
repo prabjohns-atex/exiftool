@@ -23,6 +23,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -51,9 +52,35 @@ public class CollectionsTest {
 
 	@Test
 	public void it_should_get_size_of_collection() {
+		Iterable<Integer> iterables = new Iterable<Integer>() {
+			@Override
+			public Iterator<Integer> iterator() {
+				return new Iterator<Integer>() {
+					private int i = 0;
+
+					@Override
+					public boolean hasNext() {
+						return i < 3;
+					}
+
+					@Override
+					public Integer next() {
+						i++;
+						return i;
+					}
+
+					@Override
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
+			}
+		};
+
 		assertThat(Collections.size(null)).isZero();
 		assertThat(Collections.size(emptyList())).isZero();
 		assertThat(Collections.size(asList(1, 2, 3))).isEqualTo(3);
+		assertThat(Collections.size(iterables)).isEqualTo(3);
 	}
 
 	@Test

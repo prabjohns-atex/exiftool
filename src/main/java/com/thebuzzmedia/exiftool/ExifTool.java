@@ -33,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +40,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import static com.thebuzzmedia.exiftool.commons.iterables.Collections.addAll;
+import static com.thebuzzmedia.exiftool.commons.iterables.Collections.size;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isReadable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isWritable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notBlank;
@@ -508,7 +508,7 @@ public class ExifTool implements AutoCloseable {
 		isReadable(image, "Unable to read the given image [%s], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.", image);
 
 		// Build list of exiftool arguments.
-		List<String> args = getImageMetaArguments(image, tags, options);
+		List<String> args = toArguments(image, tags, options);
 
 		// Execute ExifTool command
 		strategy.execute(executor, path, args, tagHandler);
@@ -564,7 +564,7 @@ public class ExifTool implements AutoCloseable {
 		long startTime = System.currentTimeMillis();
 
 		// Get arguments
-		List<String> args = setImageMetaArguments(image, tags, options);
+		List<String> args = toArguments(image, tags, options);
 
 		// Execute ExifTool command
 		strategy.execute(executor, path, args, stopHandler());
@@ -572,62 +572,37 @@ public class ExifTool implements AutoCloseable {
 		log.debug("Image Meta Processed in {} ms [write {} tags]", System.currentTimeMillis() - startTime, tags.size());
 	}
 
-	/**
-	 * Build argument list to parse image metadata using exiftool command
-	 * line.
-	 *
-	 * @param image Image.
-	 * @param tags List of tags.
-	 * @param options ExifTool options.
-	 * @return List of associated arguments.
-	 */
-	private List<String> getImageMetaArguments(File image, Collection<? extends Tag> tags, ExifToolOptions options) {
-		// Create list of arguments: deduce expected number of arguments.
-		Set<String> args = new LinkedHashSet<>();
-
-		// Format output.
-		addAll(args, options.serialize());
-
-		// Compact output.
-		args.add("-S");
-
-		// Add tags arguments.
+	private List<String> toArguments(File image, Collection<? extends Tag> tags, ExifToolOptions options) {
+		List<String> tagArgs = new ArrayList<>(tags.size());
 		for (Tag tag : tags) {
-			args.add("-" + tag.getName());
+			tagArgs.add("-" + tag.getName());
 		}
 
-		// Add image argument.
-		args.add(image.getAbsolutePath());
-
-		// Add last argument.
-		// This argument will only be used by exiftool if stay_open flag has been set.
-		args.add("-execute");
-
-		return new ArrayList<>(args);
+		return toArguments(image, options, tagArgs);
 	}
 
-	/**
-	 * Build argument list to parse image metadata using exiftool command
-	 * line.
-	 *
-	 * @param image Image.
-	 * @param tags List of tags.
-	 * @param options ExifTool options.
-	 * @return List of associated arguments.
-	 */
-	private List<String> setImageMetaArguments(File image, Map<? extends Tag, String> tags, ExifToolOptions options) {
-		Set<String> args = new LinkedHashSet<>();
+	private List<String> toArguments(File image, Map<? extends Tag, String> tags, ExifToolOptions options) {
+		List<String> tagArgs = new ArrayList<>(tags.size());
+		for (Map.Entry<? extends Tag, String> entry : tags.entrySet()) {
+			tagArgs.add("-" + entry.getKey().getName() + "=" + entry.getValue());
+		}
+
+		return toArguments(image, options, tagArgs);
+	}
+
+	private List<String> toArguments(File image, ExifToolOptions options, List<String> tags) {
+		Iterable<String> optionArgs = options.serialize();
+		int expectedSize = size(optionArgs) + tags.size() + 3;
+		List<String> args = new ArrayList<>(expectedSize);
 
 		// Options.
-		addAll(args, options.serialize());
+		addAll(args, optionArgs);
 
 		// Compact output.
 		args.add("-S");
 
 		// Add tags arguments.
-		for (Map.Entry<? extends Tag, String> entry : tags.entrySet()) {
-			args.add("-" + entry.getKey().getName() + "=" + entry.getValue());
-		}
+		args.addAll(tags);
 
 		// Add image argument.
 		args.add(image.getAbsolutePath());

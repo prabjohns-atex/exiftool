@@ -61,8 +61,21 @@ public final class Collections {
 	 * @param <T> Type of element in collection.
 	 * @return Size of collection.
 	 */
-	public static <T> int size(Collection<T> values) {
-		return isEmpty(values) ? 0 : values.size();
+	public static <T> int size(Iterable<T> values) {
+		if (values == null) {
+			return 0;
+		}
+
+		if (values instanceof Collection) {
+			return ((Collection<T>) values).size();
+		}
+
+		int size = 0;
+		for (T value : values) {
+			size++;
+		}
+
+		return size;
 	}
 
 	/**
