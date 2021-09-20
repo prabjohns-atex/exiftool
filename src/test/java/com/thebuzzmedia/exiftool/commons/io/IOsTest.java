@@ -26,28 +26,25 @@ import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static com.thebuzzmedia.exiftool.tests.TestConstants.BR;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class IOsTest {
 
-	private static final Charset UTF_8 = Charset.forName("UTF-8");
-
 	@Test
 	public void it_should_read_input_stream() throws Exception {
 		String firstLine = "first-line";
 		String secondLine = "second-line";
 		String output = firstLine + BR + secondLine;
-		InputStream is = spy(new ByteArrayInputStream(output.getBytes(UTF_8)));
+		CustomInputStream is = new CustomInputStream(output);
 
 		OutputHandler handler = mock(OutputHandler.class);
 		when(handler.readLine(anyString())).thenAnswer(new Answer<Boolean>() {
@@ -62,7 +59,7 @@ public class IOsTest {
 
 		verify(handler).readLine(firstLine);
 		verify(handler).readLine(secondLine);
-		verify(is).close();
+		assertThat(is.closed).isTrue();
 	}
 
 	@Test
@@ -70,7 +67,7 @@ public class IOsTest {
 		String firstLine = "first-line";
 		String secondLine = "second-line";
 		String output = firstLine + BR + secondLine;
-		InputStream is = spy(new ByteArrayInputStream(output.getBytes(UTF_8)));
+		CustomInputStream is = new CustomInputStream(output);
 
 		OutputHandler handler = mock(OutputHandler.class);
 		when(handler.readLine(anyString())).thenAnswer(new Answer<Boolean>() {
@@ -84,7 +81,7 @@ public class IOsTest {
 
 		verify(handler, times(1)).readLine(anyString());
 		verify(handler).readLine(firstLine);
-		verify(is, never()).close();
+		assertThat(is.closed).isFalse();
 	}
 
 	@Test
@@ -107,8 +104,7 @@ public class IOsTest {
 	@Test
 	public void it_should_read_file_with_utf8_charset() throws Exception {
 		String output = "line-with-accent: àéê";
-		byte[] bytes = output.getBytes(UTF_8);
-		InputStream is = new ByteArrayInputStream(bytes);
+		CustomInputStream is = new CustomInputStream(output);
 
 		OutputHandler handler = mock(OutputHandler.class);
 		when(handler.readLine(anyString())).thenReturn(false);
@@ -116,5 +112,27 @@ public class IOsTest {
 		IOs.readInputStream(is, handler);
 
 		verify(handler).readLine("line-with-accent: àéê");
+	}
+
+	private static final class CustomInputStream extends InputStream {
+
+		private final ByteArrayInputStream is;
+		private boolean closed;
+
+		private CustomInputStream(String value) {
+			this.is = new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
+			this.closed = false;
+		}
+
+		@Override
+		public int read() throws IOException {
+			return is.read();
+		}
+
+		@Override
+		public void close() throws IOException {
+			is.close();
+			closed = true;
+		}
 	}
 }

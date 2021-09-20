@@ -326,6 +326,17 @@
 
 	<profiles>
 		<profile>
+			<id>java16+</id>
+			<activation>
+				<jdk>[16,)</jdk>
+			</activation>
+			<properties>
+				<assertj.version>3.21.0</assertj.version>
+				<equalsverifier.version>3.7.1</equalsverifier.version>
+				<mockito.version>3.12.4</mockito.version>
+			</properties>
+		</profile>
+		<profile>
 			<id>release</id>
 			<build>
 				<plugins>
