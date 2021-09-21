@@ -159,6 +159,11 @@ public final class StandardOptions implements ExifToolOptions {
 	private final OverwriteMode overwriteOriginal;
 
 	/**
+	 * Output information in the form of exiftool arguments, suitable for use with the -@ option when writing.
+	 */
+	private final boolean useArgsFormat;
+
+	/**
 	 * Create options.
 	 *
 	 * @param format Output format.
@@ -175,6 +180,7 @@ public final class StandardOptions implements ExifToolOptions {
 	 * @param extractEmbedded Extract information from embedded documents.
 	 * @param extractUnknown Extract unknown tags.
 	 * @param overwriteMode The overwrite mode.
+	 * @param useArgsFormat Output information in the form of exiftool arguments.
 	 */
 	private StandardOptions(
 			Format format,
@@ -190,7 +196,8 @@ public final class StandardOptions implements ExifToolOptions {
 			boolean duplicates,
 			boolean extractEmbedded,
 			boolean extractUnknown,
-			OverwriteMode overwriteMode) {
+			OverwriteMode overwriteMode,
+			boolean useArgsFormat) {
 
 		this.format = format;
 		this.ignoreMinorErrors = ignoreMinorErrors;
@@ -206,6 +213,7 @@ public final class StandardOptions implements ExifToolOptions {
 		this.extractUnknown = extractUnknown;
 		this.duplicates = duplicates;
 		this.overwriteOriginal = overwriteMode;
+		this.useArgsFormat = useArgsFormat;
 	}
 
 	@Override
@@ -222,6 +230,10 @@ public final class StandardOptions implements ExifToolOptions {
 
 		if (extractUnknown) {
 			arguments.add("-u");
+		}
+
+		if (useArgsFormat) {
+			arguments.add("-args");
 		}
 
 		if (isNotEmpty(dateFormat)) {
@@ -418,6 +430,15 @@ public final class StandardOptions implements ExifToolOptions {
 	}
 
 	/**
+	 * Get {@link #useArgsFormat}
+	 *
+	 * @return {@link #useArgsFormat}
+	 */
+	public boolean isUseArgsFormat() {
+		return useArgsFormat;
+	}
+
+	/**
 	 * Re-Create builder from given options.
 	 *
 	 * @return Builder.
@@ -437,7 +458,8 @@ public final class StandardOptions implements ExifToolOptions {
 				.withDuplicates(duplicates)
 				.withExtractEmbedded(extractEmbedded)
 				.withExtractUnknown(extractUnknown)
-				.withOverwriteMode(overwriteOriginal);
+				.withOverwriteMode(overwriteOriginal)
+				.withUseArgsFormat(useArgsFormat);
 	}
 
 	@Override
@@ -461,7 +483,8 @@ public final class StandardOptions implements ExifToolOptions {
 					&& Objects.equals(duplicates, opts.duplicates)
 					&& Objects.equals(extractEmbedded, opts.extractEmbedded)
 					&& Objects.equals(extractUnknown, opts.extractUnknown)
-					&& Objects.equals(overwriteOriginal, opts.overwriteOriginal);
+					&& Objects.equals(overwriteOriginal, opts.overwriteOriginal)
+					&& Objects.equals(useArgsFormat, opts.useArgsFormat);
 		}
 
 		return false;
@@ -483,7 +506,8 @@ public final class StandardOptions implements ExifToolOptions {
 				duplicates,
 				extractEmbedded,
 				extractUnknown,
-				overwriteOriginal
+				overwriteOriginal,
+				useArgsFormat
 		);
 	}
 
@@ -504,6 +528,7 @@ public final class StandardOptions implements ExifToolOptions {
 				.append("extractEmbedded", extractEmbedded)
 				.append("extractUnknown", extractUnknown)
 				.append("overwriteOriginal", overwriteOriginal)
+				.append("useArgsFormat", useArgsFormat)
 				.build();
 	}
 
@@ -610,6 +635,11 @@ public final class StandardOptions implements ExifToolOptions {
 		 */
 		private OverwriteMode overwriteOriginal;
 
+		/**
+		 * Output information in the form of exiftool arguments.
+		 */
+		private boolean useArgsFormat;
+
 		private Builder() {
 			this.ignoreMinorErrors = false;
 			this.format = StandardFormat.HUMAN_READABLE;
@@ -625,6 +655,7 @@ public final class StandardOptions implements ExifToolOptions {
 			this.extractEmbedded = false;
 			this.extractUnknown = false;
 			this.overwriteOriginal = OverwriteMode.NONE;
+			this.useArgsFormat = false;
 		}
 
 		/**
@@ -884,6 +915,17 @@ public final class StandardOptions implements ExifToolOptions {
 		}
 
 		/**
+		 * Update {@link #useArgsFormat}.
+		 *
+		 * @param useArgsFormat The flag.
+		 * @return The builder.
+		 */
+		public Builder withUseArgsFormat(boolean useArgsFormat) {
+			this.useArgsFormat = useArgsFormat;
+			return this;
+		}
+
+		/**
 		 * Build ExifTool options.
 		 *
 		 * @return Options.
@@ -903,7 +945,8 @@ public final class StandardOptions implements ExifToolOptions {
 					duplicates,
 					extractEmbedded,
 					extractUnknown,
-					overwriteOriginal
+					overwriteOriginal,
+					useArgsFormat
 			);
 		}
 
@@ -1044,6 +1087,15 @@ public final class StandardOptions implements ExifToolOptions {
 			return overwriteOriginal == OverwriteMode.IN_PLACE;
 		}
 
+		/**
+		 * Get {@link #useArgsFormat}
+		 *
+		 * @return {@link #useArgsFormat}
+		 */
+		public boolean isUseArgsFormat() {
+			return useArgsFormat;
+		}
+
 		@Override
 		public String toString() {
 			return ToStringBuilder.create(getClass())
@@ -1060,6 +1112,7 @@ public final class StandardOptions implements ExifToolOptions {
 					.append("duplicates", duplicates)
 					.append("extractEmbedded", extractEmbedded)
 					.append("overwriteOriginal", overwriteOriginal)
+					.append("useArgsFormat", useArgsFormat)
 					.build();
 		}
 	}

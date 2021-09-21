@@ -49,6 +49,7 @@ public class StandardOptionsTest {
 		assertThat(opts.isExtractUnknown()).isFalse();
 		assertThat(opts.isOverwriteOriginal()).isFalse();
 		assertThat(opts.isOverwriteOriginalInPlace()).isFalse();
+		assertThat(opts.isUseArgsFormat()).isFalse();
 		assertThat(opts.serialize()).isNotNull().isEmpty();
 	}
 
@@ -310,6 +311,18 @@ public class StandardOptionsTest {
 	}
 
 	@Test
+	public void it_should_use_args_format() {
+		StandardOptions opts = StandardOptions.builder()
+				.withUseArgsFormat(true)
+				.build();
+
+		assertThat(opts).isNotNull();
+		assertThat(opts.isUseArgsFormat()).isTrue();
+		assertThat(opts.serialize()).hasSize(1).containsExactly("-args");
+		assertThat(opts.toBuilder().isUseArgsFormat()).isTrue();
+	}
+
+	@Test
 	public void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(StandardOptions.class)
 				.withPrefabValues(Charset.class, StandardCharsets.UTF_8, StandardCharsets.UTF_16)
@@ -336,7 +349,8 @@ public class StandardOptionsTest {
 						"duplicates: false, " +
 						"extractEmbedded: false, " +
 						"extractUnknown: false, " +
-						"overwriteOriginal: NONE" +
+						"overwriteOriginal: NONE, " +
+						"useArgsFormat: false" +
 				"}"
 		);
 		// @formatter:on
@@ -361,7 +375,8 @@ public class StandardOptionsTest {
 						"lang: null, " +
 						"duplicates: false, " +
 						"extractEmbedded: false, " +
-						"overwriteOriginal: NONE" +
+						"overwriteOriginal: NONE, " +
+						"useArgsFormat: false" +
 				"}"
 		);
 		// @formatter:on
