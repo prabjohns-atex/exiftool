@@ -94,38 +94,41 @@ This library is available on maven repository:
 
 #### Parsing tags
 
-```java:src/test/java/com/thebuzzmedia/exiftool/readme/basic/ExifParser.java
-import static java.util.Arrays.asList;
+```java
+// src/test/java/com/thebuzzmedia/exiftool/readme/basic/ExifParser.java
 
-import java.io.File;
-import java.util.Map;
+package com.thebuzzmedia.exiftool.readme.basic;
 
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.Map;
+
 public class ExifParser {
+	public static Map<Tag, String> parse(File image) throws Exception {
+		// ExifTool path must be defined as a system property (`exiftool.path`),
+		// but path can be set using `withPath` method.
+		try (ExifTool exifTool = new ExifToolBuilder().build()) {
+			return exifTool.getImageMeta(image, Arrays.asList(
+					StandardTag.ISO,
+					StandardTag.X_RESOLUTION,
+					StandardTag.Y_RESOLUTION
+			));
 
-    public static Map<Tag, String> parse(File image) throws Exception {
-        // ExifTool path must be defined as a system property (`exiftool.path`),
-        // but path can be set using `withPath` method.
-        try (ExifTool exifTool = new ExifToolBuilder().build()) {
-            return exifTool.getImageMeta(image, asList(
-                StandardTag.ISO,
-                StandardTag.X_RESOLUTION,
-                StandardTag.Y_RESOLUTION
-            ));
+		}
+	}
 
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        for (String image : args) {
-            System.out.println("Tags: " + ExifParser.parse(new File(image)));
-        }
-    }
+	public static void main(String[] args) throws Exception {
+		for (String image : args) {
+			System.out.println("Tags: " + ExifParser.parse(new File(image)));
+		}
+	}
 }
+
 ```
 
 #### Stay Open
@@ -133,12 +136,10 @@ public class ExifParser {
 If you want to reuse your exiftool process, you may want to activate the `stay_open` feature: note that an
 instance of `UnsupportedFeatureException` will be thrown your exiftool version is too old.
 
-```java:src/test/java/com/thebuzzmedia/exiftool/readme/stayopen/ExifParser.java
-import static java.util.Arrays.asList;
+```java
+// src/test/java/com/thebuzzmedia/exiftool/readme/stayopen/ExifParser.java
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
+package com.thebuzzmedia.exiftool.readme.stayopen;
 
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
@@ -146,37 +147,43 @@ import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+
 public class ExifParser {
 
-    private static final ExifTool exifTool = detect();
+	private static final ExifTool exifTool = detect();
 
-    private static ExifTool detect() {
-        try {
-            return new ExifToolBuilder().enableStayOpen().build();
-        } catch (UnsupportedFeatureException ex) {
-            // Fallback to simple exiftool instance.
-            return new ExifToolBuilder().build();
-        }
-    }
+	private static ExifTool detect() {
+		try {
+			return new ExifToolBuilder().enableStayOpen().build();
+		} catch (UnsupportedFeatureException ex) {
+			// Fallback to simple exiftool instance.
+			return new ExifToolBuilder().build();
+		}
+	}
 
-    public static Map<Tag, String> parse(File image) throws IOException {
-        return exifTool.getImageMeta(image, asList(
-            StandardTag.ISO,
-            StandardTag.X_RESOLUTION,
-            StandardTag.Y_RESOLUTION
-        ));
-    }
+	public static Map<Tag, String> parse(File image) throws IOException {
+		return exifTool.getImageMeta(image, Arrays.asList(
+				StandardTag.ISO,
+				StandardTag.X_RESOLUTION,
+				StandardTag.Y_RESOLUTION
+		));
+	}
 
-    public static void main(String[] args) throws Exception {
-        try {
-            for (String image : args) {
-                System.out.println("Tags: "+ ExifParser.parse(new File(image)));
-            }
-        } finally {
-            exifTool.close();
-        }
-    }
+	public static void main(String[] args) throws Exception {
+		try {
+			for (String image : args) {
+				System.out.println("Tags: "+ ExifParser.parse(new File(image)));
+			}
+		} finally {
+			exifTool.close();
+		}
+	}
 }
+
 ```
 
 #### Multithreading
@@ -186,30 +193,73 @@ will be synchronized. This can be a big problem if you need to manipulate images
 can be configured to allow a maximum number of `exiftool` to be open.
 
 ```java
+// src/test/java/com/thebuzzmedia/exiftool/readme/multithread/ExifParser.java
+
+package com.thebuzzmedia.exiftool.readme.multithread;
 
 import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
-import com.thebuzzmedia.exiftool.exceptions.UnsupportedFeatureException;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-
-import static java.util.Arrays.asList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ExifParser {
 
-    public static void main(String[] args) throws Exception {
-        ExifTool exifTool = new ExifToolBuilder()
-            .withPoolSize(10)  // Allow 10 process
-            .enableStayOpen()
-            .build();
+	private static final ExifTool exifTool = detect();
 
-        // Start 10 threads and use exifTool in parallel.
-        // ...
-    }
+	private static ExifTool detect() {
+		return new ExifToolBuilder()
+				.withPoolSize(10)  // Allow 10 process
+				.enableStayOpen()
+				.build();
+	}
+
+	public static Map<Tag, String> parse(File image) throws Exception {
+		try (ExifTool exifTool = new ExifToolBuilder().build()) {
+			return exifTool.getImageMeta(image, Arrays.asList(
+					StandardTag.ISO,
+					StandardTag.X_RESOLUTION,
+					StandardTag.Y_RESOLUTION
+			));
+
+		}
+	}
+
+	private static Map<Tag, String> parse(String image) throws Exception {
+		return parse(new File(image));
+	}
+
+	public static void main(String[] args) throws Exception {
+		ExecutorService executor = Executors.newFixedThreadPool(10);
+
+		try {
+			for (final String image : args) {
+				executor.submit(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							System.out.println("Tags: " + parse(image));
+						}
+						catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				});
+			}
+		} finally {
+			executor.shutdown();
+			exifTool.close();
+		}
+	}
 }
+
 ```
 
 ### Performance
