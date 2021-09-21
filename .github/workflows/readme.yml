@@ -21,8 +21,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - 'src/test/java/com/thebuzzmedia/exiftool/readme/**'
 
 jobs:
   embed-code:
