@@ -46,6 +46,7 @@ public class StandardOptionsTest {
 		assertThat(opts.getLang()).isNull();
 		assertThat(opts.isDuplicates()).isFalse();
 		assertThat(opts.isExtractEmbedded()).isFalse();
+		assertThat(opts.isExtractUnknown()).isFalse();
 		assertThat(opts.isOverwriteOriginal()).isFalse();
 		assertThat(opts.isOverwriteOriginalInPlace()).isFalse();
 		assertThat(opts.serialize()).isNotNull().isEmpty();
@@ -246,15 +247,26 @@ public class StandardOptionsTest {
 
 	@Test
 	public void it_should_set_extract_embedded() {
-		boolean extractEmbedded = true;
 		StandardOptions opts = StandardOptions.builder()
 				.withExtractEmbedded(true)
 				.build();
 
 		assertThat(opts).isNotNull();
-		assertThat(opts.isExtractEmbedded()).isEqualTo(extractEmbedded);
+		assertThat(opts.isExtractEmbedded()).isTrue();
 		assertThat(opts.serialize()).hasSize(1).containsExactly("-extractEmbedded");
 		assertThat(opts.toBuilder().isExtractEmbedded()).isTrue();
+	}
+
+	@Test
+	public void it_should_set_extract_unknown() {
+		StandardOptions opts = StandardOptions.builder()
+				.withExtractUnknown(true)
+				.build();
+
+		assertThat(opts).isNotNull();
+		assertThat(opts.isExtractUnknown()).isTrue();
+		assertThat(opts.serialize()).hasSize(1).containsExactly("-u");
+		assertThat(opts.toBuilder().isExtractUnknown()).isTrue();
 	}
 
 	@Test
@@ -323,6 +335,7 @@ public class StandardOptionsTest {
 						"lang: null, " +
 						"duplicates: false, " +
 						"extractEmbedded: false, " +
+						"extractUnknown: false, " +
 						"overwriteOriginal: NONE" +
 				"}"
 		);

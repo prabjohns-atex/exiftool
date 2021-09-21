@@ -131,6 +131,14 @@ public final class StandardOptions implements ExifToolOptions {
 	private final boolean extractEmbedded;
 
 	/**
+	 * Extract values of unknown tags.
+	 * Add another -u to also extract unknown information from binary data blocks.
+	 * This option applies to tags with numerical tag ID's, and causes tag names like "Exif_0xc5d9" to be generated for unknown information.
+	 * It has no effect on information types which have human-readable tag ID's (such as XMP), since unknown tags are extracted automatically from these formats.
+	 */
+	private final boolean extractUnknown;
+
+	/**
 	 * Wether or not to override original file when writing information to an image. Caution: This option should only
 	 * be used if you already have separate backup copies of your image files.
 	 *
@@ -165,6 +173,7 @@ public final class StandardOptions implements ExifToolOptions {
 	 * @param lang Lang.
 	 * @param duplicates Allow or suppress duplicate tag names to be extracted.
 	 * @param extractEmbedded Extract information from embedded documents.
+	 * @param extractUnknown Extract unknown tags.
 	 * @param overwriteMode The overwrite mode.
 	 */
 	private StandardOptions(
@@ -180,6 +189,7 @@ public final class StandardOptions implements ExifToolOptions {
 			String lang,
 			boolean duplicates,
 			boolean extractEmbedded,
+			boolean extractUnknown,
 			OverwriteMode overwriteMode) {
 
 		this.format = format;
@@ -193,6 +203,7 @@ public final class StandardOptions implements ExifToolOptions {
 		this.escapeXml = escapeXml;
 		this.lang = lang;
 		this.extractEmbedded = extractEmbedded;
+		this.extractUnknown = extractUnknown;
 		this.duplicates = duplicates;
 		this.overwriteOriginal = overwriteMode;
 	}
@@ -207,6 +218,10 @@ public final class StandardOptions implements ExifToolOptions {
 
 		if (ignoreMinorErrors) {
 			arguments.add("-m");
+		}
+
+		if (extractUnknown) {
+			arguments.add("-u");
 		}
 
 		if (isNotEmpty(dateFormat)) {
@@ -374,6 +389,15 @@ public final class StandardOptions implements ExifToolOptions {
 	}
 
 	/**
+	 * Get {@link #extractUnknown}
+	 *
+	 * @return {@link #extractUnknown}
+	 */
+	public boolean isExtractUnknown() {
+		return extractUnknown;
+	}
+
+	/**
 	 * Check if writing metadata will overwrite original file <strong>(not in place)</strong>.
 	 *
 	 * @return {@code true} if writing to file will overwrite it, {@code false otherwise}.
@@ -412,6 +436,7 @@ public final class StandardOptions implements ExifToolOptions {
 				.withLang(lang)
 				.withDuplicates(duplicates)
 				.withExtractEmbedded(extractEmbedded)
+				.withExtractUnknown(extractUnknown)
 				.withOverwiteMode(overwriteOriginal);
 	}
 
@@ -435,6 +460,7 @@ public final class StandardOptions implements ExifToolOptions {
 					&& Objects.equals(lang, opts.lang)
 					&& Objects.equals(duplicates, opts.duplicates)
 					&& Objects.equals(extractEmbedded, opts.extractEmbedded)
+					&& Objects.equals(extractUnknown, opts.extractUnknown)
 					&& Objects.equals(overwriteOriginal, opts.overwriteOriginal);
 		}
 
@@ -456,6 +482,7 @@ public final class StandardOptions implements ExifToolOptions {
 				lang,
 				duplicates,
 				extractEmbedded,
+				extractUnknown,
 				overwriteOriginal
 		);
 	}
@@ -475,6 +502,7 @@ public final class StandardOptions implements ExifToolOptions {
 				.append("lang", lang)
 				.append("duplicates", duplicates)
 				.append("extractEmbedded", extractEmbedded)
+				.append("extractUnknown", extractUnknown)
 				.append("overwriteOriginal", overwriteOriginal)
 				.build();
 	}
@@ -569,6 +597,13 @@ public final class StandardOptions implements ExifToolOptions {
 		private boolean extractEmbedded;
 
 		/**
+		 * Extract values of unknown tags.
+		 *
+		 * @see StandardOptions#extractUnknown
+		 */
+		private boolean extractUnknown;
+
+		/**
 		 * Overwrite original file mode.
 		 *
 		 * @see StandardOptions#overwriteOriginal
@@ -588,6 +623,7 @@ public final class StandardOptions implements ExifToolOptions {
 			this.lang = null;
 			this.duplicates = false;
 			this.extractEmbedded = false;
+			this.extractUnknown = false;
 			this.overwriteOriginal = OverwriteMode.NONE;
 		}
 
@@ -800,6 +836,17 @@ public final class StandardOptions implements ExifToolOptions {
 		}
 
 		/**
+		 * Update {@link #extractUnknown}.
+		 *
+		 * @param extractUnknown The flag.
+		 * @return The builder.
+		 */
+		public Builder withExtractUnknown(boolean extractUnknown) {
+			this.extractUnknown = extractUnknown;
+			return this;
+		}
+
+		/**
 		 * Build ExifTool options.
 		 *
 		 * @return Options.
@@ -818,6 +865,7 @@ public final class StandardOptions implements ExifToolOptions {
 					lang,
 					duplicates,
 					extractEmbedded,
+					extractUnknown,
 					overwriteOriginal
 			);
 		}
@@ -928,6 +976,15 @@ public final class StandardOptions implements ExifToolOptions {
 		 */
 		public boolean isExtractEmbedded() {
 			return extractEmbedded;
+		}
+
+		/**
+		 * Get {@link #extractUnknown}
+		 *
+		 * @return {@link #extractUnknown}
+		 */
+		public boolean isExtractUnknown() {
+			return extractUnknown;
 		}
 
 		/**
