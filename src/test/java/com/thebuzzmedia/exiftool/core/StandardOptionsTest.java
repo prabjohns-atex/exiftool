@@ -272,7 +272,7 @@ public class StandardOptionsTest {
 	@Test
 	public void it_should_overwrite_original() {
 		StandardOptions opts = StandardOptions.builder()
-				.withOverwiteOriginal()
+				.withOverwriteOriginal()
 				.build();
 
 		assertThat(opts).isNotNull();
@@ -284,7 +284,7 @@ public class StandardOptionsTest {
 		assertThat(builder.isOverwriteOriginal()).isTrue();
 		assertThat(builder.isOverwriteOriginalInPlace()).isFalse();
 
-		builder.doNotOverwiteOriginal();
+		builder.doNotOverwriteOriginal();
 		assertThat(builder.isOverwriteOriginal()).isFalse();
 		assertThat(builder.isOverwriteOriginalInPlace()).isFalse();
 	}
@@ -292,7 +292,7 @@ public class StandardOptionsTest {
 	@Test
 	public void it_should_overwrite_original_in_place() {
 		StandardOptions opts = StandardOptions.builder()
-				.withOverwiteOriginalInPlace()
+				.withOverwriteOriginalInPlace()
 				.build();
 
 		assertThat(opts).isNotNull();
@@ -304,7 +304,7 @@ public class StandardOptionsTest {
 		assertThat(builder.isOverwriteOriginal()).isFalse();
 		assertThat(builder.isOverwriteOriginalInPlace()).isTrue();
 
-		builder.doNotOverwiteOriginal();
+		builder.doNotOverwriteOriginal();
 		assertThat(builder.isOverwriteOriginal()).isFalse();
 		assertThat(builder.isOverwriteOriginalInPlace()).isFalse();
 	}

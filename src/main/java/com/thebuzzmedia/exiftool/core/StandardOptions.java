@@ -437,7 +437,7 @@ public final class StandardOptions implements ExifToolOptions {
 				.withDuplicates(duplicates)
 				.withExtractEmbedded(extractEmbedded)
 				.withExtractUnknown(extractUnknown)
-				.withOverwiteMode(overwriteOriginal);
+				.withOverwriteMode(overwriteOriginal);
 	}
 
 	@Override
@@ -797,9 +797,31 @@ public final class StandardOptions implements ExifToolOptions {
 		 * Do not overwrite original file.
 		 *
 		 * @return The builder.
+		 * @deprecated Use {@link #doNotOverwiteOriginal()} instead.
 		 */
+		@Deprecated
 		public Builder doNotOverwiteOriginal() {
-			return withOverwiteMode(OverwriteMode.NONE);
+			return doNotOverwriteOriginal();
+		}
+
+		/**
+		 * Do not overwrite original file.
+		 *
+		 * @return The builder.
+		 */
+		public Builder doNotOverwriteOriginal() {
+			return withOverwriteMode(OverwriteMode.NONE);
+		}
+
+		/**
+		 * Overwrite original file.
+		 *
+		 * @return The builder.
+		 * @deprecated Use {@link #withOverwriteOriginal()} instead.
+		 */
+		@Deprecated
+		public Builder withOverwiteOriginal() {
+			return withOverwriteOriginal();
 		}
 
 		/**
@@ -807,8 +829,23 @@ public final class StandardOptions implements ExifToolOptions {
 		 *
 		 * @return The builder.
 		 */
-		public Builder withOverwiteOriginal() {
-			return withOverwiteMode(OverwriteMode.COPY);
+		public Builder withOverwriteOriginal() {
+			return withOverwriteMode(OverwriteMode.COPY);
+		}
+
+		/**
+		 * Overwrite original file in place.
+		 *
+		 * <br>
+		 *
+		 * Caution: this may cause some performance issues, prefer {@link #withOverwiteOriginal()} if possible.
+		 *
+		 * @return The builder.
+		 * @deprecated Use {@link #withOverwriteOriginalInPlace()} instead.
+		 */
+		@Deprecated
+		public Builder withOverwiteOriginalInPlace() {
+			return withOverwriteOriginalInPlace();
 		}
 
 		/**
@@ -820,8 +857,8 @@ public final class StandardOptions implements ExifToolOptions {
 		 *
 		 * @return The builder.
 		 */
-		public Builder withOverwiteOriginalInPlace() {
-			return withOverwiteMode(OverwriteMode.IN_PLACE);
+		public Builder withOverwriteOriginalInPlace() {
+			return withOverwriteMode(OverwriteMode.IN_PLACE);
 		}
 
 		/**
@@ -830,7 +867,7 @@ public final class StandardOptions implements ExifToolOptions {
 		 * @param mode The mode.
 		 * @return The builder.
 		 */
-		private Builder withOverwiteMode(OverwriteMode mode) {
+		private Builder withOverwriteMode(OverwriteMode mode) {
 			this.overwriteOriginal = mode;
 			return this;
 		}
