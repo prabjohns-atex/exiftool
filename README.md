@@ -94,7 +94,7 @@ This library is available on maven repository:
 
 #### Parsing tags
 
-```java
+```java:src/test/java/com/thebuzzmedia/exiftool/readme/basic/ExifParser.java
 import static java.util.Arrays.asList;
 
 import java.io.File;
@@ -133,7 +133,7 @@ public class ExifParser {
 If you want to reuse your exiftool process, you may want to activate the `stay_open` feature: note that an
 instance of `UnsupportedFeatureException` will be thrown your exiftool version is too old.
 
-```java
+```java:src/test/java/com/thebuzzmedia/exiftool/readme/stayopen/ExifParser.java
 import static java.util.Arrays.asList;
 
 import java.io.File;
