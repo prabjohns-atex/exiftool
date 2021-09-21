@@ -109,24 +109,24 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class ExifParser {
-	public static Map<Tag, String> parse(File image) throws Exception {
-		// ExifTool path must be defined as a system property (`exiftool.path`),
-		// but path can be set using `withPath` method.
-		try (ExifTool exifTool = new ExifToolBuilder().build()) {
-			return exifTool.getImageMeta(image, Arrays.asList(
-					StandardTag.ISO,
-					StandardTag.X_RESOLUTION,
-					StandardTag.Y_RESOLUTION
-			));
+  public static Map<Tag, String> parse(File image) throws Exception {
+    // ExifTool path must be defined as a system property (`exiftool.path`),
+    // but path can be set using `withPath` method.
+    try (ExifTool exifTool = new ExifToolBuilder().build()) {
+      return exifTool.getImageMeta(image, Arrays.asList(
+          StandardTag.ISO,
+          StandardTag.X_RESOLUTION,
+          StandardTag.Y_RESOLUTION
+      ));
 
-		}
-	}
+    }
+  }
 
-	public static void main(String[] args) throws Exception {
-		for (String image : args) {
-			System.out.println("Tags: " + ExifParser.parse(new File(image)));
-		}
-	}
+  public static void main(String[] args) throws Exception {
+    for (String image : args) {
+      System.out.println("Tags: " + ExifParser.parse(new File(image)));
+    }
+  }
 }
 
 ```
@@ -154,34 +154,34 @@ import java.util.Map;
 
 public class ExifParser {
 
-	private static final ExifTool exifTool = detect();
+  private static final ExifTool exifTool = detect();
 
-	private static ExifTool detect() {
-		try {
-			return new ExifToolBuilder().enableStayOpen().build();
-		} catch (UnsupportedFeatureException ex) {
-			// Fallback to simple exiftool instance.
-			return new ExifToolBuilder().build();
-		}
-	}
+  private static ExifTool detect() {
+    try {
+      return new ExifToolBuilder().enableStayOpen().build();
+    } catch (UnsupportedFeatureException ex) {
+      // Fallback to simple exiftool instance.
+      return new ExifToolBuilder().build();
+    }
+  }
 
-	public static Map<Tag, String> parse(File image) throws IOException {
-		return exifTool.getImageMeta(image, Arrays.asList(
-				StandardTag.ISO,
-				StandardTag.X_RESOLUTION,
-				StandardTag.Y_RESOLUTION
-		));
-	}
+  public static Map<Tag, String> parse(File image) throws IOException {
+    return exifTool.getImageMeta(image, Arrays.asList(
+        StandardTag.ISO,
+        StandardTag.X_RESOLUTION,
+        StandardTag.Y_RESOLUTION
+    ));
+  }
 
-	public static void main(String[] args) throws Exception {
-		try {
-			for (String image : args) {
-				System.out.println("Tags: "+ ExifParser.parse(new File(image)));
-			}
-		} finally {
-			exifTool.close();
-		}
-	}
+  public static void main(String[] args) throws Exception {
+    try {
+      for (String image : args) {
+        System.out.println("Tags: "+ ExifParser.parse(new File(image)));
+      }
+    } finally {
+      exifTool.close();
+    }
+  }
 }
 
 ```
@@ -212,52 +212,52 @@ import java.util.concurrent.Executors;
 
 public class ExifParser {
 
-	private static final ExifTool exifTool = detect();
+  private static final ExifTool exifTool = detect();
 
-	private static ExifTool detect() {
-		return new ExifToolBuilder()
-				.withPoolSize(10)  // Allow 10 process
-				.enableStayOpen()
-				.build();
-	}
+  private static ExifTool detect() {
+    return new ExifToolBuilder()
+        .withPoolSize(10)  // Allow 10 process
+        .enableStayOpen()
+        .build();
+  }
 
-	public static Map<Tag, String> parse(File image) throws Exception {
-		try (ExifTool exifTool = new ExifToolBuilder().build()) {
-			return exifTool.getImageMeta(image, Arrays.asList(
-					StandardTag.ISO,
-					StandardTag.X_RESOLUTION,
-					StandardTag.Y_RESOLUTION
-			));
+  public static Map<Tag, String> parse(File image) throws Exception {
+    try (ExifTool exifTool = new ExifToolBuilder().build()) {
+      return exifTool.getImageMeta(image, Arrays.asList(
+          StandardTag.ISO,
+          StandardTag.X_RESOLUTION,
+          StandardTag.Y_RESOLUTION
+      ));
 
-		}
-	}
+    }
+  }
 
-	private static Map<Tag, String> parse(String image) throws Exception {
-		return parse(new File(image));
-	}
+  private static Map<Tag, String> parse(String image) throws Exception {
+    return parse(new File(image));
+  }
 
-	public static void main(String[] args) throws Exception {
-		ExecutorService executor = Executors.newFixedThreadPool(10);
+  public static void main(String[] args) throws Exception {
+    ExecutorService executor = Executors.newFixedThreadPool(10);
 
-		try {
-			for (final String image : args) {
-				executor.submit(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							System.out.println("Tags: " + parse(image));
-						}
-						catch (Exception ex) {
-							ex.printStackTrace();
-						}
-					}
-				});
-			}
-		} finally {
-			executor.shutdown();
-			exifTool.close();
-		}
-	}
+    try {
+      for (final String image : args) {
+        executor.submit(new Runnable() {
+          @Override
+          public void run() {
+            try {
+              System.out.println("Tags: " + parse(image));
+            }
+            catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          }
+        });
+      }
+    } finally {
+      executor.shutdown();
+      exifTool.close();
+    }
+  }
 }
 
 ```
