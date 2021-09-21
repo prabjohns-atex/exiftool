@@ -455,7 +455,7 @@ public class ExifTool implements AutoCloseable {
 	 * @throws IllegalArgumentException If list of tag is empty.
 	 * @throws com.thebuzzmedia.exiftool.exceptions.UnreadableFileException If image cannot be read.
 	 */
-	public Map<Tag, String> getImageMeta(File image, Collection<Tag> tags) throws IOException {
+	public Map<Tag, String> getImageMeta(File image, Collection<? extends Tag> tags) throws IOException {
 		return getImageMeta(image, StandardFormat.NUMERIC, tags);
 	}
 
