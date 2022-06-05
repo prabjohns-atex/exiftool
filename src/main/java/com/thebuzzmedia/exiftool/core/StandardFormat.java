@@ -66,6 +66,9 @@ import static java.util.Collections.singletonList;
  * @since 1.1
  */
 public enum StandardFormat implements Format {
+	/**
+	 * Numeric Output.
+	 */
 	NUMERIC {
 		@Override
 		public List<String> getArgs() {
@@ -73,6 +76,9 @@ public enum StandardFormat implements Format {
 		}
 	},
 
+	/**
+	 * Human readable Output.
+	 */
 	HUMAN_READABLE {
 		@Override
 		public List<String> getArgs() {

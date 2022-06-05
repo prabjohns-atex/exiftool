@@ -38,9 +38,9 @@ import static com.thebuzzmedia.exiftool.process.executor.CommandExecutors.newExe
  * Builder for {@link ExifTool} instance.
  * This builder should be used to create instance of {@link com.thebuzzmedia.exiftool.ExifTool}.
  *
- * <h3>Settings</h3>
+ * <h2>Settings</h2>
  *
- * <h4>Path</h4>
+ * <h3>Path</h3>
  *
  * Set the absolute withPath to the ExifTool executable on the host system running
  * this class as defined by the `exiftool.withPath` system property.
@@ -183,6 +183,9 @@ public class ExifToolBuilder {
 	 */
 	private int poolSize;
 
+	/**
+	 * Create builder with default settings.
+	 */
 	public ExifToolBuilder() {
 	}
 

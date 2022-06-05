@@ -69,7 +69,7 @@ import static java.util.Collections.singleton;
  * (including Windows) so no portability issues are introduced into your
  * application by utilizing this class.
  *
- * <h3>Usage</h3>
+ * <h2>Usage</h2>
  *
  * Assuming ExifTool is installed on the host system correctly and either in the
  * system path, using this class to communicate with ExifTool is as simple as

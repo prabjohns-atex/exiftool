@@ -20,6 +20,9 @@ package com.thebuzzmedia.exiftool.commons.lang;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Builder to write <code>toString</code> function in a fluent way.
+ */
 public class ToStringBuilder {
 	/**
 	 * The characters used to start object representation.

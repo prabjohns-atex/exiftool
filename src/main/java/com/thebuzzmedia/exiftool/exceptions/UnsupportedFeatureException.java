@@ -43,6 +43,12 @@ public class UnsupportedFeatureException extends AbstractExifException {
 	 */
 	private final String path;
 
+	/**
+	 * Create exception.
+	 *
+	 * @param path ExifTool path.
+	 * @param version Exif Version.
+	 */
 	public UnsupportedFeatureException(String path, Version version) {
 		super(message(path, version));
 		this.version = version;

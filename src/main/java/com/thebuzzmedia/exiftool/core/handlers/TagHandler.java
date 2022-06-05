@@ -22,6 +22,9 @@ import com.thebuzzmedia.exiftool.process.OutputHandler;
 
 import java.util.Map;
 
+/**
+ * Handle tags line by line and store output.
+ */
 public interface TagHandler extends OutputHandler {
 
 	/**

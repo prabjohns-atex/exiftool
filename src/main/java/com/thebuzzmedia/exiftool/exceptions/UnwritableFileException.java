@@ -44,6 +44,11 @@ public class UnwritableFileException extends AbstractExifException {
 		this.file = file;
 	}
 
+	/**
+	 * Get {@link #file}
+	 *
+	 * @return {@link #file}
+	 */
 	public File getFile() {
 		return file;
 	}

@@ -26,6 +26,12 @@ public final class Strings {
 	private Strings() {
 	}
 
+	/**
+	 * Check that given string is not {@code null} or empty.
+	 *
+	 * @param value Given string to check.
+	 * @return {@code true} if {@code value} is {@code null} or empty.
+	 */
 	public static boolean isNotEmpty(String value) {
 		return value != null && !value.isEmpty();
 	}

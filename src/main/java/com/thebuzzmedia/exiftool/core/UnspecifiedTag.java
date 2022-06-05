@@ -44,6 +44,11 @@ public final class UnspecifiedTag implements Tag {
 	 */
 	private final String name;
 
+	/**
+	 * Create tag.
+	 *
+	 * @param name Tag name.
+	 */
 	public UnspecifiedTag(String name) {
 		this.name = name;
 	}
