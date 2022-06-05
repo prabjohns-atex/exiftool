@@ -91,7 +91,9 @@ public class DefaultCommandExecutor implements CommandExecutor {
 	private Process createProcess(Command command) throws IOException {
 		try {
 			List<String> args = command.getArguments();
-			return new ProcessBuilder(args).start();
+			ProcessBuilder builder = new ProcessBuilder(args);
+			builder.redirectErrorStream(true);
+			return builder.start();
 		}
 		catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
