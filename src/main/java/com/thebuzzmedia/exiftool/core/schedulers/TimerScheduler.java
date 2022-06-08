@@ -92,12 +92,6 @@ public class TimerScheduler implements Scheduler {
 		timer.cancel();
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		shutdown();
-	}
-
 	private static class CleanupTask extends TimerTask {
 		private final Runnable runnable;
 

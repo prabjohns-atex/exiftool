@@ -170,28 +170,4 @@ public class DefaultSchedulerTest {
 		verify(executor).purge();
 		verify(executor).shutdownNow();
 	}
-
-	@Test
-	public void it_should_finalize_scheduler() throws Throwable {
-		int delay = 10000;
-		TimeUnit timeUnit = TimeUnit.MILLISECONDS;
-		SchedulerDuration executionDelay = duration(delay, timeUnit);
-		DefaultScheduler scheduler = new DefaultScheduler(executionDelay);
-		writePrivateField(scheduler, "executor", executor);
-
-		RunnableFuture<?> r1 = mock(RunnableFuture.class);
-		RunnableFuture<?> r2 = mock(RunnableFuture.class);
-		BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(10);
-		queue.add(r1);
-		queue.add(r2);
-
-		when(executor.getQueue()).thenReturn(queue);
-
-		scheduler.finalize();
-
-		verify(r1).cancel(false);
-		verify(r2).cancel(false);
-		verify(executor).purge();
-		verify(executor).shutdownNow();
-	}
 }

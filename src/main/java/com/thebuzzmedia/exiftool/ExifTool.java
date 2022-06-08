@@ -17,6 +17,9 @@
 
 package com.thebuzzmedia.exiftool;
 
+import com.thebuzzmedia.exiftool.commons.gc.Cleaner;
+import com.thebuzzmedia.exiftool.commons.gc.CleanerFactory;
+import com.thebuzzmedia.exiftool.commons.lang.PreConditions;
 import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
@@ -276,6 +279,8 @@ import static java.util.Collections.singleton;
  */
 public class ExifTool implements AutoCloseable {
 
+	private static final Cleaner cleaner = CleanerFactory.createCleaner();
+
 	/**
 	 * Internal Logger.
 	 * Will used slf4j, log4j or internal implementation.
@@ -338,6 +343,8 @@ public class ExifTool implements AutoCloseable {
 		if (!strategy.isSupported(version)) {
 			throw new UnsupportedFeatureException(path, version);
 		}
+
+		cleaner.register(this, new FinalizerTask(strategy));
 	}
 
 	/**
@@ -612,5 +619,23 @@ public class ExifTool implements AutoCloseable {
 		args.add("-execute");
 
 		return new ArrayList<>(args);
+	}
+
+	private static final class FinalizerTask implements Runnable {
+		private final ExecutionStrategy strategy;
+
+		private FinalizerTask(ExecutionStrategy strategy) {
+			this.strategy = PreConditions.notNull(strategy, "Execution strategy must not be null");
+		}
+
+		@Override
+		public void run() {
+			try {
+				strategy.shutdown();
+			}
+			catch (Exception ex) {
+				log.warn(ex.getMessage(), ex);
+			}
+		}
 	}
 }

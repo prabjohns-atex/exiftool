@@ -163,26 +163,4 @@ public class TimerSchedulerTest {
 		verify(timer).cancel();
 		assertThat(readPrivateField(scheduler, "pendingTask")).isNull();
 	}
-
-	@Test
-	public void it_should_finalize_scheduler() throws Throwable {
-		long delay = 10000;
-		TimerScheduler scheduler = new TimerScheduler(null, delay);
-
-		Timer timer = mock(Timer.class);
-		writePrivateField(scheduler, "timer", timer);
-
-		TimerTask timerTask = mock(TimerTask.class);
-		writePrivateField(scheduler, "pendingTask", timerTask);
-
-		scheduler.finalize();
-
-		InOrder inOrder = inOrder(timer, timerTask);
-		inOrder.verify(timerTask).cancel();
-		inOrder.verify(timer).purge();
-		inOrder.verify(timer).cancel();
-
-		TimerTask actualScheduler = readPrivateField(scheduler, "pendingTask");
-		assertThat(actualScheduler).isNull();
-	}
 }
