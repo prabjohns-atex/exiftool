@@ -26,6 +26,9 @@ import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.lookupClas
 
 /**
  * Implementation of {@link Cleaner} using {@code sun.misc.Cleaner} implementation.
+ *
+ * This cleaner is created using reflection, as {@code sun.misc.Cleaner} does not exist in Java >= 9.
+ * Once this library will support java >= 9 only, this implementation will be removed.
  */
 final class UnsafeCleaner implements Cleaner {
 
@@ -40,6 +43,9 @@ final class UnsafeCleaner implements Cleaner {
 		return new UnsafeCleaner(register);
 	}
 
+	/**
+	 * Static register method on {@code sun.misc.Cleaner} class.
+	 */
 	private final MethodHandle register;
 
 	private UnsafeCleaner(MethodHandle register) {

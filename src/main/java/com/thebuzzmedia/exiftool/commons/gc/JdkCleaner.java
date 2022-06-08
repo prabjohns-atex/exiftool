@@ -28,6 +28,9 @@ import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.lookupClas
 
 /**
  * Implementation of {@link Cleaner} using {@code java.lang.ref.Cleaner} implementation.
+ *
+ * This cleaner is created using reflection, once this library will support Java >= 9 only, we'll be
+ * able to get rid of Reflection.
  */
 final class JdkCleaner implements Cleaner {
 
@@ -46,7 +49,14 @@ final class JdkCleaner implements Cleaner {
 		return new JdkCleaner(cleaner, register);
 	}
 
+	/**
+	 * Cleaner instance (instance of {@code java.lang.ref.Cleaner}.
+	 */
 	private final Object cleaner;
+
+	/**
+	 * Register method on cleaner instance.
+	 */
 	private final MethodHandle register;
 
 	private JdkCleaner(Object cleaner, MethodHandle register) {
