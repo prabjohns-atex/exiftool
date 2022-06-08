@@ -92,4 +92,20 @@ public final class ReflectionTestUtils {
 			throw new AssertionError(ex);
 		}
 	}
+
+	/**
+	 * Check if given class is available on classpath.
+	 *
+	 * @param klazz Class name to check (FQN).
+	 * @return True if class is available, false otherwise.
+	 */
+	public static boolean isClassAvailable(String klazz) {
+		try {
+			Class.forName(klazz);
+			return true;
+		}
+		catch (ClassNotFoundException ex) {
+			return false;
+		}
+	}
 }

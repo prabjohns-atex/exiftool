@@ -178,13 +178,4 @@ public class DefaultScheduler implements Scheduler {
 			Thread.currentThread().interrupt();
 		}
 	}
-
-	// Implement finalizer.
-	// This is just a small security to stop scheduled task if
-	// instance is garbage collected.
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		shutdown();
-	}
 }

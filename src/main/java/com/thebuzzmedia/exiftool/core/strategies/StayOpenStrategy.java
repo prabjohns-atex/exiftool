@@ -144,19 +144,6 @@ public class StayOpenStrategy implements ExecutionStrategy {
 		shutdownScheduler();
 	}
 
-	// Implement finalizer.
-	// This is just a small security: it should not prevent caller
-	// to explicitly close the exiftool process (but add this finalizer
-	// if someone forget).
-	@Override
-	protected void finalize() throws Throwable {
-		// Just delegate to original finalizer implementation
-		super.finalize();
-
-		// Be sure process is closed
-		shutdown();
-	}
-
 	/**
 	 * Close pending cleanup task and stop scheduler.
 	 * This scheduler may be re-used if necessary.
