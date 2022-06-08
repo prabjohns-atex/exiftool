@@ -20,42 +20,34 @@ package com.thebuzzmedia.exiftool.commons.gc;
 import java.lang.invoke.MethodHandle;
 
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
-import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.findMethod;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.findStaticMethod;
-import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.invoke;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.invokeStatic;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.lookupClass;
 
 /**
- * Implementation of {@link Cleaner} using {@code java.lang.ref.Cleaner} implementation.
+ * Implementation of {@link Cleaner} using {@code sun.misc.Cleaner} implementation.
  */
-final class JdkCleaner implements Cleaner {
+final class UnsafeCleaner implements Cleaner {
 
 	/**
-	 * Create JDK cleaner.
+	 * Create "unsafe" cleaner.
 	 *
-	 * @return Cleaner, using {@code java.lang.ref.Cleaner} available since Java >= 9.
+	 * @return Cleaner, using {@code sun.misc.Cleaner} available with Java < 9.
 	 */
-	static JdkCleaner create() {
-		Class<?> cleanerClass = lookupClass("java.lang.ref.Cleaner");
-		Class<?> cleanableClass = lookupClass("java.lang.ref.Cleaner$Cleanable");
-		MethodHandle create = findStaticMethod(cleanerClass, "create", cleanerClass);
-
-		Object cleaner = invokeStatic(create);
-		MethodHandle register = findMethod(cleanerClass, "register", cleanableClass, Object.class, Runnable.class);
-		return new JdkCleaner(cleaner, register);
+	static UnsafeCleaner create() {
+		Class<?> cleanerClass = lookupClass("sun.misc.Cleaner");
+		MethodHandle register = findStaticMethod(cleanerClass, "create", cleanerClass, Object.class, Runnable.class);
+		return new UnsafeCleaner(register);
 	}
 
-	private final Object cleaner;
 	private final MethodHandle register;
 
-	private JdkCleaner(Object cleaner, MethodHandle register) {
-		this.cleaner = notNull(cleaner, "Cleaner must not be null");
+	private UnsafeCleaner(MethodHandle register) {
 		this.register = notNull(register, "Register method must not be null");
 	}
 
 	@Override
 	public void register(Object ref, Runnable cleanupTask) {
-		invoke(register, cleaner, ref, cleanupTask);
+		invokeStatic(register, ref, cleanupTask);
 	}
 }
