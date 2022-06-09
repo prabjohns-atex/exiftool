@@ -253,10 +253,9 @@ public class ExifToolTest {
 	@SuppressWarnings({"unused", "UnusedAssignment"})
 	@Test
 	public void it_should_shutdown_strategy_if_exiftool_has_not_been_called() throws Exception {
-		final ExecutionStrategy strategy = mock(ExecutionStrategy.class);
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 
-		ExifTool exifTool = new ExifToolBuilder().withStrategy(strategy).build();
+		ExifTool exifTool = new ExifTool(path, executor, strategy);
 		verify(strategy, never()).shutdown();
 
 		exifTool = null;
