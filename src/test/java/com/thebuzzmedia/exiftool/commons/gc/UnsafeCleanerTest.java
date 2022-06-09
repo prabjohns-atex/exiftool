@@ -17,7 +17,6 @@
 
 package com.thebuzzmedia.exiftool.commons.gc;
 
-import org.awaitility.Awaitility;
 import org.awaitility.core.ThrowingRunnable;
 import org.junit.Test;
 
@@ -30,6 +29,7 @@ import static org.junit.Assume.assumeTrue;
 
 public class UnsafeCleanerTest {
 
+	@SuppressWarnings("UnusedAssignment")
 	@Test
 	public void it_should_create_cleaner_and_register_object() {
 		assumeTrue(isClassAvailable("sun.misc.Cleaner"));
