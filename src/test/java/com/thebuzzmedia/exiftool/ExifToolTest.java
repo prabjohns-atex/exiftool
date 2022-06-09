@@ -23,15 +23,23 @@ import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.awaitility.Awaitility;
+import org.awaitility.core.ThrowingRunnable;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readStaticPrivateField;
+import static java.lang.System.gc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -240,5 +248,25 @@ public class ExifToolTest {
 								"The version of ExifTool referenced by the path '" + path + "' is not high enough. " +
 								"You can either upgrade the install of ExifTool or avoid using this feature to workaround this exception."
 				);
+	}
+
+	@SuppressWarnings("unused")
+	@Test
+	public void it_should_shutdown_strategy_if_exiftool_has_not_been_called() throws Exception {
+		final ExecutionStrategy strategy = mock(ExecutionStrategy.class);
+		when(strategy.isSupported(any(Version.class))).thenReturn(true);
+
+		ExifTool exifTool = new ExifToolBuilder().withStrategy(strategy).build();
+		verify(strategy, never()).shutdown();
+
+		exifTool = null;
+		gc();
+
+		await().atMost(5, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).untilAsserted(new ThrowingRunnable() {
+			@Override
+			public void run() throws Throwable {
+				verify(strategy).shutdown();
+			}
+		});
 	}
 }

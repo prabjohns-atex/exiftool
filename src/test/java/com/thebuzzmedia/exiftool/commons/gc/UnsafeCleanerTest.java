@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.isClassAvailable;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.Assume.assumeTrue;
 
 public class UnsafeCleanerTest {
@@ -43,7 +44,7 @@ public class UnsafeCleanerTest {
 		o = null;
 		System.gc();
 
-		Awaitility.await().timeout(5, TimeUnit.SECONDS).untilAsserted(new ThrowingRunnable() {
+		await().atMost(5, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).untilAsserted(new ThrowingRunnable() {
 			@Override
 			public void run() {
 				assertThat(cleanupTask.runned).isTrue();
