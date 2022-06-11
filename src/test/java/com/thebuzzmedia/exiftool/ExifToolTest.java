@@ -23,23 +23,19 @@ import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.awaitility.Awaitility;
 import org.awaitility.core.ThrowingRunnable;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readStaticPrivateField;
 import static java.lang.System.gc;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -207,13 +203,9 @@ public class ExifToolTest {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 
-		String exifToolPath = readPrivateField(exifTool, "path");
-		CommandExecutor exifToolExecutor = readPrivateField(exifTool, "executor");
-		ExecutionStrategy exifToolStrategy = readPrivateField(exifTool, "strategy");
-
-		assertThat(exifToolPath).isEqualTo(this.path);
-		assertThat(exifToolExecutor).isEqualTo(this.executor);
-		assertThat(exifToolStrategy).isEqualTo(this.strategy);
+		assertThat(exifTool).extracting("path").isEqualTo(this.path);
+		assertThat(exifTool).extracting("executor").isEqualTo(this.executor);
+		assertThat(exifTool).extracting("strategy").isEqualTo(this.strategy);
 
 		ArgumentCaptor<Version> versionCaptor = ArgumentCaptor.forClass(Version.class);
 		verify(strategy).isSupported(versionCaptor.capture());

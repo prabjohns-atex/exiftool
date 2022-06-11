@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.duration;
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.millis;
-import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.writePrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -93,8 +92,8 @@ public class DefaultSchedulerTest {
 		DefaultScheduler scheduler = new DefaultScheduler(millis(delay));
 
 		SchedulerDuration expectedDelay = duration(delay, TimeUnit.MILLISECONDS);
-		assertThat(readPrivateField(scheduler, "executionDelay")).isEqualTo(expectedDelay);
-		assertThat(readPrivateField(scheduler, "executor")).isNotNull();
+		assertThat(scheduler).extracting("executionDelay").isEqualTo(expectedDelay);
+		assertThat(scheduler).extracting("executor").isNotNull();
 	}
 
 	@Test
@@ -106,8 +105,8 @@ public class DefaultSchedulerTest {
 		DefaultScheduler scheduler = new DefaultScheduler(executionDelay);
 
 		SchedulerDuration expectedDelay = duration(delay, timeUnit);
-		assertThat(readPrivateField(scheduler, "executionDelay")).isEqualTo(expectedDelay);
-		assertThat(readPrivateField(scheduler, "executor")).isNotNull();
+		assertThat(scheduler).extracting("executionDelay").isEqualTo(expectedDelay);
+		assertThat(scheduler).extracting("executor").isNotNull();
 	}
 
 	@Test

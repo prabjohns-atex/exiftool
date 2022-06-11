@@ -25,7 +25,6 @@ import org.mockito.InOrder;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.writePrivateField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -57,13 +56,9 @@ public class TimerSchedulerTest {
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(name, delay);
 
-		String actualName = readPrivateField(scheduler, "name");
-		long actualDelay = readPrivateField(scheduler, "delay");
-		Object actualScheduler = readPrivateField(scheduler, "timer");
-
-		assertThat(actualName).isNotNull().isNotEmpty().isEqualTo(name);
-		assertThat(actualDelay).isNotNull().isEqualTo(delay);
-		assertThat(actualScheduler).isNotNull();
+		assertThat(scheduler).extracting("name").isEqualTo(name);
+		assertThat(scheduler).extracting("delay").isEqualTo(delay);
+		assertThat(scheduler).extracting("timer").isNotNull();
 	}
 
 	@Test
@@ -71,13 +66,9 @@ public class TimerSchedulerTest {
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(null, delay);
 
-		String actualName = readPrivateField(scheduler, "name");
-		long actualDelay = readPrivateField(scheduler, "delay");
-		Timer actualScheduler = readPrivateField(scheduler, "timer");
-
-		assertThat(actualName).isNotNull().isNotEmpty().isEqualTo("ExifTool Cleanup Timer");
-		assertThat(actualDelay).isNotNull().isEqualTo(delay);
-		assertThat(actualScheduler).isNotNull();
+		assertThat(scheduler).extracting("name").isEqualTo("ExifTool Cleanup Timer");
+		assertThat(scheduler).extracting("delay").isEqualTo(delay);
+		assertThat(scheduler).extracting("timer").isNotNull();
 	}
 
 	@Test
@@ -98,10 +89,7 @@ public class TimerSchedulerTest {
 		TimerTask task = taskCaptor.getValue();
 		assertThat(task).isNotNull();
 
-		TimerTask actualScheduler = readPrivateField(scheduler, "pendingTask");
-		assertThat(actualScheduler)
-				.isNotNull()
-				.isSameAs(task);
+		assertThat(scheduler).extracting("pendingTask").isSameAs(task);
 
 		task.run();
 		verify(runnable).run();
@@ -128,8 +116,7 @@ public class TimerSchedulerTest {
 		inOrder.verify(timerTask).cancel();
 		inOrder.verify(timer).purge();
 
-		TimerTask actualScheduler = readPrivateField(scheduler, "pendingTask");
-		assertThat(actualScheduler).isNull();
+		assertThat(scheduler).extracting("pendingTask").isNull();
 	}
 
 	@Test
@@ -144,7 +131,7 @@ public class TimerSchedulerTest {
 
 		verify(timer, never()).purge();
 		verify(timer).cancel();
-		assertThat(readPrivateField(scheduler, "pendingTask")).isNull();
+		assertThat(scheduler).extracting("pendingTask").isNull();
 	}
 
 	@Test
@@ -161,6 +148,6 @@ public class TimerSchedulerTest {
 
 		verify(timer).purge();
 		verify(timer).cancel();
-		assertThat(readPrivateField(scheduler, "pendingTask")).isNull();
+		assertThat(scheduler).extracting("pendingTask").isNull();
 	}
 }

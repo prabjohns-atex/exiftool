@@ -75,7 +75,7 @@
 
 		<!-- Settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
@@ -106,11 +106,11 @@
 
 		<!-- Tests dependencies -->
 		<junit.version>4.13.2</junit.version>
-		<assertj.version>2.9.1</assertj.version>
-		<mockito.version>2.28.2</mockito.version>
+		<assertj.version>3.22.0</assertj.version>
+		<mockito.version>4.2.0</mockito.version>
 		<commons-exec.version>1.3</commons-exec.version>
-		<equalsverifier.version>2.5.2</equalsverifier.version>
-		<awaitility.version>3.1.6</awaitility.version>
+		<equalsverifier.version>3.9</equalsverifier.version>
+		<awaitility.version>4.2.0</awaitility.version>
 	</properties>
 
 	<dependencies>
@@ -332,17 +332,6 @@
 	</build>
 
 	<profiles>
-		<profile>
-			<id>java16+</id>
-			<activation>
-				<jdk>[16,)</jdk>
-			</activation>
-			<properties>
-				<assertj.version>3.21.0</assertj.version>
-				<equalsverifier.version>3.7.1</equalsverifier.version>
-				<mockito.version>3.12.4</mockito.version>
-			</properties>
-		</profile>
 		<profile>
 			<id>release</id>
 			<build>

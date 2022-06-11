@@ -36,7 +36,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.writePrivateField;
 import static com.thebuzzmedia.exiftool.tests.TestConstants.BR;
 import static java.util.Arrays.asList;
@@ -99,8 +98,8 @@ public class StayOpenStrategyTest {
 	@Test
 	public void it_should_create_stay_open_strategy() {
 		strategy = new StayOpenStrategy(scheduler);
-		assertThat(readPrivateField(strategy, "scheduler")).isSameAs(scheduler);
-		assertThat(readPrivateField(strategy, "process")).isNull();
+		assertThat(strategy).extracting("scheduler").isSameAs(scheduler);
+		assertThat(strategy).extracting("process").isNull();
 	}
 
 	@Test
@@ -116,7 +115,7 @@ public class StayOpenStrategyTest {
 		inOrder.verify(process).flush();
 		inOrder.verify(process).read(any(OutputHandler.class));
 
-		assertThat(readPrivateField(strategy, "process")).isSameAs(process);
+		assertThat(strategy).extracting("process").isSameAs(process);
 
 		verifyStartProcess();
 		verifyExecutionArguments();

@@ -99,14 +99,9 @@ public class AllTagHandlerTest {
 
 		Map<Tag, String> results = handler.getTags();
 		assertThat(hasNext).isTrue();
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1);
+		assertThat(results).hasSize(1).containsKey(tag);
 
-		assertThat(results)
-				.containsKey(tag);
-		assertThat(tag.parse(results.get(tag)))
-				.isEqualTo(new String[]{"foo", "bar"});
+		String[] values = tag.parse(results.get(tag));
+		assertThat(values).isEqualTo(new String[]{"foo", "bar"});
 	}
 }

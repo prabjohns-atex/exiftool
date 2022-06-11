@@ -205,7 +205,8 @@ public abstract class AbstractExifToolImgIT {
 			String result = entry.getValue();
 
 			try {
-				softly.assertThat(tag.parse(result))
+				Object values = tag.parse(result);
+				softly.assertThat(values)
 						.overridingErrorMessage(String.format("Cannot parse tag %s with value %s", tag, result))
 						.isNotNull();
 			}
