@@ -17,14 +17,14 @@
 
 package com.thebuzzmedia.exiftool.commons.gc;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CleanerFactoryTest {
+class CleanerFactoryTest {
 
 	@Test
-	public void it_should_create_cleaner() {
+	void it_should_create_cleaner() {
 		assertThat(CleanerFactory.createCleaner()).isNotNull();
 	}
 }

@@ -23,13 +23,9 @@ import com.thebuzzmedia.exiftool.process.Command;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
@@ -41,21 +37,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class VersionCallableTest {
-
-	@Captor
-	private ArgumentCaptor<Command> cmdCaptor;
+class VersionCallableTest {
 
 	private String exifTool;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		exifTool = "exifTool";
 	}
 
 	@Test
-	public void it_should_parse_version() throws Exception {
+	void it_should_parse_version() throws Exception {
 		CommandExecutor executor = mock(CommandExecutor.class);
 		CommandResult result = new CommandResultBuilder()
 				.output("9.36")
@@ -66,23 +58,20 @@ public class VersionCallableTest {
 		VersionCallable callable = new VersionCallable(exifTool, executor);
 		Version version = callable.call();
 
+		ArgumentCaptor<Command> cmdCaptor = ArgumentCaptor.forClass(Command.class);
 		verify(executor).execute(cmdCaptor.capture());
 
 		Command cmd = cmdCaptor.getValue();
 		assertThat(cmd).isNotNull();
-		assertThat(cmd.getArguments())
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.containsExactly(exifTool, "-ver");
+		assertThat(cmd.getArguments()).hasSize(2).containsExactly(
+				exifTool, "-ver"
+		);
 
-		assertThat(version)
-				.isNotNull()
-				.isEqualTo(new Version("9.36.0"));
+		assertThat(version).isEqualTo(new Version("9.36.0"));
 	}
 
 	@Test
-	public void it_should_parse_version_and_throw_exception_with_failure() throws Exception {
+	void it_should_parse_version_and_throw_exception_with_failure() throws Exception {
 		CommandExecutor executor = mock(CommandExecutor.class);
 		CommandResult result = new CommandResultBuilder()
 				.success(false)
@@ -90,42 +79,29 @@ public class VersionCallableTest {
 
 		when(executor.execute(any(Command.class))).thenReturn(result);
 
-		final VersionCallable callable = new VersionCallable(exifTool, executor);
+		VersionCallable callable = new VersionCallable(exifTool, executor);
 
-		ThrowingCallable call = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				callable.call();
-			}
-		};
-
-		assertThatThrownBy(call)
+		assertThatThrownBy(callable::call)
 				.isInstanceOf(ExifToolNotFoundException.class)
 				.hasMessage("Cannot find exiftool from path: exifTool");
 	}
 
 	@Test
-	public void it_should_try_to_parse_version_and_throw_ex() throws Exception {
+	void it_should_try_to_parse_version_and_throw_ex() throws Exception {
 		IOException ex = new IOException();
 		CommandExecutor executor = mock(CommandExecutor.class);
 		when(executor.execute(any(Command.class))).thenThrow(ex);
 
-		final VersionCallable callable = new VersionCallable(exifTool, executor);
+		VersionCallable callable = new VersionCallable(exifTool, executor);
 
-		ThrowingCallable call = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				callable.call();
-			}
-		};
-
-		assertThatThrownBy(call)
+		assertThatThrownBy(callable::call)
 				.isInstanceOf(ExifToolNotFoundException.class)
 				.hasCause(ex);
 	}
 
+	@SuppressWarnings("UnusedAssignment")
 	@Test
-	public void it_should_parse_version_and_handle_null_reference() throws Exception {
+	void it_should_parse_version_and_handle_null_reference() throws Exception {
 		String path = EXIF_TOOL.getAbsolutePath();
 		CommandResult result = new CommandResultBuilder()
 				.output("9.36")

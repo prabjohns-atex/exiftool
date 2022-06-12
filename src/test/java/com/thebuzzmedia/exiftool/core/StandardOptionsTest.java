@@ -19,7 +19,7 @@ package com.thebuzzmedia.exiftool.core;
 
 import com.thebuzzmedia.exiftool.core.StandardOptions.Builder;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -27,10 +27,10 @@ import java.nio.charset.StandardCharsets;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StandardOptionsTest {
+class StandardOptionsTest {
 
 	@Test
-	public void it_should_create_default_options() {
+	void it_should_create_default_options() {
 		StandardOptions opts = StandardOptions.builder().build();
 
 		assertThat(opts).isNotNull();
@@ -54,7 +54,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_numeric_format() {
+	void it_should_set_numeric_format() {
 		StandardFormat format = StandardFormat.NUMERIC;
 		StandardOptions opts = StandardOptions.builder()
 				.withFormat(format)
@@ -67,7 +67,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_human_readable_format() {
+	void it_should_set_human_readable_format() {
 		StandardFormat format = StandardFormat.HUMAN_READABLE;
 		StandardOptions opts = StandardOptions.builder()
 				.withFormat(format)
@@ -80,7 +80,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_use_human_readable_format() {
+	void it_should_use_human_readable_format() {
 		StandardOptions opts = StandardOptions.builder()
 				.withHumanReadableFormat()
 				.build();
@@ -92,7 +92,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_use_numeric_format() {
+	void it_should_use_numeric_format() {
 		StandardOptions opts = StandardOptions.builder()
 				.withNumericFormat()
 				.build();
@@ -104,7 +104,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_coord_format() {
+	void it_should_set_coord_format() {
 		String coordFormat = "%d deg %d' %.2f";
 		StandardOptions opts = StandardOptions.builder()
 				.withCoordFormat(coordFormat)
@@ -117,7 +117,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_date_format() {
+	void it_should_set_date_format() {
 		String dateFormat = "%Y:%m:%d %H:%M:%S";
 		StandardOptions opts = StandardOptions.builder()
 				.withDateFormat(dateFormat)
@@ -130,7 +130,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_escape_html() {
+	void it_should_escape_html() {
 		boolean escapeHtml = true;
 		StandardOptions opts = StandardOptions.builder()
 				.withEscapeHtml(escapeHtml)
@@ -143,7 +143,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_escape_xml() {
+	void it_should_escape_xml() {
 		boolean escapeXml = true;
 		StandardOptions opts = StandardOptions.builder()
 				.withEscapeXml(escapeXml)
@@ -156,7 +156,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_ignore_minor_errors() {
+	void it_should_ignore_minor_errors() {
 		boolean ignoreMinorErrors = true;
 		StandardOptions opts = StandardOptions.builder()
 				.withIgnoreMinorErrors(ignoreMinorErrors)
@@ -169,7 +169,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_password() {
+	void it_should_set_password() {
 		String password = "azerty123!";
 		StandardOptions opts = StandardOptions.builder()
 				.withPassword(password)
@@ -182,7 +182,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_charset() {
+	void it_should_set_charset() {
 		Charset charset = StandardCharsets.UTF_8;
 		StandardOptions opts = StandardOptions.builder()
 				.withCharset(charset)
@@ -195,7 +195,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_use_modules() {
+	void it_should_use_modules() {
 		String module = "MWG";
 		StandardOptions opts = StandardOptions.builder()
 				.useModules(module)
@@ -208,7 +208,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_use_module_list() {
+	void it_should_use_module_list() {
 		String module = "MWG";
 		StandardOptions opts = StandardOptions.builder()
 				.useModules(singletonList(module))
@@ -221,7 +221,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_lang() {
+	void it_should_set_lang() {
 		String lang = "fr";
 		StandardOptions opts = StandardOptions.builder()
 				.withLang(lang)
@@ -234,7 +234,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_duplicates() {
+	void it_should_set_duplicates() {
 		boolean duplicates = true;
 		StandardOptions opts = StandardOptions.builder()
 				.withDuplicates(true)
@@ -247,7 +247,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_extract_embedded() {
+	void it_should_set_extract_embedded() {
 		StandardOptions opts = StandardOptions.builder()
 				.withExtractEmbedded(true)
 				.build();
@@ -259,7 +259,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_set_extract_unknown() {
+	void it_should_set_extract_unknown() {
 		StandardOptions opts = StandardOptions.builder()
 				.withExtractUnknown(true)
 				.build();
@@ -271,7 +271,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_overwrite_original() {
+	void it_should_overwrite_original() {
 		StandardOptions opts = StandardOptions.builder()
 				.withOverwriteOriginal()
 				.build();
@@ -291,7 +291,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_overwrite_original_in_place() {
+	void it_should_overwrite_original_in_place() {
 		StandardOptions opts = StandardOptions.builder()
 				.withOverwriteOriginalInPlace()
 				.build();
@@ -311,7 +311,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_use_args_format() {
+	void it_should_use_args_format() {
 		StandardOptions opts = StandardOptions.builder()
 				.withUseArgsFormat(true)
 				.build();
@@ -323,14 +323,14 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(StandardOptions.class)
 				.withPrefabValues(Charset.class, StandardCharsets.UTF_8, StandardCharsets.UTF_16)
 				.verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		StandardOptions opts = StandardOptions.builder().build();
 
 		// @formatter:off
@@ -357,7 +357,7 @@ public class StandardOptionsTest {
 	}
 
 	@Test
-	public void it_should_implement_builder_to_string() {
+	void it_should_implement_builder_to_string() {
 		Builder builder = StandardOptions.builder();
 
 		// @formatter:off

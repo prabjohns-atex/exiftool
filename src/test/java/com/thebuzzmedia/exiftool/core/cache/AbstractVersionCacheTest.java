@@ -24,12 +24,9 @@ import com.thebuzzmedia.exiftool.process.Command;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
 
@@ -42,8 +39,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
-public abstract class AbstractVersionCacheTest<T extends VersionCache> {
+abstract class AbstractVersionCacheTest<T extends VersionCache> {
 
 	private String exifTool;
 
@@ -51,8 +47,8 @@ public abstract class AbstractVersionCacheTest<T extends VersionCache> {
 
 	private ArgumentCaptor<Command> cmdCaptor;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		exifTool = "exiftool";
 		executor = mock(CommandExecutor.class);
 		cmdCaptor = ArgumentCaptor.forClass(Command.class);
@@ -65,57 +61,43 @@ public abstract class AbstractVersionCacheTest<T extends VersionCache> {
 	}
 
 	@Test
-	public void it_should_get_version() throws Exception {
+	void it_should_get_version() throws Exception {
 		VersionCache cache = create();
 		Version version = cache.load(exifTool, executor);
 
 		assertThat(version).isEqualTo(new Version("9.36.0"));
 		verify(executor).execute(cmdCaptor.capture());
-		assertThat(cmdCaptor.getValue().getArguments())
-				.hasSize(2)
-				.containsExactly(exifTool, "-ver");
+		assertThat(cmdCaptor.getValue().getArguments()).hasSize(2).containsExactly(
+				exifTool, "-ver"
+		);
 	}
 
 	@Test
-	public void it_should_throw_exception_without_success_response() throws Exception {
-		final VersionCache cache = create();
-		final CommandResult result = new CommandResultBuilder().success(false).output(null).build();
+	void it_should_throw_exception_without_success_response() throws Exception {
+		VersionCache cache = create();
+		CommandResult result = new CommandResultBuilder().success(false).output(null).build();
 
 		when(executor.execute(any(Command.class))).thenReturn(result);
 
-		ThrowableAssert.ThrowingCallable load = new ThrowableAssert.ThrowingCallable() {
-			@Override
-			public void call() {
-				cache.load(exifTool, executor);
-			}
-		};
-
-		assertThatThrownBy(load)
+		assertThatThrownBy(() -> cache.load(exifTool, executor))
 				.isInstanceOf(ExifToolNotFoundException.class)
 				.hasMessage("Cannot find exiftool from path: exiftool");
 	}
 
 	@Test
-	public void it_should_return_null_with_io_exception() throws Exception {
-		final VersionCache cache = create();
-		final IOException ex = new IOException();
+	void it_should_return_null_with_io_exception() throws Exception {
+		VersionCache cache = create();
+		IOException ex = new IOException();
 
 		when(executor.execute(any(Command.class))).thenThrow(ex);
 
-		ThrowableAssert.ThrowingCallable load = new ThrowableAssert.ThrowingCallable() {
-			@Override
-			public void call() {
-				cache.load(exifTool, executor);
-			}
-		};
-
-		assertThatThrownBy(load)
+		assertThatThrownBy(() -> cache.load(exifTool, executor))
 				.isInstanceOf(ExifToolNotFoundException.class)
 				.hasCause(ex);
 	}
 
 	@Test
-	public void it_should_get_version_once() throws Exception {
+	void it_should_get_version_once() throws Exception {
 		VersionCache cache = create();
 
 		Version v1 = cache.load(exifTool, executor);
@@ -130,7 +112,7 @@ public abstract class AbstractVersionCacheTest<T extends VersionCache> {
 	}
 
 	@Test
-	public void it_should_clear_cache() throws Exception {
+	void it_should_clear_cache() throws Exception {
 		VersionCache cache = create();
 		cache.load(exifTool, executor);
 		assertThat(size(cache)).isNotZero().isPositive();
@@ -144,7 +126,7 @@ public abstract class AbstractVersionCacheTest<T extends VersionCache> {
 	 *
 	 * @return Cache implemetation.
 	 */
-	protected abstract T create();
+	abstract T create();
 
 	/**
 	 * Get cache size.
@@ -152,5 +134,5 @@ public abstract class AbstractVersionCacheTest<T extends VersionCache> {
 	 * @param cache Cache implementation.
 	 * @return The cache size.
 	 */
-	protected abstract long size(VersionCache cache) throws Exception;
+	abstract long size(VersionCache cache) throws Exception;
 }

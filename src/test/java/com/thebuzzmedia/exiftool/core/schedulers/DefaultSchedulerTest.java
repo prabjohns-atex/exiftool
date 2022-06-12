@@ -17,11 +17,8 @@
 
 package com.thebuzzmedia.exiftool.core.schedulers;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -38,56 +35,38 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DefaultSchedulerTest {
+class DefaultSchedulerTest {
 
-	@Mock
 	private ScheduledThreadPoolExecutor executor;
 
-	@Test
-	public void it_should_not_create_default_scheduler_with_negative_delay() {
-		ThrowingCallable newDefaultScheduler = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new DefaultScheduler(millis(-1));
-			}
-		};
+	@BeforeEach
+	void setUp() {
+		executor = mock(ScheduledThreadPoolExecutor.class);
+	}
 
-		assertThatThrownBy(newDefaultScheduler)
+	@Test
+	void it_should_not_create_default_scheduler_with_negative_delay() {
+		assertThatThrownBy(() -> new DefaultScheduler(millis(-1)))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Delay should be a strictly positive value");
 	}
 
 	@Test
-	public void it_should_not_create_default_scheduler_with_zero_delay() {
-		ThrowingCallable newDefaultScheduler = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new DefaultScheduler(millis(0));
-			}
-		};
-
-		assertThatThrownBy(newDefaultScheduler)
+	void it_should_not_create_default_scheduler_with_zero_delay() {
+		assertThatThrownBy(() -> new DefaultScheduler(millis(0)))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Delay should be a strictly positive value");
 	}
 
 	@Test
-	public void it_should_not_create_default_scheduler_with_null_time_unit() {
-		ThrowingCallable newDefaultScheduler = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new DefaultScheduler(duration(1, null));
-			}
-		};
-
-		assertThatThrownBy(newDefaultScheduler)
+	void it_should_not_create_default_scheduler_with_null_time_unit() {
+		assertThatThrownBy(() -> new DefaultScheduler(duration(1, null)))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Time Unit should not be null");
 	}
 
 	@Test
-	public void it_should_create_default_scheduler() {
+	void it_should_create_default_scheduler() {
 		long delay = 10000;
 		DefaultScheduler scheduler = new DefaultScheduler(millis(delay));
 
@@ -97,7 +76,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_create_default_scheduler_with_specific_time_unit() {
+	void it_should_create_default_scheduler_with_specific_time_unit() {
 		long delay = 1;
 		TimeUnit timeUnit = TimeUnit.HOURS;
 
@@ -110,7 +89,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_start_scheduler() {
+	void it_should_start_scheduler() {
 		int delay = 10000;
 		TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 		SchedulerDuration executionDelay = duration(delay, timeUnit);
@@ -124,7 +103,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_stop_scheduler() {
+	void it_should_stop_scheduler() {
 		int delay = 10000;
 		TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 		SchedulerDuration executionDelay = duration(delay, timeUnit);
@@ -147,7 +126,7 @@ public class DefaultSchedulerTest {
 	}
 
 	@Test
-	public void it_should_shutdown_scheduler() {
+	void it_should_shutdown_scheduler() {
 		int delay = 10000;
 		TimeUnit timeUnit = TimeUnit.MILLISECONDS;
 		SchedulerDuration executionDelay = duration(delay, timeUnit);

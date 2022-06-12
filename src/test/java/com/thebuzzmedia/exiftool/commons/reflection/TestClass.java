@@ -17,6 +17,7 @@
 
 package com.thebuzzmedia.exiftool.commons.reflection;
 
+@SuppressWarnings("unused")
 public class TestClass {
 	public static boolean isEmpty(String param) {
 		return param == null || param.isEmpty();

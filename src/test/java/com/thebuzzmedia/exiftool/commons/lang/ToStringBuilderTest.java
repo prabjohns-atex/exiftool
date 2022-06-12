@@ -17,16 +17,16 @@
 
 package com.thebuzzmedia.exiftool.commons.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ToStringBuilderTest {
+class ToStringBuilderTest {
 
 	@Test
-	public void it_should_serialize_to_string() {
+	void it_should_serialize_to_string() {
 		String value = ToStringBuilder.create(getClass())
 				.append("str", "given str")
 				.append("nb", 10L)

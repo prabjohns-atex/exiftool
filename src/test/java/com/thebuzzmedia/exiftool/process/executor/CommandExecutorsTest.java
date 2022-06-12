@@ -18,14 +18,14 @@
 package com.thebuzzmedia.exiftool.process.executor;
 
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandExecutorsTest {
+class CommandExecutorsTest {
 
 	@Test
-	public void it_should_create_new_executor() {
+	void it_should_create_new_executor() {
 		CommandExecutor executor = CommandExecutors.newExecutor();
 		assertThat(executor).isNotNull();
 	}

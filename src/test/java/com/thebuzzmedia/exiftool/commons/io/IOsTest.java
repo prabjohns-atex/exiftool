@@ -18,8 +18,7 @@
 package com.thebuzzmedia.exiftool.commons.io;
 
 import com.thebuzzmedia.exiftool.process.OutputHandler;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
+import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayInputStream;
@@ -37,22 +36,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class IOsTest {
+class IOsTest {
 
 	@Test
-	public void it_should_read_input_stream() throws Exception {
+	void it_should_read_input_stream() throws Exception {
 		String firstLine = "first-line";
 		String secondLine = "second-line";
 		String output = firstLine + BR + secondLine;
 		CustomInputStream is = new CustomInputStream(output);
 
 		OutputHandler handler = mock(OutputHandler.class);
-		when(handler.readLine(anyString())).thenAnswer(new Answer<Boolean>() {
-			@Override
-			public Boolean answer(InvocationOnMock invocation) {
-				String str = (String) invocation.getArguments()[0];
-				return str != null;
-			}
+		when(handler.readLine(anyString())).thenAnswer((Answer<Boolean>) invocation -> {
+			String str = (String) invocation.getArguments()[0];
+			return str != null;
 		});
 
 		IOs.readInputStream(is, handler);
@@ -63,19 +59,14 @@ public class IOsTest {
 	}
 
 	@Test
-	public void it_should_read_input_stream_and_stop_without_closing_stream() throws Exception {
+	void it_should_read_input_stream_and_stop_without_closing_stream() throws Exception {
 		String firstLine = "first-line";
 		String secondLine = "second-line";
 		String output = firstLine + BR + secondLine;
 		CustomInputStream is = new CustomInputStream(output);
 
 		OutputHandler handler = mock(OutputHandler.class);
-		when(handler.readLine(anyString())).thenAnswer(new Answer<Boolean>() {
-			@Override
-			public Boolean answer(InvocationOnMock invocation) {
-				return false;
-			}
-		});
+		when(handler.readLine(anyString())).thenAnswer((Answer<Boolean>) invocation -> false);
 
 		IOs.readInputStream(is, handler);
 
@@ -85,14 +76,14 @@ public class IOsTest {
 	}
 
 	@Test
-	public void it_should_close_closeable_instance() throws Exception {
+	void it_should_close_closeable_instance() throws Exception {
 		Closeable closeable = mock(Closeable.class);
 		IOs.closeQuietly(closeable);
 		verify(closeable).close();
 	}
 
 	@Test
-	public void it_should_close_closeable_instance_and_do_not_fail() throws Exception {
+	void it_should_close_closeable_instance_and_do_not_fail() throws Exception {
 		Closeable closeable = mock(Closeable.class);
 		doThrow(IOException.class).when(closeable).close();
 
@@ -102,7 +93,7 @@ public class IOsTest {
 	}
 
 	@Test
-	public void it_should_read_file_with_utf8_charset() throws Exception {
+	void it_should_read_file_with_utf8_charset() throws Exception {
 		String output = "line-with-accent: àéê";
 		CustomInputStream is = new CustomInputStream(output);
 
@@ -125,7 +116,7 @@ public class IOsTest {
 		}
 
 		@Override
-		public int read() throws IOException {
+		public int read() {
 			return is.read();
 		}
 

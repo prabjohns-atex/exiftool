@@ -19,20 +19,20 @@ package com.thebuzzmedia.exiftool.core.handlers;
 
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StandardTagHandlerTest {
+class StandardTagHandlerTest {
 
 	private List<? extends Tag> inputs;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		inputs = asList(
 				StandardTag.APERTURE,
 				StandardTag.ARTIST
@@ -40,27 +40,23 @@ public class StandardTagHandlerTest {
 	}
 
 	@Test
-	public void it_should_read_null_line() {
+	void it_should_read_null_line() {
 		StandardTagHandler handler = new StandardTagHandler(inputs);
 		boolean hasNext = handler.readLine(null);
 		assertThat(hasNext).isFalse();
-		assertThat(handler.getTags())
-				.isNotNull()
-				.isEmpty();
+		assertThat(handler.getTags()).isNotNull().isEmpty();
 	}
 
 	@Test
-	public void it_should_read_last_line() {
+	void it_should_read_last_line() {
 		StandardTagHandler handler = new StandardTagHandler(inputs);
 		boolean hasNext = handler.readLine("{ready}");
 		assertThat(hasNext).isFalse();
-		assertThat(handler.getTags())
-				.isNotNull()
-				.isEmpty();
+		assertThat(handler.getTags()).isNotNull().isEmpty();
 	}
 
 	@Test
-	public void it_should_read_tag_line() {
+	void it_should_read_tag_line() {
 		Tag tag = StandardTag.ARTIST;
 		String value = "foobar";
 
@@ -68,25 +64,17 @@ public class StandardTagHandlerTest {
 		boolean hasNext = handler.readLine(tag.getName() + ": " + value);
 
 		assertThat(hasNext).isTrue();
-		assertThat(handler.getTags())
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1)
-				.containsEntry(tag, value);
+		assertThat(handler.getTags()).hasSize(1).containsEntry(tag, value);
 	}
 
 	@Test
-	public void it_should_read_tag_line_with_additional_pattern() {
+	void it_should_read_tag_line_with_additional_pattern() {
 		Tag tag = StandardTag.ARTIST;
 		String value = "foobar: foo";
 
 		StandardTagHandler handler = new StandardTagHandler(inputs);
 		handler.readLine(tag.getName() + ": " + value);
 
-		assertThat(handler.getTags())
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1)
-				.containsEntry(tag, value);
+		assertThat(handler.getTags()).hasSize(1).containsEntry(tag, value);
 	}
 }

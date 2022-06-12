@@ -19,31 +19,32 @@ package com.thebuzzmedia.exiftool.process.command;
 
 import com.thebuzzmedia.exiftool.process.Command;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DefaultCommandTest {
+class DefaultCommandTest {
 
 	@Test
-	public void it_should_create_command() {
+	void it_should_create_command() {
 		Command command = new DefaultCommand("exiftool", Collections.<String>emptyList());
 		assertThat(command.toString()).isEqualTo("exiftool");
-		assertThat(command.getArguments()).isEqualTo(asList("exiftool"));
+		assertThat(command.getArguments()).isEqualTo(singletonList("exiftool"));
 	}
 
 	@Test
-	public void it_should_create_command_and_add_argument() {
+	void it_should_create_command_and_add_argument() {
 		Command command = new DefaultCommand("exiftool", asList("-ver", "-stay_open"));
 		assertThat(command.toString()).isEqualTo("exiftool -ver -stay_open");
 		assertThat(command.getArguments()).isEqualTo(asList("exiftool", "-ver", "-stay_open"));
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(DefaultCommand.class).verify();
 	}
 }

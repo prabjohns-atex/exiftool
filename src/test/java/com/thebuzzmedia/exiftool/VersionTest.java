@@ -18,14 +18,14 @@
 package com.thebuzzmedia.exiftool;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class VersionTest {
+class VersionTest {
 
 	@Test
-	public void it_should_parse_version() {
+	void it_should_parse_version() {
 		Version v1 = new Version("1");
 		assertThat(v1.getMajor()).isEqualTo(1);
 		assertThat(v1.getMinor()).isZero();
@@ -43,19 +43,19 @@ public class VersionTest {
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		assertThat(new Version("1")).hasToString("1.0.0");
 		assertThat(new Version("1.1")).hasToString("1.1.0");
 		assertThat(new Version("1.1.1")).hasToString("1.1.1");
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(Version.class).verify();
 	}
 
 	@Test
-	public void it_should_be_comparable() {
+	void it_should_be_comparable() {
 		Version v1 = new Version("9.1.1");
 		Version v2 = new Version("9.1.2");
 		Version v3 = new Version("9.1.1");

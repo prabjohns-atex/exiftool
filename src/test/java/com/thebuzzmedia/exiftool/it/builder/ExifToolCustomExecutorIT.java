@@ -31,7 +31,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.IOException;
 
-public class ExifToolCustomExecutorIT extends AbstractExifToolIT {
+class ExifToolCustomExecutorIT extends AbstractExifToolIT {
 
 	@Override
 	ExifToolBuilder create() {
@@ -51,8 +51,8 @@ public class ExifToolCustomExecutorIT extends AbstractExifToolIT {
 			DefaultExecutor executor = executor();
 			executor.setStreamHandler(psh);
 
-			final int exitValue = executor.execute(commandLine);
-			final String output = out.getOutput();
+			int exitValue = executor.execute(commandLine);
+			String output = out.getOutput();
 			return new DefaultCommandResult(exitValue, output);
 		}
 

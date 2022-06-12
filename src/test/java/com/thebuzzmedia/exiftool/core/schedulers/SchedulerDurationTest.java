@@ -18,7 +18,7 @@
 package com.thebuzzmedia.exiftool.core.schedulers;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,10 +27,10 @@ import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.millis
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.seconds;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SchedulerDurationTest {
+class SchedulerDurationTest {
 
 	@Test
-	public void it_should_create_duration() {
+	void it_should_create_duration() {
 		long delay = 1;
 		TimeUnit timeUnit = TimeUnit.HOURS;
 		SchedulerDuration duration = duration(delay, timeUnit);
@@ -39,7 +39,7 @@ public class SchedulerDurationTest {
 	}
 
 	@Test
-	public void it_should_create_seconds_duration() {
+	void it_should_create_seconds_duration() {
 		long delay = 1;
 		SchedulerDuration duration = seconds(delay);
 		assertThat(duration.getDelay()).isEqualTo(delay);
@@ -47,7 +47,7 @@ public class SchedulerDurationTest {
 	}
 
 	@Test
-	public void it_should_create_millis_duration() {
+	void it_should_create_millis_duration() {
 		long delay = 1;
 		SchedulerDuration duration = millis(delay);
 		assertThat(duration.getDelay()).isEqualTo(delay);
@@ -55,12 +55,12 @@ public class SchedulerDurationTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(SchedulerDuration.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		SchedulerDuration duration = millis(1);
 		assertThat(duration).hasToString(
 				"SchedulerDuration{" +

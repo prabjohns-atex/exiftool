@@ -17,8 +17,7 @@
 
 package com.thebuzzmedia.exiftool.core.schedulers;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
@@ -34,24 +33,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-public class TimerSchedulerTest {
+class TimerSchedulerTest {
 
 	@Test
-	public void it_should_not_create_scheduler_for_invalid_delay() {
-		ThrowingCallable newTimerScheduler = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new TimerScheduler("foo", -1);
-			}
-		};
-
-		assertThatThrownBy(newTimerScheduler)
+	void it_should_not_create_scheduler_for_invalid_delay() {
+		assertThatThrownBy(() -> new TimerScheduler("foo", -1))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Delay must be strictly positive");
 	}
 
 	@Test
-	public void it_should_create_scheduler() {
+	void it_should_create_scheduler() {
 		String name = "foo";
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(name, delay);
@@ -62,7 +54,7 @@ public class TimerSchedulerTest {
 	}
 
 	@Test
-	public void it_should_with_default_name() {
+	void it_should_with_default_name() {
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(null, delay);
 
@@ -72,7 +64,7 @@ public class TimerSchedulerTest {
 	}
 
 	@Test
-	public void it_should_start_scheduler() {
+	void it_should_start_scheduler() {
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(null, delay);
 
@@ -96,7 +88,7 @@ public class TimerSchedulerTest {
 	}
 
 	@Test
-	public void it_should_stop_scheduler() {
+	void it_should_stop_scheduler() {
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(null, delay);
 
@@ -120,7 +112,7 @@ public class TimerSchedulerTest {
 	}
 
 	@Test
-	public void it_should_shutdown_scheduler_without_pending_task() {
+	void it_should_shutdown_scheduler_without_pending_task() {
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(null, delay);
 
@@ -135,7 +127,7 @@ public class TimerSchedulerTest {
 	}
 
 	@Test
-	public void it_should_shutdown_scheduler_with_pending_task() {
+	void it_should_shutdown_scheduler_with_pending_task() {
 		long delay = 10000;
 		TimerScheduler scheduler = new TimerScheduler(null, delay);
 

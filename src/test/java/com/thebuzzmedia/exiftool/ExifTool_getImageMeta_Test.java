@@ -28,9 +28,8 @@ import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
 import com.thebuzzmedia.exiftool.tests.builders.FileBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -55,7 +54,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ExifTool_getImageMeta_Test {
+class ExifTool_getImageMeta_Test {
 
 	private String path;
 	private CommandExecutor executor;
@@ -63,16 +62,13 @@ public class ExifTool_getImageMeta_Test {
 
 	private ExifTool exifTool;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		executor = mock(CommandExecutor.class);
 		strategy = mock(ExecutionStrategy.class);
 		path = "exiftool";
 
-		CommandResult cmd = new CommandResultBuilder()
-				.output("9.36")
-				.build();
-
+		CommandResult cmd = new CommandResultBuilder().output("9.36").build();
 		when(executor.execute(any(Command.class))).thenReturn(cmd);
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 
@@ -82,93 +78,50 @@ public class ExifTool_getImageMeta_Test {
 	}
 
 	@Test
-	public void it_should_fail_if_image_is_null() {
-		ThrowingCallable getImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.getImageMeta(null, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
-			}
-		};
-
-		assertThatThrownBy(getImageMeta)
+	void it_should_fail_if_image_is_null() {
+		assertThatThrownBy(() -> exifTool.getImageMeta(null, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values())))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Image cannot be null and must be a valid stream of image data.");
 	}
 
 	@Test
-	public void it_should_fail_if_format_is_null() {
-		final Format format = null;
-		final List<Tag> tags = asList((Tag[]) StandardTag.values());
-		final ThrowingCallable getImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.getImageMeta(mock(File.class), format, tags);
-			}
-		};
-
-		assertThatThrownBy(getImageMeta)
+	void it_should_fail_if_format_is_null() {
+		Format format = null;
+		List<Tag> tags = asList(StandardTag.values());
+		assertThatThrownBy(() -> exifTool.getImageMeta(mock(File.class), format, tags))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Format cannot be null.");
 	}
 
 	@Test
-	public void it_should_fail_if_options_is_null() {
-		final ExifToolOptions options = null;
-		final List<Tag> tags = asList((Tag[]) StandardTag.values());
-		final ThrowingCallable getImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.getImageMeta(mock(File.class), options, tags);
-			}
-		};
-
-		assertThatThrownBy(getImageMeta)
+	void it_should_fail_if_options_is_null() {
+		ExifToolOptions options = null;
+		List<Tag> tags = asList(StandardTag.values());
+		assertThatThrownBy(() -> exifTool.getImageMeta(mock(File.class), options, tags))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Options cannot be null.");
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_null() {
-		final Format format = StandardFormat.HUMAN_READABLE;
-		final Collection<? extends Tag> tags = null;
-		final ThrowingCallable getImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.getImageMeta(mock(File.class), format, tags);
-			}
-		};
-
-		assertThatThrownBy(getImageMeta)
+	void it_should_fail_if_tags_is_null() {
+		Format format = StandardFormat.HUMAN_READABLE;
+		Collection<? extends Tag> tags = null;
+		assertThatThrownBy(() -> exifTool.getImageMeta(mock(File.class), format, tags))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_empty() {
-		ThrowingCallable getImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.<Tag>emptyList());
-			}
-		};
-
-		assertThatThrownBy(getImageMeta)
+	void it_should_fail_if_tags_is_empty() {
+		assertThatThrownBy(() -> exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.<Tag>emptyList()))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
 	}
 
 	@Test
-	public void it_should_fail_with_unknown_file() {
-		final File image = new FileBuilder("foo.png").exists(false).build();
-
-		ThrowingCallable getImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
-			}
-		};
-
-		assertThatThrownBy(getImageMeta)
+	void it_should_fail_with_unknown_file() {
+		File image = new FileBuilder("foo.png").exists(false).build();
+		assertThatThrownBy(() -> exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values())))
 				.isInstanceOf(UnreadableFileException.class)
 				.hasMessage(
 						"Unable to read the given image [/tmp/foo.png], " +
@@ -178,17 +131,9 @@ public class ExifTool_getImageMeta_Test {
 	}
 
 	@Test
-	public void it_should_fail_with_non_readable_file() {
-		final File image = new FileBuilder("foo.png").canRead(false).build();
-
-		ThrowingCallable getImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values()));
-			}
-		};
-
-		assertThatThrownBy(getImageMeta)
+	void it_should_fail_with_non_readable_file() {
+		File image = new FileBuilder("foo.png").canRead(false).build();
+		assertThatThrownBy(() -> exifTool.getImageMeta(image, StandardFormat.HUMAN_READABLE, asList((Tag[]) StandardTag.values())))
 				.isInstanceOf(UnreadableFileException.class)
 				.hasMessage(
 						"Unable to read the given image [/tmp/foo.png], " +
@@ -199,7 +144,7 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_get_image_metadata() throws Exception {
+	void it_should_get_image_metadata() throws Exception {
 		// Given
 		Format format = StandardFormat.HUMAN_READABLE;
 		File image = new FileBuilder("foo.png").build();
@@ -232,7 +177,7 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_get_image_metadata_in_numeric_format() throws Exception {
+	void it_should_get_image_metadata_in_numeric_format() throws Exception {
 		// Given
 		Format format = StandardFormat.NUMERIC;
 		File image = new FileBuilder("foo.png").build();
@@ -266,7 +211,7 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_get_image_metadata_in_numeric_format_by_default() throws Exception {
+	void it_should_get_image_metadata_in_numeric_format_by_default() throws Exception {
 		// Given
 		File image = new FileBuilder("foo.png").build();
 		Map<Tag, String> tags = new LinkedHashMap<>();
@@ -298,7 +243,7 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_get_all_image_metadata_if_no_tags_specified() throws Exception {
+	void it_should_get_all_image_metadata_if_no_tags_specified() throws Exception {
 		// Given
 		Format format = StandardFormat.HUMAN_READABLE;
 		File image = new FileBuilder("foo.png").build();
@@ -333,7 +278,7 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_get_all_image_metadata_in_numeric_format_by_default() throws Exception {
+	void it_should_get_all_image_metadata_in_numeric_format_by_default() throws Exception {
 		// Given
 		File image = new FileBuilder("foo.png").build();
 
@@ -368,7 +313,7 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_get_image_metadata_using_custom_options() throws Exception {
+	void it_should_get_image_metadata_using_custom_options() throws Exception {
 		// Given
 		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.NUMERIC).withIgnoreMinorErrors(true).build();
 		File image = new FileBuilder("foo.png").build();
@@ -403,7 +348,7 @@ public class ExifTool_getImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_get_all_image_metadata_using_custom_options() throws Exception {
+	void it_should_get_all_image_metadata_using_custom_options() throws Exception {
 		// Given
 		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.NUMERIC).withIgnoreMinorErrors(true).build();
 		File image = new FileBuilder("foo.png").build();
@@ -438,7 +383,7 @@ public class ExifTool_getImageMeta_Test {
 		);
 	}
 
-	private static class ReadTagsAnswer implements Answer<Void> {
+	private static final class ReadTagsAnswer implements Answer<Void> {
 		private final Map<Tag, String> tags;
 
 		private final String end;

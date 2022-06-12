@@ -17,14 +17,14 @@
 
 package com.thebuzzmedia.exiftool.core.schedulers;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.mockito.Mockito.mock;
 
-public class NoOpSchedulerTest {
+class NoOpSchedulerTest {
 
 	@Test
-	public void it_should_create_no_op_scheduler() {
+	void it_should_create_no_op_scheduler() {
 		NoOpScheduler scheduler = new NoOpScheduler();
 		scheduler.stop();
 		scheduler.start(mock(Runnable.class));

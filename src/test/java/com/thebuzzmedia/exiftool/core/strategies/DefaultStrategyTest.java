@@ -20,7 +20,7 @@ package com.thebuzzmedia.exiftool.core.strategies;
 import com.thebuzzmedia.exiftool.process.Command;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
@@ -33,10 +33,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("resource")
-public class DefaultStrategyTest {
+class DefaultStrategyTest {
 
 	@Test
-	public void it_should_execute_command() throws Exception {
+	void it_should_execute_command() throws Exception {
 		String exifTool = "exiftool";
 		List<String> args = asList("-S", "-n", "-XArtist", "-XComment", "-execute");
 		CommandExecutor executor = mock(CommandExecutor.class);
@@ -55,26 +55,22 @@ public class DefaultStrategyTest {
 		expectedArguments.addAll(args);
 
 		Command cmd = cmdCaptor.getValue();
-		assertThat(cmd.getArguments())
-				.isNotNull()
-				.isNotEmpty()
-				.hasSameSizeAs(expectedArguments)
-				.isEqualTo(expectedArguments);
+		assertThat(cmd.getArguments()).hasSameSizeAs(expectedArguments).isEqualTo(expectedArguments);
 	}
 
 	@Test
-	public void it_should_never_be_running() {
+	void it_should_never_be_running() {
 		DefaultStrategy strategy = new DefaultStrategy();
 		assertThat(strategy.isRunning()).isFalse();
 	}
 
 	@Test
-	public void it_should_do_nothing_on_close() {
+	void it_should_do_nothing_on_close() {
 		new DefaultStrategy().close();
 	}
 
 	@Test
-	public void it_should_do_nothing_on_shutdown() {
+	void it_should_do_nothing_on_shutdown() {
 		new DefaultStrategy().shutdown();
 	}
 }

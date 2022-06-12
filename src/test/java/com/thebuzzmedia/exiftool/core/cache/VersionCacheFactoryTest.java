@@ -18,14 +18,14 @@
 package com.thebuzzmedia.exiftool.core.cache;
 
 import com.thebuzzmedia.exiftool.commons.reflection.DependencyUtils;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class VersionCacheFactoryTest {
+class VersionCacheFactoryTest {
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		assertThat(DependencyUtils.isGuavaAvailable()).isTrue();
 	}
 }

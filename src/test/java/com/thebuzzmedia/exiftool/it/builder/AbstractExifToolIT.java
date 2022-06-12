@@ -21,46 +21,34 @@ import com.thebuzzmedia.exiftool.ExifTool;
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
 import com.thebuzzmedia.exiftool.Version;
 import com.thebuzzmedia.exiftool.exceptions.ExifToolNotFoundException;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.util.UUID;
 
 import static com.thebuzzmedia.exiftool.tests.TestConstants.EXIF_TOOL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.filter;
 
-public abstract class AbstractExifToolIT {
+abstract class AbstractExifToolIT {
 
 	@Test
-	public void it_should_get_version() {
-		ExifTool exifTool = create()
-				.withPath(EXIF_TOOL.getAbsolutePath())
-				.build();
-
-		Version version = exifTool.getVersion();
-
-		assertThat(version.getMajor()).isEqualTo(10);
-		assertThat(version.getMinor()).isEqualTo(16);
-		assertThat(version.getPatch()).isEqualTo(0);
+	void it_should_get_version() throws Exception {
+		try (ExifTool exifTool = create().withPath(EXIF_TOOL.getAbsolutePath()).build()) {
+			Version version = exifTool.getVersion();
+			assertThat(version.getMajor()).isEqualTo(10);
+			assertThat(version.getMinor()).isEqualTo(16);
+			assertThat(version.getPatch()).isEqualTo(0);
+		}
 	}
 
 	@Test
-	public void it_should_fail_with_missing_exiftool() {
-		final String separator = FileSystems.getDefault().getSeparator();
-		final String path = separator + UUID.randomUUID() + separator + "exiftool";
-		final ExifToolBuilder builder = create().withPath(path);
-		final ThrowingCallable build = new ThrowingCallable() {
-			@Override
-			public void call() {
-				builder.build();
-			}
-		};
+	void it_should_fail_with_missing_exiftool() {
+		String separator = FileSystems.getDefault().getSeparator();
+		String path = separator + UUID.randomUUID() + separator + "exiftool";
+		ExifToolBuilder builder = create().withPath(path);
 
-		assertThatThrownBy(build)
+		assertThatThrownBy(builder::build)
 				.isInstanceOf(ExifToolNotFoundException.class)
 				.hasMessageContaining("Cannot run program \"" + path + "\"")
 				.hasMessageContaining("error=2");

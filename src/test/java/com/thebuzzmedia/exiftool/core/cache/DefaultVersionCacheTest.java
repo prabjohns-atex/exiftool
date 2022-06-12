@@ -23,15 +23,15 @@ import java.util.concurrent.ConcurrentMap;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 
-public class DefaultVersionCacheTest extends AbstractVersionCacheTest<DefaultVersionCache> {
+class DefaultVersionCacheTest extends AbstractVersionCacheTest<DefaultVersionCache> {
 
 	@Override
-	protected DefaultVersionCache create() {
+	DefaultVersionCache create() {
 		return new DefaultVersionCache();
 	}
 
 	@Override
-	protected long size(VersionCache cache) {
+	long size(VersionCache cache) {
 		return ((ConcurrentMap<?, ?>) readPrivateField(cache, "cache")).size();
 	}
 }
