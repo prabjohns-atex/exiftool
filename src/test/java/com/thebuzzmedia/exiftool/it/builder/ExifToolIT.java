@@ -19,7 +19,7 @@ package com.thebuzzmedia.exiftool.it.builder;
 
 import com.thebuzzmedia.exiftool.ExifToolBuilder;
 
-public class ExifToolIT extends AbstractExifToolIT {
+class ExifToolIT extends AbstractExifToolIT {
 
 	@Override
 	ExifToolBuilder create() {

@@ -20,36 +20,32 @@ package com.thebuzzmedia.exiftool.core.handlers;
 import com.thebuzzmedia.exiftool.Constants;
 import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AllTagHandlerTest {
+class AllTagHandlerTest {
 
 	@Test
-	public void it_should_read_null_line() {
+	void it_should_read_null_line() {
 		AllTagHandler handler = new AllTagHandler();
 		boolean hasNext = handler.readLine(null);
 		assertThat(hasNext).isFalse();
-		assertThat(handler.getTags())
-				.isNotNull()
-				.isEmpty();
+		assertThat(handler.getTags()).isNotNull().isEmpty();
 	}
 
 	@Test
-	public void it_should_read_last_line() {
+	void it_should_read_last_line() {
 		AllTagHandler handler = new AllTagHandler();
 		boolean hasNext = handler.readLine("{ready}");
 		assertThat(hasNext).isFalse();
-		assertThat(handler.getTags())
-				.isNotNull()
-				.isEmpty();
+		assertThat(handler.getTags()).isNotNull().isEmpty();
 	}
 
 	@Test
-	public void it_should_read_tag_line() {
+	void it_should_read_tag_line() {
 		Tag tag = new UnspecifiedTag("baz");
 		String value = "foobar";
 
@@ -58,19 +54,14 @@ public class AllTagHandlerTest {
 
 		Map<Tag, String> results = handler.getTags();
 		assertThat(hasNext).isTrue();
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1);
+		assertThat(results).hasSize(1);
 
-		assertThat(results)
-				.containsKey(tag);
-		assertThat(results.get(tag))
-				.isEqualTo(value);
+		assertThat(results).containsKey(tag);
+		assertThat(results.get(tag)).isEqualTo(value);
 	}
 
 	@Test
-	public void it_should_read_tag_line_with_additional_pattern() {
+	void it_should_read_tag_line_with_additional_pattern() {
 		Tag tag = new UnspecifiedTag("baz");
 		String value = "foobar: foo";
 
@@ -78,19 +69,14 @@ public class AllTagHandlerTest {
 		handler.readLine(tag.getName() + ": " + value);
 
 		Map<Tag, String> results = handler.getTags();
-		assertThat(results)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1);
+		assertThat(results).hasSize(1);
 
-		assertThat(results)
-				.containsKey(tag);
-		assertThat(results.get(tag))
-				.isEqualTo(value);
+		assertThat(results).containsKey(tag);
+		assertThat(results.get(tag)).isEqualTo(value);
 	}
 
 	@Test
-	public void it_should_read_tag_line_with_multiple_values() {
+	void it_should_read_tag_line_with_multiple_values() {
 		Tag tag = new UnspecifiedTag("baz");
 		String value = "foo" + Constants.SEPARATOR + "bar";
 

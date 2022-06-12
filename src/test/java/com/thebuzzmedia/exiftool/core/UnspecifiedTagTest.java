@@ -19,37 +19,37 @@ package com.thebuzzmedia.exiftool.core;
 
 import com.thebuzzmedia.exiftool.Tag;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.thebuzzmedia.exiftool.Constants.SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UnspecifiedTagTest {
+class UnspecifiedTagTest {
 
 	@Test
-	public void it_should_pass_through_single_value_on_parse() {
-		final String value = "foo";
-		final Tag tag = new UnspecifiedTag("CustomTag");
-		final String[] result = tag.parse(value);
+	void it_should_pass_through_single_value_on_parse() {
+		String value = "foo";
+		Tag tag = new UnspecifiedTag("CustomTag");
+		String[] result = tag.parse(value);
 		assertThat(result).hasSize(1);
 		assertThat(result[0]).isEqualTo(value);
 	}
 
 	@Test
-	public void it_should_pass_through_multiple_value_on_parse() {
-		final String value = "foo" + SEPARATOR + "bar";
-		final Tag tag = new UnspecifiedTag("CustomTag");
-		final String[] result = tag.parse(value);
+	void it_should_pass_through_multiple_value_on_parse() {
+		String value = "foo" + SEPARATOR + "bar";
+		Tag tag = new UnspecifiedTag("CustomTag");
+		String[] result = tag.parse(value);
 		assertThat(result).hasSize(2).containsExactly("foo", "bar");
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(UnspecifiedTag.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		UnspecifiedTag tag = new UnspecifiedTag("a name");
 		assertThat(tag).hasToString(
 				"UnspecifiedTag{" +

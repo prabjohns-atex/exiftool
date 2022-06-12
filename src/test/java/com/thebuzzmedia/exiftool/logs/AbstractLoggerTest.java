@@ -17,13 +17,15 @@
 
 package com.thebuzzmedia.exiftool.logs;
 
-import com.thebuzzmedia.exiftool.tests.junit.SystemOutRule;
-import org.junit.Rule;
-import org.junit.Test;
+import com.thebuzzmedia.exiftool.tests.junit.SystemOutExtension;
+import com.thebuzzmedia.exiftool.tests.junit.SystemOutExtension.SystemOut;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public abstract class AbstractLoggerTest {
+@ExtendWith(SystemOutExtension.class)
+abstract class AbstractLoggerTest {
 
 	private static final String INFO = "INFO";
 	private static final String WARN = "WARN";
@@ -31,107 +33,104 @@ public abstract class AbstractLoggerTest {
 	private static final String TRACE = "TRACE";
 	private static final String DEBUG = "DEBUG";
 
-	@Rule
-	public SystemOutRule outRule = new SystemOutRule(false);
-
 	@Test
-	public void it_should_display_info() {
+	void it_should_display_info(SystemOut out) {
 		getLogger().info("message");
-		verifyOutput(INFO, "message");
+		verifyOutput(out, INFO, "message");
 	}
 
 	@Test
-	public void it_should_display_info_with_one_parameter() {
+	void it_should_display_info_with_one_parameter(SystemOut out) {
 		getLogger().info("A message: {}", "test");
-		verifyOutput(INFO, "A message: test");
+		verifyOutput(out, INFO, "A message: test");
 	}
 
 	@Test
-	public void it_should_display_info_with_two_parameters() {
+	void it_should_display_info_with_two_parameters(SystemOut out) {
 		getLogger().info("A message: {} -- {}", "p1", "p2");
-		verifyOutput(INFO, "A message: p1 -- p2");
+		verifyOutput(out, INFO, "A message: p1 -- p2");
 	}
 
 	@Test
-	public void it_should_display_warn() {
+	void it_should_display_warn(SystemOut out) {
 		getLogger().warn("message");
-		verifyOutput(WARN, "message");
+		verifyOutput(out, WARN, "message");
 	}
 
 	@Test
-	public void it_should_display_warn_with_one_parameter() {
+	void it_should_display_warn_with_one_parameter(SystemOut out) {
 		getLogger().warn("A message: {}", "p1");
-		verifyOutput(WARN, "A message: p1");
+		verifyOutput(out, WARN, "A message: p1");
 	}
 
 	@Test
-	public void it_should_display_warn_with_two_parameters() {
+	void it_should_display_warn_with_two_parameters(SystemOut out) {
 		getLogger().warn("A message: {} -- {}", "p1", "p2");
-		verifyOutput(WARN, "A message: p1 -- p2");
+		verifyOutput(out, WARN, "A message: p1 -- p2");
 	}
 
 	@Test
-	public void it_should_display_error() {
+	void it_should_display_error(SystemOut out) {
 		getLogger().error("message");
-		verifyOutput(ERROR, "message");
+		verifyOutput(out, ERROR, "message");
 	}
 
 	@Test
-	public void it_should_display_error_with_one_parameter() {
+	void it_should_display_error_with_one_parameter(SystemOut out) {
 		getLogger().error("A message: {}", "p1");
-		verifyOutput(ERROR, "A message: p1");
+		verifyOutput(out, ERROR, "A message: p1");
 	}
 
 	@Test
-	public void it_should_display_error_with_two_parameters() {
+	void it_should_display_error_with_two_parameters(SystemOut out) {
 		getLogger().error("A message: {} -- {}", "p1", "p2");
-		verifyOutput(ERROR, "A message: p1 -- p2");
+		verifyOutput(out, ERROR, "A message: p1 -- p2");
 	}
 
 	@Test
-	public void it_should_display_trace() {
+	void it_should_display_trace(SystemOut out) {
 		getLogger().trace("message");
-		verifyOutput(TRACE, "message");
+		verifyOutput(out, TRACE, "message");
 	}
 
 	@Test
-	public void it_should_display_trace_with_one_parameter() {
+	void it_should_display_trace_with_one_parameter(SystemOut out) {
 		getLogger().trace("A message: {}", "p1");
-		verifyOutput(TRACE, "A message: p1");
+		verifyOutput(out, TRACE, "A message: p1");
 	}
 
 	@Test
-	public void it_should_display_trace_with_two_parameters() {
+	void it_should_display_trace_with_two_parameters(SystemOut out) {
 		getLogger().trace("A message: {} -- {}", "p1", "p2");
-		verifyOutput(TRACE, "A message: p1 -- p2");
+		verifyOutput(out, TRACE, "A message: p1 -- p2");
 	}
 
 	@Test
-	public void it_should_display_debug() {
+	void it_should_display_debug(SystemOut out) {
 		getLogger().debug("message");
-		verifyOutput(DEBUG, "message");
+		verifyOutput(out, DEBUG, "message");
 	}
 
 	@Test
-	public void it_should_display_debug_with_one_parameter() {
+	void it_should_display_debug_with_one_parameter(SystemOut out) {
 		getLogger().debug("A message: {}", "p1");
-		verifyOutput(DEBUG, "A message: p1");
+		verifyOutput(out, DEBUG, "A message: p1");
 	}
 
 	@Test
-	public void it_should_display_debug_with_two_parameters() {
+	void it_should_display_debug_with_two_parameters(SystemOut out) {
 		getLogger().debug("A message: {} -- {}", "p1", "p2");
-		verifyOutput(DEBUG, "A message: p1 -- p2");
+		verifyOutput(out, DEBUG, "A message: p1 -- p2");
 	}
 
 	@Test
-	public void it_should_not_display_debug_if_disabled() {
+	void it_should_not_display_debug_if_disabled(SystemOut out) {
 		getLoggerWithoutDebug().debug("message");
-		assertThat(outRule.getPendingOut()).isEmpty();
+		assertThat(out.getOut()).isEmpty();
 	}
 
 	@Test
-	public void it_should_check_if_debug_is_enabled() {
+	void it_should_check_if_debug_is_enabled() {
 		Logger logger1 = getLogger();
 		assertThat(logger1.isDebugEnabled()).isTrue();
 
@@ -140,17 +139,17 @@ public abstract class AbstractLoggerTest {
 	}
 
 	@Test
-	public void it_should_display_error_exception() {
+	void it_should_display_error_exception(SystemOut out) {
 		RuntimeException ex = new RuntimeException("Error Message");
 		getLogger().error(ex.getMessage(), ex);
-		verifyException("ERROR", ex);
+		verifyException(out, "ERROR", ex);
 	}
 
 	@Test
-	public void it_should_display_warn_exception() {
+	void it_should_display_warn_exception(SystemOut out) {
 		RuntimeException ex = new RuntimeException("Error Message");
 		getLogger().warn(ex.getMessage(), ex);
-		verifyException("WARN", ex);
+		verifyException(out, "WARN", ex);
 	}
 
 	/**
@@ -167,14 +166,14 @@ public abstract class AbstractLoggerTest {
 	 */
 	abstract Logger getLoggerWithoutDebug();
 
-	private void verifyOutput(String level, String message) {
-		String out = outRule.getPendingOut().trim();
+	private void verifyOutput(SystemOut sysOut, String level, String message) {
+		String out = sysOut.getTrimmedOut();
 		assertThat(out).contains(level);
 		assertThat(out).endsWith(message);
 	}
 
-	private void verifyException(String level, Exception ex) {
-		String out = outRule.getPendingOut().trim();
+	private void verifyException(SystemOut sysOut, String level, Exception ex) {
+		String out = sysOut.getTrimmedOut();
 		assertThat(out).contains(level);
 		assertThat(out).contains(ex.getMessage());
 		assertThat(out).contains("at com.thebuzzmedia.exiftool.logs.AbstractLoggerTest");

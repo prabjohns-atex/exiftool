@@ -18,27 +18,23 @@
 package com.thebuzzmedia.exiftool.process.executor;
 
 import com.thebuzzmedia.exiftool.tests.TestConstants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResultHandlerTest {
+class ResultHandlerTest {
 
 	@Test
-	public void it_should_handle_result() {
+	void it_should_handle_result() {
 		ResultHandler handler = new ResultHandler();
 		assertThat(handler.getOutput()).isEmpty();
 
 		handler.readLine("foo");
-		assertThat(handler.getOutput())
-				.isNotEmpty()
-				.isEqualTo("foo");
+		assertThat(handler.getOutput()).isEqualTo("foo");
 
 		handler.readLine("bar");
-		assertThat(handler.getOutput())
-				.isNotEmpty()
-				.isEqualTo(
-						"foo" + TestConstants.BR + "bar"
-				);
+		assertThat(handler.getOutput()).isEqualTo(
+				"foo" + TestConstants.BR + "bar"
+		);
 	}
 }

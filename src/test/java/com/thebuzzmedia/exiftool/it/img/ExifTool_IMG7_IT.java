@@ -25,8 +25,7 @@ import java.util.Map;
 
 import static com.thebuzzmedia.exiftool.tests.TestConstants.IS_WINDOWS;
 
-@SuppressWarnings("serial")
-public class ExifTool_IMG7_IT extends AbstractExifToolImgIT {
+class ExifTool_IMG7_IT extends AbstractExifToolImgIT {
 
 	@Override
 	String image() {

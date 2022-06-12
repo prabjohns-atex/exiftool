@@ -17,14 +17,14 @@
 
 package com.thebuzzmedia.exiftool.logs;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LoggerFactoryTest {
+class LoggerFactoryTest {
 
 	@Test
-	public void it_should_get_slf4j_logger_by_default() {
+	void it_should_get_slf4j_logger_by_default() {
 		Logger logger = LoggerFactory.getLogger(LoggerFactoryTest.class);
 		assertThat(logger).isExactlyInstanceOf(LoggerSlf4j.class);
 	}

@@ -18,169 +18,96 @@
 package com.thebuzzmedia.exiftool.process.command;
 
 import com.thebuzzmedia.exiftool.process.Command;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class CommandBuilderTest {
+class CommandBuilderTest {
 
 	@Test
-	public void it_should_build_command() {
+	void it_should_build_command() {
 		Command cmd = CommandBuilder.builder("exiftool").build();
 		assertThat(cmd.toString()).isEqualTo("exiftool");
 	}
 
 	@Test
-	public void it_should_build_command_with_expected_size_and_arguments() {
-		Command cmd = CommandBuilder.builder("exiftool", 1)
-				.addArgument("-ver")
-				.build();
-
+	void it_should_build_command_with_expected_size_and_arguments() {
+		Command cmd = CommandBuilder.builder("exiftool", 1).addArgument("-ver").build();
 		assertThat(cmd.toString()).isEqualTo("exiftool -ver");
 	}
 
 	@Test
-	public void it_should_build_command_with_arguments() {
-		Command cmd = CommandBuilder.builder("exiftool")
-				.addArgument("-ver")
-				.build();
-
+	void it_should_build_command_with_arguments() {
+		Command cmd = CommandBuilder.builder("exiftool").addArgument("-ver").build();
 		assertThat(cmd.toString()).isEqualTo("exiftool -ver");
 	}
 
 	@Test
-	public void it_should_build_command_with_several_arguments() {
-		Command cmd = CommandBuilder.builder("exiftool")
-				.addArgument("-ver", "-stay_open")
-				.build();
-
+	void it_should_build_command_with_several_arguments() {
+		Command cmd = CommandBuilder.builder("exiftool").addArgument("-ver", "-stay_open").build();
 		assertThat(cmd.toString()).isEqualTo("exiftool -ver -stay_open");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_executable_is_null() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder(null);
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_executable_is_null() {
+		assertThatThrownBy(() -> CommandBuilder.builder(null))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Command line executable should be defined");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_executable_is_empty() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder("");
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_executable_is_empty() {
+		assertThatThrownBy(() -> CommandBuilder.builder(""))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Command line executable should be defined");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_executable_is_blank() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder(" ");
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_executable_is_blank() {
+		assertThatThrownBy(() -> CommandBuilder.builder(" "))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Command line executable should be defined");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_argument_is_null() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder("exiftool").addArgument(null);
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_argument_is_null() {
+		assertThatThrownBy(() -> CommandBuilder.builder("exiftool").addArgument(null))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Command line argument should be defined if set");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_argument_is_empty() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder("exiftool").addArgument("");
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_argument_is_empty() {
+		assertThatThrownBy(() -> CommandBuilder.builder("exiftool").addArgument(""))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Command line argument should be defined if set");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_argument_is_blank() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder("exiftool").addArgument(" ");
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_argument_is_blank() {
+		assertThatThrownBy(() -> CommandBuilder.builder("exiftool").addArgument(" "))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Command line argument should be defined if set");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_one_of_argument_is_null() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder("exiftool").addArgument("-ver", new String[]{null});
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_one_of_argument_is_null() {
+		assertThatThrownBy(() -> CommandBuilder.builder("exiftool").addArgument("-ver", new String[]{null}))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Command line argument should be defined if set");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_one_of_argument_is_empty() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder("exiftool").addArgument("-ver", "");
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_one_of_argument_is_empty() {
+		assertThatThrownBy(() -> CommandBuilder.builder("exiftool").addArgument("-ver", ""))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Command line argument should be defined if set");
 	}
 
 	@Test
-	public void it_should_not_build_command_if_one_of_argument_is_blank() {
-		ThrowingCallable builder = new ThrowingCallable() {
-			@Override
-			public void call() {
-				CommandBuilder.builder("exiftool").addArgument("-ver", " ");
-			}
-		};
-
-		assertThatThrownBy(builder)
+	void it_should_not_build_command_if_one_of_argument_is_blank() {
+		assertThatThrownBy(() -> CommandBuilder.builder("exiftool").addArgument("-ver", " "))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Command line argument should be defined if set");
 	}

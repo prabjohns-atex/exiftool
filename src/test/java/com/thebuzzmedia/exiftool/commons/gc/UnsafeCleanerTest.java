@@ -17,21 +17,20 @@
 
 package com.thebuzzmedia.exiftool.commons.gc;
 
-import org.awaitility.core.ThrowingRunnable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.isClassAvailable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-public class UnsafeCleanerTest {
+class UnsafeCleanerTest {
 
 	@SuppressWarnings("UnusedAssignment")
 	@Test
-	public void it_should_create_cleaner_and_register_object() {
+	void it_should_create_cleaner_and_register_object() {
 		assumeTrue(isClassAvailable("sun.misc.Cleaner"));
 
 		UnsafeCleaner cleaner = UnsafeCleaner.create();
@@ -44,12 +43,9 @@ public class UnsafeCleanerTest {
 		o = null;
 		System.gc();
 
-		await().atMost(5, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).untilAsserted(new ThrowingRunnable() {
-			@Override
-			public void run() {
-				assertThat(cleanupTask.runned).isTrue();
-			}
-		});
+		await().atMost(5, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).untilAsserted(() ->
+				assertThat(cleanupTask.runned).isTrue()
+		);
 	}
 
 	private static class CleanupTask implements Runnable {

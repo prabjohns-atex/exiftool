@@ -22,10 +22,8 @@ import com.thebuzzmedia.exiftool.process.Command;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.awaitility.core.ThrowingRunnable;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.util.concurrent.TimeUnit;
@@ -43,23 +41,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("resource")
-public class ExifToolTest {
+class ExifToolTest {
 
 	private CommandExecutor executor;
 	private ExecutionStrategy strategy;
 
 	private String path;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		executor = mock(CommandExecutor.class);
 		strategy = mock(ExecutionStrategy.class);
 		path = "exiftool";
 
-		CommandResult v9_36 = new CommandResultBuilder()
-				.output("9.36")
-				.build();
-
+		CommandResult v9_36 = new CommandResultBuilder().output("9.36").build();
 		when(executor.execute(any(Command.class))).thenReturn(v9_36);
 
 		// Clear cache before each test
@@ -70,77 +65,42 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_path_is_null() {
-		ThrowingCallable newExifTool = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new ExifTool(null, executor, strategy);
-			}
-		};
-
-		assertThatThrownBy(newExifTool)
+	void it_should_not_create_exiftool_if_path_is_null() {
+		assertThatThrownBy(() -> new ExifTool(null, executor, strategy))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("ExifTool path should not be null");
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_path_is_empty() {
-		ThrowingCallable newExifTool = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new ExifTool("", executor, strategy);
-			}
-		};
-
-		assertThatThrownBy(newExifTool)
+	void it_should_not_create_exiftool_if_path_is_empty() {
+		assertThatThrownBy(() -> new ExifTool("", executor, strategy))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("ExifTool path should not be null");
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_path_is_blank() {
-		ThrowingCallable newExifTool = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new ExifTool("  ", executor, strategy);
-			}
-		};
-
-		assertThatThrownBy(newExifTool)
+	void it_should_not_create_exiftool_if_path_is_blank() {
+		assertThatThrownBy(() -> new ExifTool("  ", executor, strategy))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("ExifTool path should not be null");
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_executor_is_null() {
-		ThrowingCallable newExifTool = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new ExifTool(path, null, strategy);
-			}
-		};
-
-		assertThatThrownBy(newExifTool)
+	void it_should_not_create_exiftool_if_executor_is_null() {
+		assertThatThrownBy(() -> new ExifTool(path, null, strategy))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Executor should not be null");
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_if_strategy_is_null() {
-		ThrowingCallable newExifTool = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new ExifTool(path, executor, null);
-			}
-		};
-
-		assertThatThrownBy(newExifTool)
+	void it_should_not_create_exiftool_if_strategy_is_null() {
+		assertThatThrownBy(() -> new ExifTool(path, executor, null))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Execution strategy should not be null");
 	}
 
 	@Test
-	public void it_should_get_version_from_cache() {
+	void it_should_get_version_from_cache() {
 		VersionCache cache = readStaticPrivateField(ExifTool.class, "cache");
 
 		cache.clear();
@@ -158,7 +118,7 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_check_if_exiftool_is_running() {
+	void it_should_check_if_exiftool_is_running() {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 
@@ -174,7 +134,7 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_close_exiftool() throws Exception {
+	void it_should_close_exiftool() throws Exception {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 		exifTool.close();
@@ -182,7 +142,7 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_stop_exiftool() throws Exception {
+	void it_should_stop_exiftool() throws Exception {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 		exifTool.stop();
@@ -191,7 +151,7 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_get_exiftool_version() {
+	void it_should_get_exiftool_version() {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 		Version version = exifTool.getVersion();
@@ -199,7 +159,7 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_create_exiftool_instance_and_get_version() throws Exception {
+	void it_should_create_exiftool_instance_and_get_version() throws Exception {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
 
@@ -223,17 +183,10 @@ public class ExifToolTest {
 	}
 
 	@Test
-	public void it_should_not_create_exiftool_instance_if_strategy_is_not_supported() {
+	void it_should_not_create_exiftool_instance_if_strategy_is_not_supported() {
 		when(strategy.isSupported(any(Version.class))).thenReturn(false);
 
-		ThrowingCallable newExifTool = new ThrowingCallable() {
-			@Override
-			public void call() {
-				new ExifTool(path, executor, strategy);
-			}
-		};
-
-		assertThatThrownBy(newExifTool)
+		assertThatThrownBy(() -> new ExifTool(path, executor, strategy))
 				.isInstanceOf(UnsupportedFeatureException.class)
 				.hasMessage(
 						"Use of feature requires version 9.36.0 or higher of the native ExifTool program. " +
@@ -244,7 +197,7 @@ public class ExifToolTest {
 
 	@SuppressWarnings({"unused", "UnusedAssignment"})
 	@Test
-	public void it_should_shutdown_strategy_if_exiftool_has_not_been_called() throws Exception {
+	void it_should_shutdown_strategy_if_exiftool_has_not_been_called() throws Exception {
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 
 		ExifTool exifTool = new ExifTool(path, executor, strategy);
@@ -253,11 +206,8 @@ public class ExifToolTest {
 		exifTool = null;
 		gc();
 
-		await().atMost(5, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).untilAsserted(new ThrowingRunnable() {
-			@Override
-			public void run() throws Throwable {
-				verify(strategy).shutdown();
-			}
-		});
+		await().atMost(5, TimeUnit.SECONDS).pollDelay(1, TimeUnit.SECONDS).untilAsserted(() ->
+				verify(strategy).shutdown()
+		);
 	}
 }

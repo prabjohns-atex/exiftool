@@ -18,7 +18,7 @@
 package com.thebuzzmedia.exiftool.process.executor;
 
 import com.thebuzzmedia.exiftool.process.OutputHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,10 +26,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CompositeHandlerTest {
+class CompositeHandlerTest {
 
 	@Test
-	public void it_should_read_line() {
+	void it_should_read_line() {
 		String line = "foo";
 
 		OutputHandler h1 = mock(OutputHandler.class);
@@ -48,7 +48,7 @@ public class CompositeHandlerTest {
 	}
 
 	@Test
-	public void it_should_read_line_and_stop_with_first_false_value() {
+	void it_should_read_line_and_stop_with_first_false_value() {
 		String line = "foo";
 		String end = "{ready}";
 

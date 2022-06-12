@@ -24,13 +24,13 @@ import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.StandardTag;
-import com.thebuzzmedia.exiftool.tests.junit.OpenedProcessRule;
+import com.thebuzzmedia.exiftool.tests.junit.ProcessLeakDetectorExtension;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.util.Map;
@@ -45,84 +45,71 @@ public abstract class AbstractExifToolImgIT {
 
 	private static final String PATH = EXIF_TOOL.getAbsolutePath();
 
+	@RegisterExtension
+	public ProcessLeakDetectorExtension processes = new ProcessLeakDetectorExtension(PATH);
+
 	private ExifTool exifTool;
 	private ExifTool exifToolStayOpen;
 	private ExifTool exifToolPool;
 
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder();
-
-	@Rule
-	public OpenedProcessRule processes = new OpenedProcessRule(PATH);
-
-	@Before
-	public void setUp() {
-		exifTool = new ExifToolBuilder()
-				.withPath(PATH)
-				.build();
-
-		exifToolStayOpen = new ExifToolBuilder()
-				.withPath(PATH)
-				.enableStayOpen()
-				.build();
-
-		exifToolPool = new ExifToolBuilder()
-				.withPath(PATH)
-				.withPoolSize(2)
-				.build();
+	@BeforeEach
+	void setUp() {
+		exifTool = new ExifToolBuilder().withPath(PATH).build();
+		exifToolStayOpen = new ExifToolBuilder().withPath(PATH).enableStayOpen().build();
+		exifToolPool = new ExifToolBuilder().withPath(PATH).withPoolSize(2).build();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		exifTool.close();
 		exifToolStayOpen.close();
 		exifToolPool.close();
 	}
 
 	@Test
-	public void test_get_image_meta() throws Exception {
+	void test_get_image_meta() throws Exception {
 		verifyGetMeta(exifTool);
 	}
 
 	@Test
-	public void test_parse_image_meta() throws Exception {
+	void test_parse_image_meta() throws Exception {
 		verifyParsingMeta(exifTool);
 	}
 
 	@Test
-	public void test_get_all_image_meta() throws Exception {
+	void test_get_all_image_meta() throws Exception {
 		verifyGetAllMeta(exifTool);
 	}
 
 	@Test
-	public void test_get_image_meta_stay_open() throws Exception {
+	void test_get_image_meta_stay_open() throws Exception {
 		verifyGetMeta(exifToolStayOpen);
 	}
 
 	@Test
-	public void test_get_image_meta_stay_open_two_times() throws Exception {
+	void test_get_image_meta_stay_open_two_times() throws Exception {
 		verifyGetMeta(exifToolStayOpen);
 		verifyGetMeta(exifToolStayOpen);
 	}
 
 	@Test
-	public void test_get_image_meta_pool() throws Exception {
+	void test_get_image_meta_pool() throws Exception {
 		verifyGetMeta(exifToolPool);
 	}
 
 	@Test
-	public void test_set_image_meta() throws Exception {
-		verifySetMeta(exifTool);
+	void test_set_image_meta(@TempDir File tmpFolder) throws Exception {
+		verifySetMeta(exifTool, tmpFolder);
 	}
 
 	@Test
-	public void test_set_image_meta_stay_open() throws Exception {
-		verifySetMeta(exifToolStayOpen);
+	void test_set_image_meta_stay_open(@TempDir File tmpFolder) throws Exception {
+		verifySetMeta(exifToolStayOpen, tmpFolder);
 	}
 
 	@Test
-	public void test_set_image_meta_pool() throws Exception {
-		verifySetMeta(exifToolPool);
+	void test_set_image_meta_pool(@TempDir File tmpFolder) throws Exception {
+		verifySetMeta(exifToolPool, tmpFolder);
 	}
 
 	private void verifyGetMeta(ExifTool exifTool) throws Exception {
@@ -140,11 +127,10 @@ public abstract class AbstractExifToolImgIT {
 		checkAllMetaContains(exifTool, file, expectations());
 	}
 
-	private void verifySetMeta(ExifTool exifTool) throws Exception {
+	private void verifySetMeta(ExifTool exifTool, File tmpFolder) throws Exception {
 		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.HUMAN_READABLE).build();
 		File file = new File("src/test/resources/images/" + image());
-		File folder = tmp.newFolder("exif");
-		File tmpCopy = copy(file, folder);
+		File tmpCopy = copy(file, tmpFolder);
 		Map<Tag, String> meta = updateTags();
 
 		exifTool.setImageMeta(tmpCopy, options, meta);

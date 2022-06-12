@@ -21,7 +21,7 @@ import org.apache.log4j.Level;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 
-public class LoggerLog4jTest extends AbstractLoggerTest {
+class LoggerLog4jTest extends AbstractLoggerTest {
 
 	@Override
 	Logger getLogger() {

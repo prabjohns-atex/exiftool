@@ -27,9 +27,8 @@ import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
 import com.thebuzzmedia.exiftool.tests.builders.FileBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -51,7 +50,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ExifTool_setImageMeta_Test {
+class ExifTool_setImageMeta_Test {
 
 	private String path;
 	private CommandExecutor executor;
@@ -60,8 +59,8 @@ public class ExifTool_setImageMeta_Test {
 
 	private ExifTool exifTool;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		executor = mock(CommandExecutor.class);
 		strategy = mock(ExecutionStrategy.class);
 		path = "exiftool";
@@ -70,10 +69,7 @@ public class ExifTool_setImageMeta_Test {
 			put(StandardTag.ARTIST, "bar");
 		}};
 
-		CommandResult result = new CommandResultBuilder()
-				.output("9.36")
-				.build();
-
+		CommandResult result = new CommandResultBuilder().output("9.36").build();
 		when(executor.execute(any(Command.class))).thenReturn(result);
 		when(strategy.isSupported(any(Version.class))).thenReturn(true);
 
@@ -83,93 +79,50 @@ public class ExifTool_setImageMeta_Test {
 	}
 
 	@Test
-	public void it_should_fail_if_image_is_null() {
-		ThrowingCallable setImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.setImageMeta(null, StandardFormat.HUMAN_READABLE, tags);
-			}
-		};
-
-		assertThatThrownBy(setImageMeta)
+	void it_should_fail_if_image_is_null() {
+		assertThatThrownBy(() -> exifTool.setImageMeta(null, StandardFormat.HUMAN_READABLE, tags))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Image cannot be null and must be a valid stream of image data.");
 	}
 
 	@Test
-	public void it_should_fail_if_format_is_null() {
-		final Format format = null;
-		final Map<StandardTag, String> tags = ExifTool_setImageMeta_Test.this.tags;
-		final ThrowingCallable setImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.setImageMeta(mock(File.class), format, tags);
-			}
-		};
-
-		assertThatThrownBy(setImageMeta)
+	void it_should_fail_if_format_is_null() {
+		Format format = null;
+		Map<StandardTag, String> tags = ExifTool_setImageMeta_Test.this.tags;
+		assertThatThrownBy(() -> exifTool.setImageMeta(mock(File.class), format, tags))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Format cannot be null.");
 	}
 
 	@Test
-	public void it_should_fail_if_options_is_null() {
-		final ExifToolOptions options = null;
-		final Map<StandardTag, String> tags = ExifTool_setImageMeta_Test.this.tags;
-		final ThrowingCallable setImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.setImageMeta(mock(File.class), options, tags);
-			}
-		};
-
-		assertThatThrownBy(setImageMeta)
+	void it_should_fail_if_options_is_null() {
+		ExifToolOptions options = null;
+		Map<StandardTag, String> tags = ExifTool_setImageMeta_Test.this.tags;
+		assertThatThrownBy(() -> exifTool.setImageMeta(mock(File.class), options, tags))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Options cannot be null.");
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_null() {
-		final StandardFormat format = StandardFormat.HUMAN_READABLE;
-		final Map<? extends Tag, String> tags = null;
-		final ThrowingCallable setImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.setImageMeta(mock(File.class), format, tags);
-			}
-		};
-
-		assertThatThrownBy(setImageMeta)
+	void it_should_fail_if_tags_is_null() {
+		StandardFormat format = StandardFormat.HUMAN_READABLE;
+		Map<? extends Tag, String> tags = null;
+		assertThatThrownBy(() -> exifTool.setImageMeta(mock(File.class), format, tags))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
 	}
 
 	@Test
-	public void it_should_fail_if_tags_is_empty() {
-		ThrowingCallable setImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.setImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.<Tag, String>emptyMap());
-			}
-		};
-
-		assertThatThrownBy(setImageMeta)
+	void it_should_fail_if_tags_is_empty() {
+		assertThatThrownBy(() -> exifTool.setImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.<Tag, String>emptyMap()))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
 	}
 
 	@Test
-	public void it_should_fail_with_unknown_file() {
-		final File image = new FileBuilder("foo.png").exists(false).build();
-
-		ThrowingCallable setImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.setImageMeta(image, StandardFormat.HUMAN_READABLE, tags);
-			}
-		};
-
-		assertThatThrownBy(setImageMeta)
+	void it_should_fail_with_unknown_file() {
+		File image = new FileBuilder("foo.png").exists(false).build();
+		assertThatThrownBy(() -> exifTool.setImageMeta(image, StandardFormat.HUMAN_READABLE, tags))
 				.isInstanceOf(UnwritableFileException.class)
 				.hasMessage(
 						"Unable to read the given image [/tmp/foo.png], " +
@@ -179,17 +132,9 @@ public class ExifTool_setImageMeta_Test {
 	}
 
 	@Test
-	public void it_should_fail_with_non_writable_file() {
-		final File image = new FileBuilder("foo.png").canWrite(false).build();
-
-		ThrowingCallable setImageMeta = new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				exifTool.setImageMeta(image, StandardFormat.HUMAN_READABLE, tags);
-			}
-		};
-
-		assertThatThrownBy(setImageMeta)
+	void it_should_fail_with_non_writable_file() {
+		File image = new FileBuilder("foo.png").canWrite(false).build();
+		assertThatThrownBy(() -> exifTool.setImageMeta(image, StandardFormat.HUMAN_READABLE, tags))
 				.isInstanceOf(UnwritableFileException.class)
 				.hasMessage(
 						"Unable to read the given image [/tmp/foo.png], " +
@@ -200,7 +145,7 @@ public class ExifTool_setImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_set_image_meta_data() throws Exception {
+	void it_should_set_image_meta_data() throws Exception {
 		File image = new FileBuilder("foo.png").build();
 		Format format = StandardFormat.HUMAN_READABLE;
 
@@ -225,7 +170,7 @@ public class ExifTool_setImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_set_image_meta_data_in_numeric_format() throws Exception {
+	void it_should_set_image_meta_data_in_numeric_format() throws Exception {
 		File image = new FileBuilder("foo.png").build();
 		Format format = StandardFormat.NUMERIC;
 
@@ -251,7 +196,7 @@ public class ExifTool_setImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_set_image_meta_data_in_numeric_format_by_default() throws Exception {
+	void it_should_set_image_meta_data_in_numeric_format_by_default() throws Exception {
 		File image = new FileBuilder("foo.png").build();
 
 		doAnswer(new WriteTagsAnswer()).when(strategy).execute(
@@ -276,7 +221,7 @@ public class ExifTool_setImageMeta_Test {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void it_should_set_image_meta_data_with_given_options() throws Exception {
+	void it_should_set_image_meta_data_with_given_options() throws Exception {
 		File image = new FileBuilder("foo.png").build();
 		ExifToolOptions options = StandardOptions.builder().withFormat(StandardFormat.NUMERIC).withIgnoreMinorErrors(true).build();
 
@@ -301,7 +246,7 @@ public class ExifTool_setImageMeta_Test {
 		);
 	}
 
-	private static class WriteTagsAnswer implements Answer<String> {
+	private static final class WriteTagsAnswer implements Answer<String> {
 		@Override
 		public String answer(InvocationOnMock invocation) {
 			return "{ready}";

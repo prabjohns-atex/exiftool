@@ -22,15 +22,15 @@ import com.thebuzzmedia.exiftool.VersionCache;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 
-public class GuavaVersionCacheTest extends AbstractVersionCacheTest<GuavaVersionCache> {
+class GuavaVersionCacheTest extends AbstractVersionCacheTest<GuavaVersionCache> {
 
 	@Override
-	protected GuavaVersionCache create() {
+	GuavaVersionCache create() {
 		return new GuavaVersionCache();
 	}
 
 	@Override
-	protected long size(VersionCache cache) {
+	long size(VersionCache cache) {
 		return ((Cache<?, ?>) readPrivateField(cache, "cache")).size();
 	}
 }

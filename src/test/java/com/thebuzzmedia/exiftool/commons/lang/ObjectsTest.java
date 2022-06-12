@@ -17,14 +17,14 @@
 
 package com.thebuzzmedia.exiftool.commons.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ObjectsTest {
+class ObjectsTest {
 
 	@Test
-	public void it_should_return_first_parameter_if_it_is_not_null() {
+	void it_should_return_first_parameter_if_it_is_not_null() {
 		String v1 = "foo";
 		String v2 = "bar";
 
@@ -34,7 +34,7 @@ public class ObjectsTest {
 	}
 
 	@Test
-	public void it_should_return_second_parameter_if_first_is_null() {
+	void it_should_return_second_parameter_if_first_is_null() {
 		String v1 = null;
 		String v2 = "bar";
 
@@ -44,7 +44,7 @@ public class ObjectsTest {
 	}
 
 	@Test
-	public void it_should_return_other_first_non_null_parameter() {
+	void it_should_return_other_first_non_null_parameter() {
 		String v1 = null;
 		String v2 = null;
 		String o1 = null;

@@ -17,15 +17,15 @@
 
 package com.thebuzzmedia.exiftool.core.handlers;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.thebuzzmedia.exiftool.core.handlers.StopHandler.stopHandler;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StopHandlerTest {
+class StopHandlerTest {
 
 	@Test
-	public void it_should_detect_end_of_stream() {
+	void it_should_detect_end_of_stream() {
 		assertThat(stopHandler().readLine(null)).isFalse();
 		assertThat(stopHandler().readLine("{ready}")).isFalse();
 		assertThat(stopHandler().readLine("foo")).isTrue();

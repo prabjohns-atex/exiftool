@@ -6,9 +6,7 @@ import com.thebuzzmedia.exiftool.Tag;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -44,15 +42,12 @@ public class ExifParser {
 
 		try {
 			for (final String image : args) {
-				executor.submit(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							System.out.println("Tags: " + parse(image));
-						}
-						catch (Exception ex) {
-							ex.printStackTrace();
-						}
+				executor.submit(() -> {
+					try {
+						System.out.println("Tags: " + parse(image));
+					}
+					catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				});
 			}

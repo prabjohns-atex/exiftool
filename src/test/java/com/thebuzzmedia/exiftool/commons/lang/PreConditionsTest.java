@@ -20,8 +20,7 @@ package com.thebuzzmedia.exiftool.commons.lang;
 import com.thebuzzmedia.exiftool.exceptions.UnreadableFileException;
 import com.thebuzzmedia.exiftool.exceptions.UnwritableFileException;
 import com.thebuzzmedia.exiftool.tests.builders.FileBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.HashMap;
@@ -33,81 +32,49 @@ import static java.util.Collections.emptyMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class PreConditionsTest {
+class PreConditionsTest {
 
 	@Test
-	public void it_should_fail_with_npe() {
-		final String message = "should not be null";
-
-		ThrowingCallable notNull = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notNull(null, message);
-			}
-		};
-
-		assertThatThrownBy(notNull)
+	void it_should_fail_with_npe() {
+		String message = "should not be null";
+		assertThatThrownBy(() -> PreConditions.notNull(null, message))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_npe() {
+	void it_should_not_fail_with_npe() {
 		String val = "foo";
 		String foo = PreConditions.notNull(val, "should not be null");
 		assertThat(foo).isEqualTo(val);
 	}
 
 	@Test
-	public void it_should_fail_with_null_string() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notBlank = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notBlank(null, message);
-			}
-		};
-
-		assertThatThrownBy(notBlank)
+	void it_should_fail_with_null_string() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notBlank(null, message))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_empty_string() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notBlank = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notBlank("", message);
-			}
-		};
-
-		assertThatThrownBy(notBlank)
+	void it_should_fail_with_empty_string() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notBlank("", message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_blank_string() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notBlank = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notBlank("  ", message);
-			}
-		};
-
-		assertThatThrownBy(notBlank)
+	void it_should_fail_with_blank_string() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notBlank("  ", message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_valid_string() {
+	void it_should_not_fail_with_valid_string() {
 		String message = "should not be empty";
 		String val = "foo";
 
@@ -117,39 +84,23 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_fail_with_null_array() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notEmpty = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notBlank("  ", message);
-			}
-		};
-
-		assertThatThrownBy(notEmpty)
+	void it_should_fail_with_null_array() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notBlank("  ", message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_empty_array() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notEmpty = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notEmpty(new String[]{}, message);
-			}
-		};
-
-		assertThatThrownBy(notEmpty)
+	void it_should_fail_with_empty_array() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notEmpty(new String[]{}, message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_valid_array() {
+	void it_should_not_fail_with_valid_array() {
 		String message = "should not be empty";
 		String[] val = new String[]{"foo"};
 
@@ -159,39 +110,23 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_fail_with_null_map() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notEmpty = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notEmpty((Map<Object, Object>) null, message);
-			}
-		};
-
-		assertThatThrownBy(notEmpty)
+	void it_should_fail_with_null_map() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notEmpty((Map<Object, Object>) null, message))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_empty_map() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notEmpty = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notEmpty(emptyMap(), message);
-			}
-		};
-
-		assertThatThrownBy(notEmpty)
+	void it_should_fail_with_empty_map() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notEmpty(emptyMap(), message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_valid_map() {
+	void it_should_not_fail_with_valid_map() {
 		String message = "should not be empty";
 		Map<String, String> val = new HashMap<>();
 		val.put("foo", "bar");
@@ -202,39 +137,23 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_fail_with_null_iterable() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notEmpty = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notEmpty((Iterable<Object>) null, message);
-			}
-		};
-
-		assertThatThrownBy(notEmpty)
+	void it_should_fail_with_null_iterable() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notEmpty((Iterable<Object>) null, message))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_empty_iterable() {
-		final String message = "should not be empty";
-
-		ThrowingCallable notEmpty = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notEmpty(emptyList(), message);
-			}
-		};
-
-		assertThatThrownBy(notEmpty)
+	void it_should_fail_with_empty_iterable() {
+		String message = "should not be empty";
+		assertThatThrownBy(() -> PreConditions.notEmpty(emptyList(), message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_valid_iterable() {
+	void it_should_not_fail_with_valid_iterable() {
 		String message = "should not be empty";
 		Iterable<String> val = asList("foo", "bar");
 
@@ -247,55 +166,31 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_fail_with_null_number() {
-		final String message = "should be readable";
-
-		ThrowingCallable isPositive = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isPositive(null, message);
-			}
-		};
-
-		assertThatThrownBy(isPositive)
+	void it_should_fail_with_null_number() {
+		String message = "should be readable";
+		assertThatThrownBy(() -> PreConditions.isPositive(null, message))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_negative_number() {
-		final String message = "should be readable";
-
-		ThrowingCallable isPositive = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isPositive(-1, message);
-			}
-		};
-
-		assertThatThrownBy(isPositive)
+	void it_should_fail_with_negative_number() {
+		String message = "should be readable";
+		assertThatThrownBy(() -> PreConditions.isPositive(-1, message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_zero() {
-		final String message = "should be readable";
-
-		ThrowingCallable isPositive = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isPositive(0, message);
-			}
-		};
-
-		assertThatThrownBy(isPositive)
+	void it_should_fail_with_zero() {
+		String message = "should be readable";
+		assertThatThrownBy(() -> PreConditions.isPositive(0, message))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_positive_number() {
+	void it_should_not_fail_with_positive_number() {
 		String message = "should be readable";
 
 		int nb = PreConditions.isPositive(1, message);
@@ -304,57 +199,33 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_not_be_readable_with_null_file() {
-		final String message = "should be readable";
-
-		ThrowingCallable isReadable = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isReadable(null, message);
-			}
-		};
-
-		assertThatThrownBy(isReadable)
+	void it_should_not_be_readable_with_null_file() {
+		String message = "should be readable";
+		assertThatThrownBy(() -> PreConditions.isReadable(null, message))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_be_readable_with_file_that_does_not_exist() {
-		final String message = "should be readable";
-		final File file = new FileBuilder("foo.png").exists(false).build();
-
-		ThrowingCallable isReadable = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isReadable(file, message);
-			}
-		};
-
-		assertThatThrownBy(isReadable)
+	void it_should_not_be_readable_with_file_that_does_not_exist() {
+		String message = "should be readable";
+		File file = new FileBuilder("foo.png").exists(false).build();
+		assertThatThrownBy(() -> PreConditions.isReadable(file, message))
 				.isInstanceOf(UnreadableFileException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_file_that_is_not_readable() {
-		final String message = "should be readable";
-		final File file = new FileBuilder("foo.png").canRead(false).build();
-
-		ThrowingCallable isReadable = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isReadable(file, message);
-			}
-		};
-
-		assertThatThrownBy(isReadable)
+	void it_should_fail_with_file_that_is_not_readable() {
+		String message = "should be readable";
+		File file = new FileBuilder("foo.png").canRead(false).build();
+		assertThatThrownBy(() -> PreConditions.isReadable(file, message))
 				.isInstanceOf(UnreadableFileException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_readable_file() {
+	void it_should_not_fail_with_readable_file() {
 		String message = "should be readable";
 		File file = new FileBuilder("foo.png").build();
 
@@ -364,57 +235,33 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_not_be_writable_with_null_file() {
-		final String message = "should be writable";
-
-		ThrowingCallable isWritable = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isWritable(null, message);
-			}
-		};
-
-		assertThatThrownBy(isWritable)
+	void it_should_not_be_writable_with_null_file() {
+		String message = "should be writable";
+		assertThatThrownBy(() -> PreConditions.isWritable(null, message))
 				.isInstanceOf(NullPointerException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_be_writable_with_file_that_does_not_exist() {
-		final String message = "should be writable";
-		final File file = new FileBuilder("foo.png").exists(false).build();
-
-		ThrowingCallable isWritable = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isWritable(file, message);
-			}
-		};
-
-		assertThatThrownBy(isWritable)
+	void it_should_not_be_writable_with_file_that_does_not_exist() {
+		String message = "should be writable";
+		File file = new FileBuilder("foo.png").exists(false).build();
+		assertThatThrownBy(() -> PreConditions.isWritable(file, message))
 				.isInstanceOf(UnwritableFileException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_fail_with_file_that_is_not_writable() {
-		final String message = "should be writable";
-		final File file = new FileBuilder("foo.png").canWrite(false).build();
-
-		ThrowingCallable isWritable = new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.isWritable(file, message);
-			}
-		};
-
-		assertThatThrownBy(isWritable)
+	void it_should_fail_with_file_that_is_not_writable() {
+		String message = "should be writable";
+		File file = new FileBuilder("foo.png").canWrite(false).build();
+		assertThatThrownBy(() -> PreConditions.isWritable(file, message))
 				.isInstanceOf(UnwritableFileException.class)
 				.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_fail_with_writable_file() {
+	void it_should_not_fail_with_writable_file() {
 		String message = "should be writable";
 		File file = new FileBuilder("foo.png").build();
 

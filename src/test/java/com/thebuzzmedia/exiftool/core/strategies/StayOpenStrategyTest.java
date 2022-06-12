@@ -23,15 +23,11 @@ import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandProcess;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
 import org.assertj.core.api.Condition;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,38 +38,29 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StayOpenStrategyTest {
+class StayOpenStrategyTest {
 
-	@Mock
 	private Scheduler scheduler;
-
-	@Mock
 	private CommandProcess process;
-
-	@Mock
 	private CommandExecutor executor;
-
-	@Mock
 	private OutputHandler outputHandler;
-
-	@Captor
-	private ArgumentCaptor<List<String>> argsCaptor;
-
-	@Captor
-	private ArgumentCaptor<Command> cmdCaptor;
 
 	private String exifTool;
 	private List<String> args;
 	private StayOpenStrategy strategy;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
+		scheduler = mock(Scheduler.class);
+		process = mock(CommandProcess.class);
+		executor = mock(CommandExecutor.class);
+		outputHandler = mock(OutputHandler.class);
 		exifTool = "exiftool";
 
 		// Mock withExecutor
@@ -83,8 +70,8 @@ public class StayOpenStrategyTest {
 		args = asList("-S", "-n", "-XArtist", "XComment", "-execute");
 	}
 
-	@After
-	public void tearDown() {
+	@AfterEach
+	void tearDown() {
 		if (strategy != null) {
 			try {
 				strategy.close();
@@ -96,17 +83,20 @@ public class StayOpenStrategyTest {
 	}
 
 	@Test
-	public void it_should_create_stay_open_strategy() {
+	void it_should_create_stay_open_strategy() {
 		strategy = new StayOpenStrategy(scheduler);
 		assertThat(strategy).extracting("scheduler").isSameAs(scheduler);
 		assertThat(strategy).extracting("process").isNull();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
-	public void it_should_execute_command() throws Exception {
+	void it_should_execute_command() throws Exception {
 		strategy = new StayOpenStrategy(scheduler);
 		strategy.execute(executor, exifTool, args, outputHandler);
 
+		ArgumentCaptor<Command> cmdCaptor = ArgumentCaptor.forClass(Command.class);
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		InOrder inOrder = inOrder(scheduler, executor, process);
 		inOrder.verify(executor).start(cmdCaptor.capture());
 		inOrder.verify(scheduler).stop();
@@ -117,12 +107,13 @@ public class StayOpenStrategyTest {
 
 		assertThat(strategy).extracting("process").isSameAs(process);
 
-		verifyStartProcess();
-		verifyExecutionArguments();
+		verifyStartProcess(cmdCaptor);
+		verifyExecutionArguments(argsCaptor);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
-	public void it_should_not_start_process_twice_if_it_is_running() throws Exception {
+	void it_should_not_start_process_twice_if_it_is_running() throws Exception {
 		strategy = new StayOpenStrategy(scheduler);
 
 		// Mock Process
@@ -134,6 +125,7 @@ public class StayOpenStrategyTest {
 		// Executor should not have been started
 		verify(executor, never()).start(any(Command.class));
 
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		InOrder inOrder = inOrder(scheduler, process);
 		inOrder.verify(process).isClosed();
 		inOrder.verify(scheduler).stop();
@@ -142,11 +134,12 @@ public class StayOpenStrategyTest {
 		inOrder.verify(process).flush();
 		inOrder.verify(process).read(any(OutputHandler.class));
 
-		verifyExecutionArguments();
+		verifyExecutionArguments(argsCaptor);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
-	public void it_should_restart_process_twice_if_it_is_not_running() throws Exception {
+	void it_should_restart_process_twice_if_it_is_not_running() throws Exception {
 		strategy = new StayOpenStrategy(scheduler);
 
 		// Mock Process
@@ -155,6 +148,8 @@ public class StayOpenStrategyTest {
 
 		strategy.execute(executor, exifTool, args, outputHandler);
 
+		ArgumentCaptor<Command> cmdCaptor = ArgumentCaptor.forClass(Command.class);
+		ArgumentCaptor<List<String>> argsCaptor = ArgumentCaptor.forClass(List.class);
 		InOrder inOrder = inOrder(scheduler, process, executor);
 		inOrder.verify(process).isClosed();
 		inOrder.verify(executor).start(cmdCaptor.capture());
@@ -164,26 +159,26 @@ public class StayOpenStrategyTest {
 		inOrder.verify(process).flush();
 		inOrder.verify(process).read(any(OutputHandler.class));
 
-		verifyStartProcess();
-		verifyExecutionArguments();
+		verifyStartProcess(cmdCaptor);
+		verifyExecutionArguments(argsCaptor);
 	}
 
 	@Test
-	public void it_should_try_to_close_process_if_it_is_not_started() throws Exception {
+	void it_should_try_to_close_process_if_it_is_not_started() throws Exception {
 		strategy = new StayOpenStrategy(scheduler);
 		strategy.close();
 		verify(scheduler).stop();
 	}
 
 	@Test
-	public void it_should_try_to_shutdown_process_if_it_is_not_started() throws Exception {
+	void it_should_try_to_shutdown_process_if_it_is_not_started() throws Exception {
 		strategy = new StayOpenStrategy(scheduler);
 		strategy.shutdown();
 		verify(scheduler).shutdown();
 	}
 
 	@Test
-	public void it_should_close_process_if_it_is_started() throws Exception {
+	void it_should_close_process_if_it_is_started() throws Exception {
 		strategy = new StayOpenStrategy(scheduler);
 		writePrivateField(strategy, "process", process);
 		strategy.close();
@@ -199,7 +194,7 @@ public class StayOpenStrategyTest {
 	}
 
 	@Test
-	public void it_should_shutdown_process_if_it_is_started() throws Exception {
+	void it_should_shutdown_process_if_it_is_started() throws Exception {
 		strategy = new StayOpenStrategy(scheduler);
 		writePrivateField(strategy, "process", process);
 		strategy.shutdown();
@@ -216,7 +211,7 @@ public class StayOpenStrategyTest {
 	}
 
 	@Test
-	public void it_should_check_if_process_is_running() {
+	void it_should_check_if_process_is_running() {
 		strategy = new StayOpenStrategy(scheduler);
 		assertThat(strategy.isRunning()).isFalse();
 
@@ -229,19 +224,16 @@ public class StayOpenStrategyTest {
 		assertThat(strategy.isRunning()).isFalse();
 	}
 
-	private void verifyStartProcess() {
+	private void verifyStartProcess(ArgumentCaptor<Command> cmdCaptor) {
 		Command startCmd = cmdCaptor.getValue();
-		assertThat(startCmd.getArguments())
-				.hasSize(7)
-				.containsExactly(
-						exifTool, "-stay_open", "True", "-sep", "|>☃", "-@", "-"
-				);
+		assertThat(startCmd.getArguments()).hasSize(7).containsExactly(
+				exifTool, "-stay_open", "True", "-sep", "|>☃", "-@", "-"
+		);
 	}
 
-	private void verifyExecutionArguments() {
+	private void verifyExecutionArguments(ArgumentCaptor<List<String>> argsCaptor) {
 		List<String> processArgs = argsCaptor.getValue();
 		assertThat(processArgs)
-				.isNotNull()
 				.isNotEmpty()
 				.are(new Condition<String>() {
 					@Override

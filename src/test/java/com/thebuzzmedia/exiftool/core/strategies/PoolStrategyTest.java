@@ -22,9 +22,9 @@ import com.thebuzzmedia.exiftool.Version;
 import com.thebuzzmedia.exiftool.exceptions.PoolIOException;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class PoolStrategyTest {
+class PoolStrategyTest {
 
 	private CommandExecutor executor;
 	private String exifTool;
@@ -56,16 +56,16 @@ public class PoolStrategyTest {
 
 	private PoolStrategy pool;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		executor = mock(CommandExecutor.class);
 		exifTool = "exiftool";
 		arguments = singletonList("-ver");
 		handler = mock(OutputHandler.class);
 	}
 
-	@After
-	public void tearDown() {
+	@AfterEach
+	void tearDown() {
 		if (pool != null) {
 			try {
 				pool.close();
@@ -77,7 +77,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_create_pool() {
+	void it_should_create_pool() {
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s3 = mock(ExecutionStrategy.class);
@@ -89,7 +89,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_execute_a_strategy() throws Exception {
+	void it_should_execute_a_strategy() throws Exception {
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s3 = mock(ExecutionStrategy.class);
@@ -102,7 +102,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_check_that_version_is_not_supported() {
+	void it_should_check_that_version_is_not_supported() {
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		Collection<ExecutionStrategy> strategies = asList(s1, s2);
@@ -116,7 +116,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_check_that_version_is_supported() {
+	void it_should_check_that_version_is_supported() {
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
 		Collection<ExecutionStrategy> strategies = asList(s1, s2);
@@ -130,7 +130,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_execute_strategies_in_parallel() throws Exception {
+	void it_should_execute_strategies_in_parallel() throws Exception {
 		CountDownLatch executionLock = new CountDownLatch(1);
 
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
@@ -173,7 +173,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_execute_strategies_in_parallel_and_block_until_one_become_available() throws Exception {
+	void it_should_execute_strategies_in_parallel_and_block_until_one_become_available() throws Exception {
 		CountDownLatch execLock1 = new CountDownLatch(1);
 		CountDownLatch execLock2 = new CountDownLatch(1);
 
@@ -234,7 +234,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_be_running_when_a_strategy_is_running() throws Exception {
+	void it_should_be_running_when_a_strategy_is_running() throws Exception {
 		CountDownLatch execLock1 = new CountDownLatch(1);
 		CountDownLatch execLock2 = new CountDownLatch(1);
 
@@ -283,7 +283,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_close_inner_strategies() throws Exception {
+	void it_should_close_inner_strategies() throws Exception {
 		CountDownLatch execLock = new CountDownLatch(1);
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
@@ -291,12 +291,7 @@ public class PoolStrategyTest {
 		LockAnswer answer = new LockAnswer(1, execLock);
 		doAnswer(answer).when(s1).execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
-		runPool(s1, s2, new TaskFactory() {
-			@Override
-			public Runnable create(PoolStrategy pool) {
-				return new CloseTask(1, pool);
-			}
-		});
+		runPool(s1, s2, pool -> new CloseTask(1, pool));
 
 		verify(s1, never()).close();
 		verify(s2, never()).close();
@@ -310,7 +305,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_shutdown_inner_strategies() throws Exception {
+	void it_should_shutdown_inner_strategies() throws Exception {
 		CountDownLatch execLock = new CountDownLatch(1);
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		ExecutionStrategy s2 = mock(ExecutionStrategy.class);
@@ -318,12 +313,7 @@ public class PoolStrategyTest {
 		LockAnswer answer = new LockAnswer(1, execLock);
 		doAnswer(answer).when(s1).execute(any(CommandExecutor.class), anyString(), anyListOf(String.class), any(OutputHandler.class));
 
-		runPool(s1, s2, new TaskFactory() {
-			@Override
-			public Runnable create(PoolStrategy pool) {
-				return new ShutdownTask(1, pool);
-			}
-		});
+		runPool(s1, s2, pool -> new ShutdownTask(1, pool));
 
 		verify(s1, never()).shutdown();
 		verify(s2, never()).shutdown();
@@ -337,7 +327,7 @@ public class PoolStrategyTest {
 	}
 
 	@Test
-	public void it_should_close_inner_strategies_and_collect_exceptions() throws Exception {
+	void it_should_close_inner_strategies_and_collect_exceptions() throws Exception {
 		CountDownLatch execLock = new CountDownLatch(1);
 		ExecutionStrategy s1 = mock(ExecutionStrategy.class);
 		doAnswer(new LockAnswer(1, execLock))
@@ -388,11 +378,7 @@ public class PoolStrategyTest {
 		assertThat(task.getThrown()).isInstanceOf(PoolIOException.class);
 
 		Collection<Exception> exceptions = ((PoolIOException) task.getThrown()).getThrownExceptions();
-		assertThat(exceptions)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.contains(ex1, ex2);
+		assertThat(exceptions).hasSize(2).contains(ex1, ex2);
 	}
 
 	private void runPool(ExecutionStrategy s1, ExecutionStrategy s2, TaskFactory taskFactory) throws Exception {

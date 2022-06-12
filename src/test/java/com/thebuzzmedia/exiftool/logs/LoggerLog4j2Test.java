@@ -21,7 +21,7 @@ import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateFie
 import static org.apache.logging.log4j.Level.INFO;
 import static org.apache.logging.log4j.Level.TRACE;
 
-public class LoggerLog4j2Test extends AbstractLoggerTest {
+class LoggerLog4j2Test extends AbstractLoggerTest {
 
 	@Override
 	Logger getLogger() {

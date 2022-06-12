@@ -17,7 +17,7 @@
 
 package com.thebuzzmedia.exiftool.logs;
 
-public class DefaultLoggerTest extends AbstractLoggerTest {
+class DefaultLoggerTest extends AbstractLoggerTest {
 
 	@Override
 	Logger getLogger() {

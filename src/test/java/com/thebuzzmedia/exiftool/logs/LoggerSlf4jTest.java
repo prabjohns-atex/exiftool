@@ -21,7 +21,7 @@ import ch.qos.logback.classic.Level;
 
 import static com.thebuzzmedia.exiftool.tests.ReflectionTestUtils.readPrivateField;
 
-public class LoggerSlf4jTest extends AbstractLoggerTest {
+class LoggerSlf4jTest extends AbstractLoggerTest {
 
 	@Override
 	Logger getLogger() {

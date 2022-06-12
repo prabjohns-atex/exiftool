@@ -17,14 +17,14 @@
 
 package com.thebuzzmedia.exiftool.commons.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StringsTest {
+class StringsTest {
 
 	@Test
-	public void it_should_check_if_value_is_not_empty() {
+	void it_should_check_if_value_is_not_empty() {
 		assertThat(Strings.isNotEmpty(null)).isFalse();
 		assertThat(Strings.isNotEmpty("")).isFalse();
 		assertThat(Strings.isNotEmpty("  ")).isTrue();

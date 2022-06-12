@@ -22,23 +22,23 @@ import com.thebuzzmedia.exiftool.process.CommandExecutor;
 import com.thebuzzmedia.exiftool.process.CommandProcess;
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.process.OutputHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 import static com.thebuzzmedia.exiftool.tests.TestConstants.IS_WINDOWS;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DefaultCommandExecutorTest {
+class DefaultCommandExecutorTest {
 
 	@Test
-	public void it_should_execute_command_line() throws Exception {
+	void it_should_execute_command_line() throws Exception {
 		assumeFalse(IS_WINDOWS);
 
 		File script = new File(getClass().getResource("/processes/success.sh").getFile());
@@ -53,7 +53,7 @@ public class DefaultCommandExecutorTest {
 	}
 
 	@Test
-	public void it_should_execute_command_line_on_windows() throws Exception {
+	void it_should_execute_command_line_on_windows() throws Exception {
 		assumeTrue(IS_WINDOWS);
 
 		File script = new File(getClass().getResource("/processes/success.bat").getFile());
@@ -68,7 +68,7 @@ public class DefaultCommandExecutorTest {
 	}
 
 	@Test
-	public void it_should_execute_command_line_with_handler() throws Exception {
+	void it_should_execute_command_line_with_handler() throws Exception {
 		assumeFalse(IS_WINDOWS);
 
 		File script = new File(getClass().getResource("/processes/success.sh").getFile());
@@ -86,7 +86,7 @@ public class DefaultCommandExecutorTest {
 	}
 
 	@Test
-	public void it_should_start_command_line() throws Exception {
+	void it_should_start_command_line() throws Exception {
 		assumeFalse(IS_WINDOWS);
 
 		File script = new File(getClass().getResource("/processes/success.sh").getFile());
@@ -101,17 +101,15 @@ public class DefaultCommandExecutorTest {
 		assertThat(output).isNotNull().isEqualTo("Hello World");
 	}
 
-	private Command createUnixCommand(String script) {
+	private static Command createUnixCommand(String script) {
 		Command command = mock(Command.class);
 		when(command.getArguments()).thenReturn(asList("/bin/sh", script));
-
 		return command;
 	}
 
-	private Command createWindowsCommand(String script) {
+	private static Command createWindowsCommand(String script) {
 		Command command = mock(Command.class);
 		when(command.getArguments()).thenReturn(asList("cmd", "/C", script));
-
 		return command;
 	}
 }

@@ -19,14 +19,14 @@ package com.thebuzzmedia.exiftool.process.executor;
 
 import com.thebuzzmedia.exiftool.process.CommandResult;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DefaultCommandResultTest {
+class DefaultCommandResultTest {
 
 	@Test
-	public void it_should_create_result() {
+	void it_should_create_result() {
 		String output = "foo";
 		CommandResult result = new DefaultCommandResult(0, output);
 		assertThat(result.getExitStatus()).isZero();
@@ -34,26 +34,26 @@ public class DefaultCommandResultTest {
 	}
 
 	@Test
-	public void it_should_mark_result_as_success() {
+	void it_should_mark_result_as_success() {
 		CommandResult result = new DefaultCommandResult(0, "foo");
 		assertThat(result.isSuccess()).isTrue();
 		assertThat(result.isFailure()).isFalse();
 	}
 
 	@Test
-	public void it_should_mark_result_as_failure() {
+	void it_should_mark_result_as_failure() {
 		CommandResult result = new DefaultCommandResult(1, "foo");
 		assertThat(result.isSuccess()).isFalse();
 		assertThat(result.isFailure()).isTrue();
 	}
 
 	@Test
-	public void it_should_implement_equals_and_hashCode() {
+	void it_should_implement_equals_and_hashCode() {
 		EqualsVerifier.forClass(DefaultCommandResult.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_toString() {
+	void it_should_implement_toString() {
 		assertThat(new DefaultCommandResult(0, "foo")).hasToString("[0] foo");
 	}
 }

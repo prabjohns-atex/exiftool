@@ -18,19 +18,19 @@
 package com.thebuzzmedia.exiftool.core;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NonConvertedTagTest {
+class NonConvertedTagTest {
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(NonConvertedTag.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		NonConvertedTag t = NonConvertedTag.of(StandardTag.AUTHOR);
 		assertThat(t).hasToString(
 				"NonConvertedTag{" +

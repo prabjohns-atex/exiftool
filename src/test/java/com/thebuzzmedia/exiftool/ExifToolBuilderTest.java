@@ -28,11 +28,11 @@ import com.thebuzzmedia.exiftool.process.CommandResult;
 import com.thebuzzmedia.exiftool.process.executor.DefaultCommandExecutor;
 import com.thebuzzmedia.exiftool.tests.builders.CommandResultBuilder;
 import com.thebuzzmedia.exiftool.tests.builders.FileBuilder;
-import com.thebuzzmedia.exiftool.tests.junit.SystemPropertyRule;
+import com.thebuzzmedia.exiftool.tests.junit.SystemPropertyExtension;
 import org.assertj.core.api.Condition;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -47,8 +47,8 @@ import static org.mockito.Mockito.when;
 
 public class ExifToolBuilderTest {
 
-	@Rule
-	public SystemPropertyRule exifToolProps = new SystemPropertyRule(
+	@RegisterExtension
+	public SystemPropertyExtension exifToolProps = new SystemPropertyExtension(
 			"exiftool.path",
 			"exiftool.processCleanupDelay"
 	);
@@ -60,8 +60,8 @@ public class ExifToolBuilderTest {
 
 	private ExifToolBuilder builder;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
 		executor = mock(CommandExecutor.class);
 		strategy = mock(ExecutionStrategy.class);
 		scheduler = mock(Scheduler.class);
@@ -79,33 +79,29 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_update_path() {
+	void it_should_update_path() {
 		ExifToolBuilder res = builder.withPath(path);
-
 		assertThat(res).isSameAs(builder);
 		assertThat(builder).extracting("path").isEqualTo(path);
 	}
 
 	@Test
-	public void it_should_update_path_with_file() {
+	void it_should_update_path_with_file() {
 		File file = new FileBuilder("/usr/local/exiftool").build();
-
 		ExifToolBuilder res = builder.withPath(file);
-
 		assertThat(res).isSameAs(builder);
 		assertThat(builder).extracting("path").isEqualTo(file.getAbsolutePath());
 	}
 
 	@Test
-	public void it_should_update_executor() {
+	void it_should_update_executor() {
 		ExifToolBuilder res = builder.withExecutor(executor);
-
 		assertThat(res).isSameAs(builder);
 		assertThat(builder).extracting("executor").isEqualTo(executor);
 	}
 
 	@Test
-	public void it_should_enable_stay_open_feature() {
+	void it_should_enable_stay_open_feature() {
 		assertThat(builder).extracting("stayOpen").isNull();
 
 		ExifToolBuilder r1 = builder.enableStayOpen();
@@ -115,7 +111,7 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_enable_stay_open_feature_with_delay() {
+	void it_should_enable_stay_open_feature_with_delay() {
 		assertThat(builder).extracting("stayOpen").isNull();
 		assertThat(builder).extracting("cleanupDelay").isNull();
 
@@ -128,7 +124,7 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_enable_stay_open_feature_with_scheduler() {
+	void it_should_enable_stay_open_feature_with_scheduler() {
 		assertThat(builder).extracting("stayOpen").isNull();
 		assertThat(builder).extracting("scheduler").isNull();
 
@@ -140,7 +136,7 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_override_strategy() {
+	void it_should_override_strategy() {
 		assertThat(builder).extracting("strategy").isNull();
 
 		ExifToolBuilder r1 = builder.withStrategy(strategy);
@@ -150,7 +146,7 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_exiftool_with_custom_props() {
+	void it_should_create_exiftool_with_custom_props() {
 		ExifTool exifTool = builder
 				.withPath(path)
 				.withExecutor(executor)
@@ -163,27 +159,20 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_exiftool_and_get_path_from_system_property() {
+	void it_should_create_exiftool_and_get_path_from_system_property() {
 		System.setProperty("exiftool.path", path);
-
-		ExifTool exifTool = builder
-				.withExecutor(executor)
-				.build();
-
+		ExifTool exifTool = builder.withExecutor(executor).build();
 		assertThat(exifTool).extracting("path").isEqualTo(path);
 	}
 
 	@Test
-	public void it_should_create_exiftool_and_get_path_from_default() {
-		ExifTool exifTool = builder
-				.withExecutor(executor)
-				.build();
-
+	void it_should_create_exiftool_and_get_path_from_default() {
+		ExifTool exifTool = builder.withExecutor(executor).build();
 		assertThat(exifTool).extracting("path").isEqualTo("exiftool");
 	}
 
 	@Test
-	public void it_should_create_exiftool_and_get_delay_from_default_property() {
+	void it_should_create_exiftool_and_get_delay_from_default_property() {
 		long delay = 100;
 		System.setProperty("exiftool.processCleanupDelay", String.valueOf(delay));
 
@@ -197,7 +186,7 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_exiftool_and_get_delay_from_default() {
+	void it_should_create_exiftool_and_get_delay_from_default() {
 		ExifTool exifTool = builder
 				.withExecutor(executor)
 				.enableStayOpen()
@@ -208,7 +197,7 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_exiftool_and_use_scheduler() {
+	void it_should_create_exiftool_and_use_scheduler() {
 		ExifTool exifTool = builder
 				.withExecutor(executor)
 				.enableStayOpen(scheduler)
@@ -219,19 +208,19 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_not_enable_stay_open_by_default() {
+	void it_should_not_enable_stay_open_by_default() {
 		ExifTool exifTool = builder.withExecutor(executor).build();
 		assertThat(exifTool).extracting("strategy").isExactlyInstanceOf(DefaultStrategy.class);
 	}
 
 	@Test
-	public void it_should_create_with_default_executor() {
+	void it_should_create_with_default_executor() {
 		ExifTool exifTool = builder.build();
 		assertThat(exifTool).extracting("executor").isExactlyInstanceOf(DefaultCommandExecutor.class);
 	}
 
 	@Test
-	public void it_should_create_with_custom_strategy() {
+	void it_should_create_with_custom_strategy() {
 		ExifTool exifTool = builder
 				.withExecutor(executor)
 				.withStrategy(strategy)
@@ -241,13 +230,12 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_with_pool_strategy() {
+	void it_should_create_with_pool_strategy() {
 		ExifTool exifTool = builder.withExecutor(executor).withPoolSize(10, 500).build();
 
 		assertThat(exifTool).extracting("strategy").isExactlyInstanceOf(PoolStrategy.class);
 		assertThat(exifTool).extracting("strategy.pool").asInstanceOf(collection(ExecutionStrategy.class))
 				.hasSize(10)
-				.isNotEmpty()
 				.are(new Condition<ExecutionStrategy>() {
 					@Override
 					public boolean matches(ExecutionStrategy value) {
@@ -265,25 +253,24 @@ public class ExifToolBuilderTest {
 	}
 
 	@Test
-	public void it_should_not_create_pool_strategy_with_negative_pool() {
+	void it_should_not_create_pool_strategy_with_negative_pool() {
 		ExifTool exifTool = builder.withExecutor(executor).withPoolSize(0, 0).build();
 		assertThat(exifTool).extracting("strategy").isExactlyInstanceOf(DefaultStrategy.class);
 	}
 
 	@Test
-	public void it_should_not_create_pool_strategy_with_negative_pool_without_delay() {
+	void it_should_not_create_pool_strategy_with_negative_pool_without_delay() {
 		ExifTool exifTool = builder.withExecutor(executor).withPoolSize(0).build();
 		assertThat(exifTool).extracting("strategy").isExactlyInstanceOf(DefaultStrategy.class);
 	}
 
 	@Test
-	public void it_should_create_with_pool_strategy_and_no_op_scheduler() {
+	void it_should_create_with_pool_strategy_and_no_op_scheduler() {
 		ExifTool exifTool = builder.withExecutor(executor).withPoolSize(10).build();
 
 		assertThat(exifTool).extracting("strategy").isExactlyInstanceOf(PoolStrategy.class);
 		assertThat(exifTool).extracting("strategy.pool").asInstanceOf(collection(ExecutionStrategy.class))
 				.hasSize(10)
-				.isNotEmpty()
 				.are(new Condition<ExecutionStrategy>("Pool should only contains instance of StayOpenStrategy") {
 					@Override
 					public boolean matches(ExecutionStrategy value) {
