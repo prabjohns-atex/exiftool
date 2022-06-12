@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Map;
 
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Static PreConditions Utilities.
@@ -32,24 +33,6 @@ public final class PreConditions {
 
 	// Ensure non instantiation.
 	private PreConditions() {
-	}
-
-	/**
-	 * Ensures that an object reference passed as a parameter to the calling method is not {@code null}.
-	 *
-	 * @param val     Value to check.
-	 * @param message Message passed to {@link NullPointerException}.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
-	 * @param <T>     Type of parameter.
-	 * @return Original value if it is not {@code null}.
-	 * @throws java.lang.NullPointerException If {@code val} is null.
-	 */
-	public static <T> T notNull(T val, String message, Object... params) {
-		if (val == null) {
-			throw new NullPointerException(errorMessage(message, params));
-		}
-
-		return val;
 	}
 
 	/**
@@ -62,15 +45,14 @@ public final class PreConditions {
 	 *
 	 * @param val     Value to check.
 	 * @param message Message passed to thrown exception.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
 	 * @return Original value if it is not {@code null}.
 	 * @throws java.lang.NullPointerException     If {@code val} is {@code null}.
 	 * @throws java.lang.IllegalArgumentException If {@code val} is empty or blank.
 	 */
-	public static String notBlank(String val, String message, Object... params) {
-		notNull(val, message, params);
+	public static String notBlank(String val, String message) {
+		requireNonNull(val, message);
 		if (val.length() == 0 || val.trim().length() == 0) {
-			throw new IllegalArgumentException(errorMessage(message, params));
+			throw new IllegalArgumentException(message);
 		}
 
 		return val;
@@ -85,16 +67,15 @@ public final class PreConditions {
 	 *
 	 * @param val     Value to check.
 	 * @param message Message passed to thrown exception.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
 	 * @param <T>     Type of elements in array.
 	 * @return Original value if it is not empty.
 	 * @throws java.lang.NullPointerException     If {@code val} is {@code null}.
 	 * @throws java.lang.IllegalArgumentException If {@code val} is empty.
 	 */
-	public static <T> T[] notEmpty(T[] val, String message, Object... params) {
-		notNull(val, message, params);
+	public static <T> T[] notEmpty(T[] val, String message) {
+		requireNonNull(val, message);
 		if (val.length == 0) {
-			throw new IllegalArgumentException(errorMessage(message, params));
+			throw new IllegalArgumentException(message);
 		}
 
 		return val;
@@ -109,17 +90,16 @@ public final class PreConditions {
 	 *
 	 * @param val     Value to check.
 	 * @param message Message passed to thrown exception.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
 	 * @param <T>     Type of keys in map.
 	 * @param <U>     Type of values in map.
 	 * @return Original value if it is not empty.
 	 * @throws java.lang.NullPointerException     If {@code val} is {@code null}.
 	 * @throws java.lang.IllegalArgumentException If {@code val} is empty.
 	 */
-	public static <T, U> Map<T, U> notEmpty(Map<T, U> val, String message, Object... params) {
-		notNull(val, message, params);
+	public static <T, U> Map<T, U> notEmpty(Map<T, U> val, String message) {
+		requireNonNull(val, message);
 		if (val.size() == 0) {
-			throw new IllegalArgumentException(errorMessage(message, params));
+			throw new IllegalArgumentException(message);
 		}
 
 		return val;
@@ -134,17 +114,16 @@ public final class PreConditions {
 	 *
 	 * @param val     Value to check.
 	 * @param message Message passed to thrown exception.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
 	 * @param <T>     Type of elements in iterable structure.
 	 * @return Original value if it is not empty.
 	 * @throws java.lang.NullPointerException     If {@code val} is {@code null}.
 	 * @throws java.lang.IllegalArgumentException If {@code val} is empty.
 	 */
-	public static <T> Iterable<T> notEmpty(Iterable<T> val, String message, Object... params) {
-		notNull(val, message, params);
+	public static <T> Iterable<T> notEmpty(Iterable<T> val, String message) {
+		requireNonNull(val, message);
 
 		if (!val.iterator().hasNext()) {
-			throw new IllegalArgumentException(errorMessage(message, params));
+			throw new IllegalArgumentException(message);
 		}
 
 		return val;
@@ -155,16 +134,15 @@ public final class PreConditions {
 	 *
 	 * @param nb      Number.
 	 * @param message Error message.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
 	 * @param <T>     Type of number.
 	 * @return Original number.
 	 * @throws NullPointerException     If {@code nb} is {@code null}.
 	 * @throws IllegalArgumentException If {@code nb} is less than or equal to zero.
 	 */
-	public static <T extends Number> T isPositive(T nb, String message, Object... params) {
-		notNull(nb, message, params);
+	public static <T extends Number> T isPositive(T nb, String message) {
+		requireNonNull(nb, message);
 		if (nb.doubleValue() <= 0) {
-			throw new IllegalArgumentException(errorMessage(message, params));
+			throw new IllegalArgumentException(message);
 		}
 
 		return nb;
@@ -175,16 +153,15 @@ public final class PreConditions {
 	 *
 	 * @param file    File to check.
 	 * @param message Error message.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
 	 * @return Original file.
 	 * @throws NullPointerException    If {@code file} is {@code null}.
 	 * @throws UnreadableFileException If {@code file} does not exist.
 	 * @throws UnreadableFileException If {@code file} cannot be read.
 	 */
-	public static File isReadable(File file, String message, Object... params) {
-		notNull(file, message, params);
+	public static File isReadable(File file, String message) {
+		requireNonNull(file, message);
 		if (!file.exists() || !file.canRead()) {
-			throw new UnreadableFileException(file, errorMessage(message, params));
+			throw new UnreadableFileException(file, message);
 		}
 
 		return file;
@@ -195,16 +172,15 @@ public final class PreConditions {
 	 *
 	 * @param file    File to check.
 	 * @param message Error message.
-	 * @param params  Message parameters (formatted with {@link String#format(String, Object...)}).
 	 * @return Original file.
 	 * @throws NullPointerException    If {@code file} is {@code null}.
 	 * @throws UnreadableFileException If {@code file} does not exist.
 	 * @throws UnreadableFileException If {@code file} cannot be updated.
 	 */
-	public static File isWritable(File file, String message, Object... params) {
-		notNull(file, message, params);
+	public static File isWritable(File file, String message) {
+		requireNonNull(file, message);
 		if (!file.exists() || !file.canWrite()) {
-			throw new UnwritableFileException(file, errorMessage(message, params));
+			throw new UnwritableFileException(file, message);
 		}
 
 		return file;

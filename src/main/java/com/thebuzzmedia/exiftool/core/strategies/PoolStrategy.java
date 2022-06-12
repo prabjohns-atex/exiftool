@@ -112,12 +112,18 @@ public class PoolStrategy implements ExecutionStrategy {
 
 	@Override
 	public void close() throws Exception {
-		processPool(CLOSE_EXECUTION_STRATEGY);
+		processPool((strategy, i) -> {
+			log.debug("Closing strategy #{}", i);
+			strategy.close();
+		});
 	}
 
 	@Override
 	public void shutdown() throws Exception {
-		processPool(SHUTDOWN_EXECUTION_STRATEGY);
+		processPool((strategy, i) -> {
+			log.debug("Closing strategy #{}", i);
+			strategy.shutdown();
+		});
 	}
 
 	private void processPool(ExecutionStrategyFunction function) throws Exception {
@@ -168,20 +174,4 @@ public class PoolStrategy implements ExecutionStrategy {
 	private interface ExecutionStrategyFunction {
 		void apply(ExecutionStrategy strategy, int i) throws Exception;
 	}
-
-	private static final ExecutionStrategyFunction CLOSE_EXECUTION_STRATEGY = new ExecutionStrategyFunction() {
-		@Override
-		public void apply(ExecutionStrategy strategy, int i) throws Exception {
-			log.debug("Closing strategy #{}", i);
-			strategy.close();
-		}
-	};
-
-	private static final ExecutionStrategyFunction SHUTDOWN_EXECUTION_STRATEGY = new ExecutionStrategyFunction() {
-		@Override
-		public void apply(ExecutionStrategy strategy, int i) throws Exception {
-			log.debug("Closing strategy #{}", i);
-			strategy.shutdown();
-		}
-	};
 }

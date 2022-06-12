@@ -113,7 +113,7 @@ class ExifTool_getImageMeta_Test {
 
 	@Test
 	void it_should_fail_if_tags_is_empty() {
-		assertThatThrownBy(() -> exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.<Tag>emptyList()))
+		assertThatThrownBy(() -> exifTool.getImageMeta(mock(File.class), StandardFormat.HUMAN_READABLE, Collections.emptyList()))
 				.isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Tags cannot be null and must contain 1 or more Tag to query the image for.");
 	}

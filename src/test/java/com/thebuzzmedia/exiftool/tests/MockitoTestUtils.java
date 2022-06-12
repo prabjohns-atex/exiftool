@@ -38,8 +38,7 @@ public final class MockitoTestUtils {
 	 * @param <T> Type of elements.
 	 * @return List of elements of type T.
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> List<T> anyListOf(Class<T> klass) {
-		return (List<T>) ArgumentMatchers.anyList();
+		return ArgumentMatchers.anyList();
 	}
 }

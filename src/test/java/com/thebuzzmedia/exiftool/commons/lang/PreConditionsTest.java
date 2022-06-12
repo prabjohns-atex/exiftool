@@ -35,21 +35,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class PreConditionsTest {
 
 	@Test
-	void it_should_fail_with_npe() {
-		String message = "should not be null";
-		assertThatThrownBy(() -> PreConditions.notNull(null, message))
-				.isInstanceOf(NullPointerException.class)
-				.hasMessage(message);
-	}
-
-	@Test
-	void it_should_not_fail_with_npe() {
-		String val = "foo";
-		String foo = PreConditions.notNull(val, "should not be null");
-		assertThat(foo).isEqualTo(val);
-	}
-
-	@Test
 	void it_should_fail_with_null_string() {
 		String message = "should not be empty";
 		assertThatThrownBy(() -> PreConditions.notBlank(null, message))

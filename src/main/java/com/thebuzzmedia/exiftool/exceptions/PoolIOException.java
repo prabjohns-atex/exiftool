@@ -26,7 +26,6 @@ import static java.util.Collections.unmodifiableCollection;
 /**
  * Error thrown when an error occurs with pool execution.
  */
-@SuppressWarnings("serial")
 public class PoolIOException extends IOException {
 
 	/**

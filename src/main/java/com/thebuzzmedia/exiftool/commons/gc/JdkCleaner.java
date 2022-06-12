@@ -19,12 +19,12 @@ package com.thebuzzmedia.exiftool.commons.gc;
 
 import java.lang.invoke.MethodHandle;
 
-import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.findMethod;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.findStaticMethod;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.invoke;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.invokeStatic;
 import static com.thebuzzmedia.exiftool.commons.reflection.ClassUtils.lookupClass;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Implementation of {@link Cleaner} using {@code java.lang.ref.Cleaner} implementation.
@@ -60,8 +60,8 @@ final class JdkCleaner implements Cleaner {
 	private final MethodHandle register;
 
 	private JdkCleaner(Object cleaner, MethodHandle register) {
-		this.cleaner = notNull(cleaner, "Cleaner must not be null");
-		this.register = notNull(register, "Register method must not be null");
+		this.cleaner = requireNonNull(cleaner, "Cleaner must not be null");
+		this.register = requireNonNull(register, "Register method must not be null");
 	}
 
 	@Override

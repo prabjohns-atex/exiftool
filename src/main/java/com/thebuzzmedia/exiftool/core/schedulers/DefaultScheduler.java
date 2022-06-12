@@ -25,10 +25,10 @@ import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.duration;
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.millis;
 import static com.thebuzzmedia.exiftool.core.schedulers.SchedulerDuration.seconds;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Default implementation for {@code exiftool} {@link com.thebuzzmedia.exiftool.Scheduler}.
@@ -121,8 +121,8 @@ public class DefaultScheduler implements Scheduler {
 	 * @throws IllegalArgumentException If {@code delay} is less than or equal to zero.
 	 */
 	public DefaultScheduler(SchedulerDuration executionDelay, SchedulerDuration terminationDelay) {
-		this.executionDelay = notNull(executionDelay, "Execution delay must not be null");
-		this.terminationDelay = notNull(terminationDelay, "Termination delay must not be null");
+		this.executionDelay = requireNonNull(executionDelay, "Execution delay must not be null");
+		this.terminationDelay = requireNonNull(terminationDelay, "Termination delay must not be null");
 
 		// Create executor
 		this.executor = new ScheduledThreadPoolExecutor(1);

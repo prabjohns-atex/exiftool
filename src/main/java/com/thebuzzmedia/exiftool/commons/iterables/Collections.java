@@ -19,8 +19,8 @@ package com.thebuzzmedia.exiftool.commons.iterables;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Static Collection Utilities.
@@ -87,55 +87,7 @@ public final class Collections {
 			return (Collection<T>) iterables;
 		}
 
-		List<T> list = new ArrayList<>();
-		for (T value : iterables) {
-			list.add(value);
-		}
-
-		return list;
-	}
-
-	/**
-	 * Join elements of collection to a final string.
-	 * If collection is empty (null or empty), an empty string is returned.
-	 *
-	 * @param values Collection of values.
-	 * @param separator Separator, use to separate each elements.
-	 * @param <T> Type of element in collection.
-	 * @return Final string.
-	 */
-	public static <T> String join(Collection<T> values, String separator) {
-		if (isEmpty(values)) {
-			return "";
-		}
-
-		Iterator<T> it = values.iterator();
-		StringBuilder sb = new StringBuilder();
-		sb.append(it.next());
-		while (it.hasNext()) {
-			sb.append(separator).append(it.next());
-		}
-
-		return sb.toString();
-	}
-
-	/**
-	 * Map list of inputs to a new list of outputs.
-	 *
-	 * @param inputs Input list.
-	 * @param mapper Mapper used to transform inputs.
-	 * @param <T> Type of input.
-	 * @param <U> Type of output.
-	 * @return New list of outputs.
-	 */
-	public static <T, U> List<U> map(Collection<T> inputs, Mapper<T, U> mapper) {
-		List<U> outputs = new ArrayList<>(inputs.size());
-		for (T input : inputs) {
-			U output = mapper.map(input);
-			outputs.add(output);
-		}
-
-		return outputs;
+		return StreamSupport.stream(iterables.spliterator(), false).collect(Collectors.toList());
 	}
 
 	/**

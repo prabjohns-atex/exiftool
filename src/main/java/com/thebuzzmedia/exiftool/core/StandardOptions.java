@@ -828,7 +828,7 @@ public final class StandardOptions implements ExifToolOptions {
 		 * Do not overwrite original file.
 		 *
 		 * @return The builder.
-		 * @deprecated Use {@link #doNotOverwiteOriginal()} instead.
+		 * @deprecated Use {@link #doNotOverwriteOriginal()} instead.
 		 */
 		@Deprecated
 		public Builder doNotOverwiteOriginal() {

@@ -579,7 +579,7 @@ public enum StandardTag implements Tag {
 	 */
 	private final Type type;
 
-	private StandardTag(String name, Type type) {
+	StandardTag(String name, Type type) {
 		this.name = name;
 		this.type = type;
 	}

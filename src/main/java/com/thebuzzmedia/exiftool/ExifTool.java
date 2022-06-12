@@ -19,7 +19,6 @@ package com.thebuzzmedia.exiftool;
 
 import com.thebuzzmedia.exiftool.commons.gc.Cleaner;
 import com.thebuzzmedia.exiftool.commons.gc.CleanerFactory;
-import com.thebuzzmedia.exiftool.commons.lang.PreConditions;
 import com.thebuzzmedia.exiftool.core.StandardFormat;
 import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.UnspecifiedTag;
@@ -48,9 +47,9 @@ import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isReadable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isWritable;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notBlank;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notEmpty;
-import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
 import static com.thebuzzmedia.exiftool.core.handlers.StopHandler.stopHandler;
 import static java.util.Collections.singleton;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Class used to provide a Java-like interface to Phil Harvey's excellent,
@@ -334,9 +333,9 @@ public class ExifTool implements AutoCloseable {
 	 * @param strategy Execution strategy.
 	 */
 	ExifTool(String path, CommandExecutor executor, ExecutionStrategy strategy) {
-		this.executor = notNull(executor, "Executor should not be null");
+		this.executor = requireNonNull(executor, "Executor should not be null");
 		this.path = notBlank(path, "ExifTool path should not be null");
-		this.strategy = notNull(strategy, "Execution strategy should not be null");
+		this.strategy = requireNonNull(strategy, "Execution strategy should not be null");
 		this.version = cache.load(path, executor);
 
 		// Check if this instance may be used safely.
@@ -479,7 +478,7 @@ public class ExifTool implements AutoCloseable {
 	 * @throws com.thebuzzmedia.exiftool.exceptions.UnreadableFileException If image cannot be read.
 	 */
 	public Map<Tag, String> getImageMeta(File image, Format format, Collection<? extends Tag> tags) throws IOException {
-		notNull(format, "Format cannot be null.");
+		requireNonNull(format, "Format cannot be null.");
 		StandardOptions options = StandardOptions.builder().withFormat(format).build();
 		return getImageMeta(image, options, tags);
 	}
@@ -497,7 +496,7 @@ public class ExifTool implements AutoCloseable {
 	 * @throws com.thebuzzmedia.exiftool.exceptions.UnreadableFileException If image cannot be read.
 	 */
 	public Map<Tag, String> getImageMeta(File image, ExifToolOptions options, Collection<? extends Tag> tags) throws IOException {
-		notNull(options, "Options cannot be null.");
+		requireNonNull(options, "Options cannot be null.");
 		notEmpty(tags, "Tags cannot be null and must contain 1 or more Tag to query the image for.");
 
 		log.debug("Querying {} tags from image: {}", tags.size(), image);
@@ -510,9 +509,9 @@ public class ExifTool implements AutoCloseable {
 	}
 
 	private Map<Tag, String> getImageMeta(File image, Collection<? extends Tag> tags, ExifToolOptions options, TagHandler tagHandler) throws IOException {
-		notNull(image, "Image cannot be null and must be a valid stream of image data.");
-		notNull(options, "Options cannot be null.");
-		isReadable(image, "Unable to read the given image [%s], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.", image);
+		requireNonNull(image, "Image cannot be null and must be a valid stream of image data.");
+		requireNonNull(options, "Options cannot be null.");
+		isReadable(image, String.format("Unable to read the given image [%s], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.", image));
 
 		// Build list of exiftool arguments.
 		List<String> args = toArguments(image, tags, options);
@@ -547,7 +546,7 @@ public class ExifTool implements AutoCloseable {
 	 * @throws IOException If an error occurs during write operation.
 	 */
 	public void setImageMeta(File image, Format format, Map<? extends Tag, String> tags) throws IOException {
-		notNull(format, "Format cannot be null.");
+		requireNonNull(format, "Format cannot be null.");
 		ExifToolOptions options = StandardOptions.builder().withFormat(format).build();
 		setImageMeta(image, options, tags);
 	}
@@ -561,10 +560,10 @@ public class ExifTool implements AutoCloseable {
 	 * @throws IOException If an error occurs during write operation.
 	 */
 	public void setImageMeta(File image, ExifToolOptions options, Map<? extends Tag, String> tags) throws IOException {
-		notNull(image, "Image cannot be null and must be a valid stream of image data.");
-		notNull(options, "Options cannot be null.");
+		requireNonNull(image, "Image cannot be null and must be a valid stream of image data.");
+		requireNonNull(options, "Options cannot be null.");
 		notEmpty(tags, "Tags cannot be null and must contain 1 or more Tag to query the image for.");
-		isWritable(image, "Unable to read the given image [%s], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.", image);
+		isWritable(image, String.format("Unable to read the given image [%s], ensure that the image exists at the given withPath and that the executing Java process has permissions to read it.", image));
 
 		log.debug("Writing {} tags to image: {}", tags.size(), image);
 
@@ -625,7 +624,7 @@ public class ExifTool implements AutoCloseable {
 		private final ExecutionStrategy strategy;
 
 		private FinalizerTask(ExecutionStrategy strategy) {
-			this.strategy = PreConditions.notNull(strategy, "Execution strategy must not be null");
+			this.strategy = requireNonNull(strategy, "Execution strategy must not be null");
 		}
 
 		@Override

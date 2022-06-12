@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.isPositive;
-import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * A duration, represented by a delay and a time unit.
@@ -79,7 +79,7 @@ public final class SchedulerDuration {
 	 */
 	private SchedulerDuration(long delay, TimeUnit timeUnit) {
 		this.delay = isPositive(delay, "Delay should be a strictly positive value");
-		this.timeUnit = notNull(timeUnit, "Time Unit should not be null");
+		this.timeUnit = requireNonNull(timeUnit, "Time Unit should not be null");
 	}
 
 	/**

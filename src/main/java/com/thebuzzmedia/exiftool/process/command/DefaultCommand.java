@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.thebuzzmedia.exiftool.commons.iterables.Collections.isEmpty;
-import static com.thebuzzmedia.exiftool.commons.iterables.Collections.join;
 import static com.thebuzzmedia.exiftool.commons.iterables.Collections.size;
 import static java.util.Collections.unmodifiableList;
 
@@ -72,7 +71,7 @@ public final class DefaultCommand implements Command {
 
 	@Override
 	public String toString() {
-		return join(cmd, " ");
+		return String.join(" ", cmd);
 	}
 
 	@Override

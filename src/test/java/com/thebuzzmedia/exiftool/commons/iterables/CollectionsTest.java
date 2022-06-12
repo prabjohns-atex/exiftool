@@ -18,21 +18,14 @@
 package com.thebuzzmedia.exiftool.commons.iterables;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class CollectionsTest {
 
@@ -82,42 +75,6 @@ class CollectionsTest {
 		assertThat(Collections.toCollection(null)).isNotNull().isEmpty();
 		assertThat(Collections.toCollection(asList(1, 2, 3))).isEqualTo(asList(1, 2, 3));
 		assertThat(Collections.toCollection(iterables)).isEqualTo(asList(1, 2, 3));
-	}
-
-	@Test
-	void it_should_join_collection() {
-		assertThat(Collections.join(null, " ")).isEqualTo("");
-		assertThat(Collections.join(emptyList(), " ")).isEqualTo("");
-		assertThat(Collections.join(singletonList("foo"), " ")).isEqualTo("foo");
-		assertThat(Collections.join(asList("foo", "bar"), " ")).isEqualTo("foo bar");
-	}
-
-	@Test
-	void it_should_map_inputs_to_outputs() {
-		@SuppressWarnings("unchecked")
-		Mapper<String, String> mapper = mock(Mapper.class);
-
-		final String suffix = "from_mapper";
-		when(mapper.map(anyString())).thenAnswer((Answer<String>) invocation -> {
-			String input = (String) invocation.getArguments()[0];
-			return input + suffix;
-		});
-
-		String input1 = "foo";
-		String input2 = "bar";
-		List<String> inputs = asList(input1, input2);
-
-		List<String> outputs = Collections.map(inputs, mapper);
-
-		verify(mapper).map(input1);
-		verify(mapper).map(input2);
-
-		assertThat(outputs)
-				.hasSameSizeAs(inputs)
-				.containsExactly(
-						input1 + "from_mapper",
-						input2 + "from_mapper"
-				);
 	}
 
 	@Test
