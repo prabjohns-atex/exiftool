@@ -30,7 +30,6 @@ import static java.lang.String.format;
  * @author Mickael Jeanroy
  * @since 1.1
  */
-@SuppressWarnings("serial")
 public class UnsupportedFeatureException extends AbstractExifException {
 
 	/**

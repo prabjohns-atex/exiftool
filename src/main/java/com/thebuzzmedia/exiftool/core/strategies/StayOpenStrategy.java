@@ -21,7 +21,6 @@ import com.thebuzzmedia.exiftool.Constants;
 import com.thebuzzmedia.exiftool.ExecutionStrategy;
 import com.thebuzzmedia.exiftool.Scheduler;
 import com.thebuzzmedia.exiftool.Version;
-import com.thebuzzmedia.exiftool.commons.iterables.Mapper;
 import com.thebuzzmedia.exiftool.logs.Logger;
 import com.thebuzzmedia.exiftool.logs.LoggerFactory;
 import com.thebuzzmedia.exiftool.process.CommandExecutor;
@@ -31,8 +30,7 @@ import com.thebuzzmedia.exiftool.process.command.CommandBuilder;
 
 import java.io.IOException;
 import java.util.List;
-
-import static com.thebuzzmedia.exiftool.commons.iterables.Collections.map;
+import java.util.stream.Collectors;
 
 /**
  * Execution strategy that use {@code exiftool} with the {@code stay_open} feature.
@@ -43,12 +41,6 @@ public class StayOpenStrategy implements ExecutionStrategy {
 	 * Class Logger.
 	 */
 	private static final Logger log = LoggerFactory.getLogger(StayOpenStrategy.class);
-
-	/**
-	 * Mapper to use to append a line break to each
-	 * arguments.
-	 */
-	private static final ArgumentMapper MAPPER = new ArgumentMapper();
 
 	/**
 	 * Minimum version of {@code exiftool} supporting {@code stay_open} feature.
@@ -81,7 +73,7 @@ public class StayOpenStrategy implements ExecutionStrategy {
 	@Override
 	public void execute(CommandExecutor executor, String exifTool, List<String> arguments, OutputHandler handler) throws IOException {
 		log.debug("Using ExifTool in daemon mode (-stay_open True)...");
-		List<String> newArgs = map(arguments, MAPPER);
+		List<String> newArgs = arguments.stream().map(input -> input + Constants.BR).collect(Collectors.toList());
 
 		synchronized (this) {
 			// Start daemon process if it is not already started.
@@ -100,12 +92,7 @@ public class StayOpenStrategy implements ExecutionStrategy {
 
 			// Always reset the cleanup task.
 			scheduler.stop();
-			scheduler.start(new Runnable() {
-				@Override
-				public void run() {
-					safeClose();
-				}
-			});
+			scheduler.start(this::safeClose);
 
 			try {
 				process.write(newArgs);
@@ -230,19 +217,6 @@ public class StayOpenStrategy implements ExecutionStrategy {
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
-		}
-	}
-
-	/**
-	 * Argument Mapper.
-	 * This mapper should be used to concatenate a line break after
-	 * each input.
-	 */
-	private static class ArgumentMapper implements Mapper<String, String> {
-
-		@Override
-		public String map(String input) {
-			return input + Constants.BR;
 		}
 	}
 }

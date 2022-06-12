@@ -30,7 +30,7 @@ import java.io.OutputStream;
 import static com.thebuzzmedia.exiftool.commons.io.IOs.readInputStream;
 import static com.thebuzzmedia.exiftool.commons.lang.Objects.firstNonNull;
 import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notEmpty;
-import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Default implementation for {@link CommandProcess} interface.
@@ -81,9 +81,9 @@ public class DefaultCommandProcess implements CommandProcess {
 	 * @param err Error stream.
 	 */
 	public DefaultCommandProcess(InputStream is, OutputStream os, InputStream err) {
-		this.is = notNull(is, "Input stream should not be null");
-		this.os = notNull(os, "Output stream should not be null");
-		this.err = notNull(err, "Error stream should not be null");
+		this.is = requireNonNull(is, "Input stream should not be null");
+		this.os = requireNonNull(os, "Output stream should not be null");
+		this.err = requireNonNull(err, "Error stream should not be null");
 		this.close = false;
 	}
 
@@ -94,7 +94,7 @@ public class DefaultCommandProcess implements CommandProcess {
 
 	@Override
 	public String read(OutputHandler handler) throws IOException {
-		return doRead(notNull(handler, "Handler should not be null"));
+		return doRead(requireNonNull(handler, "Handler should not be null"));
 	}
 
 	@Override
@@ -180,7 +180,7 @@ public class DefaultCommandProcess implements CommandProcess {
 		}
 
 		// Check valid input.
-		notNull(input, "Write input should not be null");
+		requireNonNull(input, "Write input should not be null");
 
 		// Just log some debug information
 		log.debug("Send command input: {}", input);

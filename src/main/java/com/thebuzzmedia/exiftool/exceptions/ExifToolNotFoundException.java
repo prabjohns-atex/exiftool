@@ -24,7 +24,6 @@ import java.io.IOException;
 /**
  * Exception thrown when exiftool program is missing.
  */
-@SuppressWarnings("serial")
 public class ExifToolNotFoundException extends AbstractExifException {
 
 	/**

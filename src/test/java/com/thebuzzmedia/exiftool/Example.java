@@ -22,7 +22,6 @@ import com.thebuzzmedia.exiftool.core.StandardOptions;
 import com.thebuzzmedia.exiftool.core.StandardTag;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +59,7 @@ public class Example {
 		for (File f : files) {
 			System.out.println("\n[" + f.getName() + "]");
 
-			List<Tag> tags = asList((Tag[]) StandardTag.values());
+			List<Tag> tags = asList(StandardTag.values());
 			Map<Tag, String> exifData = tool.getImageMeta(f, options, tags);
 			System.out.println(exifData);
 		}

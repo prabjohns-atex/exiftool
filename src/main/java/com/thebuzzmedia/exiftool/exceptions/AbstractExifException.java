@@ -21,7 +21,6 @@ package com.thebuzzmedia.exiftool.exceptions;
  * Basic Exception.
  * Should be extended.
  */
-@SuppressWarnings("serial")
 class AbstractExifException extends RuntimeException {
 
 	/**

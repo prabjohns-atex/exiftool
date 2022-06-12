@@ -39,7 +39,7 @@ import static com.thebuzzmedia.exiftool.logs.LogUtils.fromSlf4jStyle;
  */
 class DefaultLogger implements Logger {
 
-	private static enum Level {
+	private enum Level {
 		TRACE, DEBUG, INFO, WARN, ERROR
 	}
 

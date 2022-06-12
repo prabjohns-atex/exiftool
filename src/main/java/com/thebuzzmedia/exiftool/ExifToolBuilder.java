@@ -441,7 +441,7 @@ public class ExifToolBuilder {
 	 *
 	 * @param <T> Type of settings.
 	 */
-	private static interface FactoryFunction<T> {
+	private interface FactoryFunction<T> {
 		T apply();
 	}
 
@@ -552,7 +552,7 @@ public class ExifToolBuilder {
 
 		private final Scheduler scheduler;
 
-		private int poolSize;
+		private final int poolSize;
 
 		public StrategyFunction(Boolean stayOpen, Long delay, Scheduler scheduler, int poolSize) {
 			this.stayOpen = stayOpen;

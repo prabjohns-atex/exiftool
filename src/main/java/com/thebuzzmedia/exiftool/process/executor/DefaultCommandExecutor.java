@@ -30,7 +30,7 @@ import java.util.List;
 
 import static com.thebuzzmedia.exiftool.commons.io.IOs.closeQuietly;
 import static com.thebuzzmedia.exiftool.commons.io.IOs.readInputStream;
-import static com.thebuzzmedia.exiftool.commons.lang.PreConditions.notNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Default Executor.
@@ -55,7 +55,7 @@ public class DefaultCommandExecutor implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(Command command, OutputHandler handler) throws IOException {
-		return readProcessOutput(command, notNull(handler, "Handler should not be null"));
+		return readProcessOutput(command, requireNonNull(handler, "Handler should not be null"));
 	}
 
 	@Override
